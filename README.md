@@ -62,7 +62,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/board.rs` contains Board/whiteboard execution, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
 - `src/app/chat.rs` contains Chat execution, chat create/list/search/get/delete, member operations, and chat member body builders.
-- `src/app/doc.rs` contains docx command execution, Markdown/local block mapping, templates, and media insertion.
+- `src/app/doc.rs` contains docx command execution, templates, and media
+  insertion; `src/app/doc/` contains Markdown/local block mapping helpers.
 - `src/app/drive.rs` contains the Drive command runner; `src/app/drive/`
   contains Drive upload, import/export, comment, version, subscription, and
   permission helpers.
