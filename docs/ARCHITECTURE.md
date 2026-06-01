@@ -37,7 +37,7 @@ src/app/scopes.rs    Open Platform scope groups and grant URL printing.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
 src/app/sheet.rs     Sheets command runner, sheet tab operations, and cell value body builders.
 src/app/task.rs      Task command runner.
-src/app/task/        Task section and custom-field structure builders.
+src/app/task/        Task body/query helpers plus section and custom-field structure builders.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
 src/app/wiki.rs      Wiki/knowledge-space command runner, route checks, and Wiki body builders.
 src/app/tests.rs     Shared unit-test imports and cross-module tests.

@@ -71,7 +71,7 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/search.rs` contains Search execution, doc/message search, and custom search connector body builders.
 - `src/app/sheet.rs` contains Sheets execution, sheet tab operations, and cell value body builders.
 - `src/app/task.rs` contains Task command execution; `src/app/task/` contains
-  task section and custom-field structure builders.
+  Task body/query helpers plus section and custom-field structure builders.
 - `src/app/vc.rs` contains VC execution, meeting/reserve/recording/report/room operations, and VC body builders.
 - `src/app/wiki.rs` contains Wiki/knowledge-space command execution, route checks, and Wiki body builders.
 - `src/app/help.rs`, `src/app/manifest.rs`, `src/app/scopes.rs`, and `src/app/output.rs` contain AI help text, manifest generation, scope grants, and output formatting.
