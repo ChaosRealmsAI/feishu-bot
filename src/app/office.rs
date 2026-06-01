@@ -1,6 +1,13 @@
 use super::*;
 
+mod formatting;
+mod links;
+mod readback;
 mod state;
+
+use formatting::*;
+use links::*;
+use readback::*;
 pub(super) use state::*;
 const PROJECT_LOG_TABLE_NAME: &str = "项目日志";
 
@@ -1483,144 +1490,4 @@ async fn pin_message(api: &mut FeishuClient, message_id: Option<&str>) -> Value 
         api.post_json("/im/v1/pins", &[], json!({ "message_id": message_id }))
             .await,
     )
-}
-
-async fn readback_chat(api: &mut FeishuClient, chat_id: Option<&str>) -> Value {
-    let Some(chat_id) = chat_id else {
-        return json!({ "status": "skipped_missing_chat_id" });
-    };
-    let path = format!("/im/v1/chats/{chat_id}");
-    probe_value(
-        api.get_json(
-            &path,
-            &[("user_id_type".to_string(), "open_id".to_string())],
-        )
-        .await,
-    )
-}
-
-async fn readback_wiki_node(
-    api: &mut FeishuClient,
-    node_token: Option<&str>,
-    auth: ApiAuthArg,
-) -> Value {
-    let Some(node_token) = node_token else {
-        return json!({ "status": "skipped_missing_node_token" });
-    };
-    probe_value(
-        wiki_request_json(
-            api,
-            Method::GET,
-            "/wiki/v2/spaces/get_node",
-            &[("token".to_string(), node_token.to_string())],
-            None,
-            auth,
-        )
-        .await,
-    )
-}
-
-async fn readback_base(
-    api: &mut FeishuClient,
-    app_token: Option<&str>,
-    table_id: Option<&str>,
-) -> Value {
-    let Some(app_token) = app_token else {
-        return json!({ "status": "skipped_missing_app_token" });
-    };
-    let app_path = format!("/bitable/v1/apps/{app_token}");
-    let table_path = format!("/bitable/v1/apps/{app_token}/tables");
-    let tables = probe_value(
-        api.get_json(&table_path, &[("page_size".to_string(), "100".to_string())])
-            .await,
-    );
-    json!({
-        "app": probe_value(api.get_json(&app_path, &[]).await),
-        "target_table_id": table_id,
-        "tables": tables,
-    })
-}
-
-async fn readback_message(api: &mut FeishuClient, message_id: Option<&str>) -> Value {
-    let Some(message_id) = message_id else {
-        return json!({ "status": "skipped_missing_message_id" });
-    };
-    let path = format!("/im/v1/messages/{}", encode_path_segment(message_id));
-    probe_value(
-        api.get_json(
-            &path,
-            &[("user_id_type".to_string(), "open_id".to_string())],
-        )
-        .await,
-    )
-}
-
-fn office_index_markdown(project: &OfficeProject) -> String {
-    format!(
-        "# {}\n\n## 项目状态\n\n- 群聊：{}\n- 初始化时间：{}\n\n## 使用约定\n\n- 每一个新功能演示单独创建一篇报告文档。\n- 群聊只放短消息、链接、语音和待处理回复。\n- 项目日志写入多维表格，方便后续搜索和回顾。\n",
-        project.name,
-        project.chat_id.as_deref().unwrap_or("未创建"),
-        project.created_at.as_deref().unwrap_or("未知"),
-    )
-}
-
-fn office_progress_message(
-    title: &str,
-    status: &str,
-    summary: &str,
-    report_url: Option<&str>,
-) -> String {
-    let mut lines = vec![
-        format!("进度更新：{title}"),
-        format!("状态：{status}"),
-        format!("摘要：{summary}"),
-    ];
-    if let Some(url) = report_url.filter(|value| !value.trim().is_empty()) {
-        lines.push(format!("详情：{url}"));
-    }
-    lines.join("\n")
-}
-
-fn extract_chat_id(value: &Value) -> Option<String> {
-    get_string(value, &["data", "chat_id"])
-        .or_else(|| get_string(value, &["data", "chat", "chat_id"]))
-}
-
-fn extract_message_id(value: &Value) -> Option<String> {
-    get_string(value, &["data", "message_id"])
-        .or_else(|| get_string(value, &["data", "message", "message_id"]))
-}
-
-fn extract_table_id(value: &Value) -> Option<String> {
-    get_string(value, &["data", "table_id"])
-        .or_else(|| get_string(value, &["data", "table", "table_id"]))
-}
-
-fn web_root(api: &FeishuClient) -> String {
-    let doc_base = api.config.doc_base_url.trim_end_matches('/');
-    if let Some(root) = doc_base.strip_suffix("/docx") {
-        return root.to_string();
-    }
-    if let Some((root, _)) = doc_base.split_once("/docx/") {
-        return root.to_string();
-    }
-    doc_base.to_string()
-}
-
-fn wiki_url(api: &FeishuClient, node_token: &str) -> String {
-    format!("{}/wiki/{}", web_root(api), node_token)
-}
-
-fn base_url(api: &FeishuClient, app_token: &str) -> String {
-    format!("{}/base/{}", web_root(api), app_token)
-}
-
-fn push_json_opt(body: &mut Map<String, Value>, key: &str, value: Option<String>) {
-    if let Some(value) = value.filter(|item| !item.trim().is_empty()) {
-        body.insert(key.to_string(), Value::String(value));
-    }
-}
-
-fn truncate_chars(value: &str, max_chars: usize) -> String {
-    value.chars().take(max_chars).collect()
 }
