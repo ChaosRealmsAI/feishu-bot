@@ -21,8 +21,8 @@ src/app/client/      Docx document create/append/read helper methods plus Drive/
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
 src/app/doc.rs       Docx command runner, media insertion, and raw descendant body normalization.
 src/app/doc/         Markdown/local block mapping helpers and raw block templates.
-src/app/dogfood.rs   Dogfood publish/verify command runner.
-src/app/dogfood/     Probe classification, summaries, and AI remediation helpers.
+src/app/dogfood.rs   Dogfood publish runner plus write/message loop probes.
+src/app/dogfood/     Read-probe verify orchestration, probe classification, summaries, and AI remediation helpers.
 src/app/drive.rs     Drive command runner.
 src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
 src/app/help.rs      AI help entrypoint and re-exports.
