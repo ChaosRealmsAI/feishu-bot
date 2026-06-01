@@ -64,6 +64,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/chat.rs` contains Chat execution, chat create/list/search/get/delete, member operations, and chat member body builders.
 - `src/app/doc.rs` contains docx command execution, templates, and media
   insertion; `src/app/doc/` contains Markdown/local block mapping helpers.
+- `src/app/dogfood.rs` contains dogfood publish/verify execution;
+  `src/app/dogfood/` contains probe classification, summaries, and AI
+  remediation helpers.
 - `src/app/drive.rs` contains the Drive command runner; `src/app/drive/`
   contains Drive upload, import/export, comment, version, subscription, and
   permission helpers.

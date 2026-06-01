@@ -20,6 +20,8 @@ src/app/client.rs    Feishu HTTP client, token handling, upload/download helpers
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
 src/app/doc.rs       Docx command runner, templates, and media insertion.
 src/app/doc/         Markdown/local block mapping helpers.
+src/app/dogfood.rs   Dogfood publish/verify command runner.
+src/app/dogfood/     Probe classification, summaries, and AI remediation helpers.
 src/app/drive.rs     Drive command runner.
 src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
 src/app/help.rs      Long help text and AI handoff text.
