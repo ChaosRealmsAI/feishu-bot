@@ -84,6 +84,7 @@ See `skills/feishu-bot-office/SKILL.md` for the repeatable AI office workflow.
 ## Quick checks
 
 ```bash
+scripts/ci-local.sh
 feishu-bot ai
 feishu-bot manifest
 feishu-bot --help

@@ -7,10 +7,7 @@ CLI. Keep new commands easy to discover from `--help`, `feishu-bot ai`, and
 Before sending changes:
 
 ```bash
-scripts/open-source-preflight.sh
-cargo fmt -- --check
-cargo test --all-targets
-cargo clippy --all-targets -- -D warnings
+scripts/ci-local.sh
 ```
 
 When adding a Feishu capability:
