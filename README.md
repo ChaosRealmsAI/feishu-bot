@@ -99,7 +99,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/minutes.rs` contains Minutes execution, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 - `src/app/okr.rs` contains OKR execution, OKR query helpers, and ID validation.
 - `src/app/people.rs` contains Contact, Directory, and CoreHR execution and
-  body builders; `src/app/people/` contains Hire execution and helpers.
+  body builders; `src/app/people/` contains Directory and Hire execution and
+  helpers.
 - `src/app/tests.rs` contains unit tests.
 
 See `docs/ARCHITECTURE.md` before adding new Feishu APIs.
