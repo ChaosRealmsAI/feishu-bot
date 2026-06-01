@@ -19,6 +19,7 @@ mod attendance;
 mod base;
 mod board;
 mod bot;
+mod browser_control;
 mod calendar;
 mod chat;
 mod cli;
@@ -33,11 +34,13 @@ mod mail;
 mod manifest;
 mod message;
 mod minutes;
+mod notify_card;
 mod oauth;
 mod office;
 mod okr;
 mod output;
 mod people;
+mod project_chat;
 mod raw_api;
 mod scopes;
 mod search;
@@ -52,6 +55,7 @@ use attendance::*;
 use base::*;
 use board::*;
 use bot::*;
+use browser_control::*;
 use calendar::*;
 use chat::*;
 use cli::*;
@@ -66,11 +70,13 @@ use mail::*;
 use manifest::*;
 use message::*;
 use minutes::*;
+use notify_card::*;
 use oauth::*;
 use office::*;
 use okr::*;
 use output::*;
 use people::*;
+use project_chat::*;
 use raw_api::*;
 use scopes::*;
 use search::*;
@@ -79,12 +85,6 @@ use sheet::*;
 use task::*;
 use vc::*;
 use wiki::*;
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-struct ProjectMap {
-    #[serde(flatten)]
-    chats: HashMap<String, String>,
-}
 
 pub async fn run() -> Result<()> {
     let Cli {
@@ -374,132 +374,6 @@ async fn doctor(config: &Config, raw_json: bool) -> Result<()> {
         println!("tenant_access_token={token_mask} ");
     }
     Ok(())
-}
-
-fn build_notification_card(args: &NotifyArgs, body: &str) -> Value {
-    let (emoji, color, label) = match args.status {
-        StatusArg::Done => ("OK", "green", "完成"),
-        StatusArg::Error => ("ERR", "red", "失败"),
-        StatusArg::Info => ("INFO", "blue", "进展"),
-        StatusArg::Warning => ("WARN", "orange", "警告"),
-    };
-
-    let mut elements = Vec::new();
-    let mut top = Vec::new();
-    if let Some(goal) = &args.goal {
-        top.push(format!("**目标**  {}", unescape_newlines(goal)));
-    }
-    if let Some(task) = &args.task {
-        top.push(format!("**任务**  {}", unescape_newlines(task)));
-    }
-    if !top.is_empty() {
-        elements.push(json!({
-            "tag": "div",
-            "text": { "tag": "lark_md", "content": top.join("\n") }
-        }));
-        elements.push(json!({ "tag": "hr" }));
-    }
-    if let Some(summary) = &args.summary {
-        elements.push(json!({
-            "tag": "div",
-            "text": { "tag": "lark_md", "content": format!("**{}**", unescape_newlines(summary)) }
-        }));
-    }
-    if let Some(details) = &args.details {
-        let items = details
-            .split(['|', '｜'])
-            .map(str::trim)
-            .filter(|s| !s.is_empty())
-            .map(|s| format!("- {s}"))
-            .collect::<Vec<_>>();
-        if !items.is_empty() {
-            elements.push(json!({
-                "tag": "div",
-                "text": { "tag": "lark_md", "content": items.join("\n") }
-            }));
-        }
-    }
-    let trimmed = body.trim();
-    if !trimmed.is_empty() {
-        elements.push(json!({
-            "tag": "div",
-            "text": { "tag": "lark_md", "content": unescape_newlines(trimmed) }
-        }));
-    }
-    if let Some(next) = &args.next {
-        elements.push(json!({
-            "tag": "div",
-            "text": { "tag": "lark_md", "content": format!("> **下一步**  {}", unescape_newlines(next)) }
-        }));
-    }
-    if let Some(link) = &args.link {
-        elements.push(json!({
-            "tag": "action",
-            "actions": [{
-                "tag": "button",
-                "text": { "tag": "plain_text", "content": "查看详情" },
-                "type": "primary",
-                "url": link
-            }]
-        }));
-    }
-    elements.push(json!({ "tag": "hr" }));
-
-    let session = args.session.clone().unwrap_or_else(random_uuid);
-    let mut meta = vec![
-        format!("项目 {}", args.project),
-        format!("{}", Local::now().format("%H:%M")),
-        format!("ID `{}`", session.chars().take(8).collect::<String>()),
-    ];
-    if let Some(progress) = &args.progress {
-        meta.insert(1, format!("进度 {progress}"));
-    }
-    elements.push(json!({
-        "tag": "note",
-        "elements": [{ "tag": "lark_md", "content": meta.join(" | ") }]
-    }));
-
-    let title = args
-        .task
-        .clone()
-        .unwrap_or_else(|| format!("{} - {}", args.project, label));
-
-    json!({
-        "config": { "wide_screen_mode": true },
-        "header": {
-            "title": { "tag": "plain_text", "content": format!("{emoji} {title}") },
-            "template": color
-        },
-        "elements": elements
-    })
-}
-
-async fn get_or_create_project_chat(api: &mut FeishuClient, project: &str) -> Result<String> {
-    let mut map = load_project_map()?;
-    if let Some(chat_id) = map.chats.get(project) {
-        return Ok(chat_id.clone());
-    }
-
-    let default_user = api
-        .config
-        .default_user_id
-        .clone()
-        .ok_or_else(|| anyhow!("missing FEISHU_USER_ID; pass --to or set FEISHU_USER_ID"))?;
-    let user_type = infer_user_id_type(&default_user);
-    let data = api
-        .create_chat(
-            project,
-            Some(&format!("Feishu Bot project chat: {project}")),
-            &[default_user],
-            user_type,
-        )
-        .await?;
-    let chat_id = get_string(&data, &["data", "chat_id"])
-        .or_else(|| get_string(&data, &["data", "chat", "chat_id"]))
-        .ok_or_else(|| anyhow!("create chat response missing chat_id: {data}"))?;
-    map.chats.insert(project.to_string(), chat_id.clone());
-    save_project_map(&map)?;
-    Ok(chat_id)
 }
 
 fn push_query_opt(query: &mut Vec<(String, String)>, key: &str, value: Option<String>) {
@@ -856,84 +730,6 @@ fn random_uuid() -> String {
 
 fn unescape_newlines(value: &str) -> String {
     value.replace("\\n", "\n")
-}
-
-fn project_map_path() -> Result<PathBuf> {
-    let config_dir = dirs::config_dir().ok_or_else(|| anyhow!("cannot find config directory"))?;
-    Ok(config_dir.join("feishu").join("projects.json"))
-}
-
-fn load_project_map() -> Result<ProjectMap> {
-    let mut chats = HashMap::new();
-    let path = project_map_path()?;
-    if path.exists() {
-        let text = fs::read_to_string(&path).with_context(|| format!("read {}", path.display()))?;
-        let parsed: HashMap<String, String> =
-            serde_json::from_str(&text).with_context(|| format!("parse {}", path.display()))?;
-        chats.extend(parsed);
-    }
-    Ok(ProjectMap { chats })
-}
-
-fn save_project_map(map: &ProjectMap) -> Result<()> {
-    let path = project_map_path()?;
-    if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).with_context(|| format!("create {}", parent.display()))?;
-    }
-    fs::write(&path, serde_json::to_string_pretty(&map.chats)?)
-        .with_context(|| format!("write {}", path.display()))?;
-    Ok(())
-}
-
-fn run_browser_command(command: BrowserCommand) -> Result<()> {
-    match command {
-        BrowserCommand::Ensure => {
-            let script = std::env::var("FEISHU_PLAYWRIGHT_ENSURE")
-                .unwrap_or_else(|_| "ensure-extension-mcp.sh".to_string());
-            run_status(ProcessCommand::new("bash").arg(script).arg("--background"))
-        }
-        BrowserCommand::Tabs => run_mcpc(&[
-            "tools-call",
-            "browser_tabs",
-            "action:=list",
-            "--timeout",
-            "20",
-        ]),
-        BrowserCommand::Open(args) => {
-            let url_arg = format!("url:={}", args.url);
-            run_mcpc(&[
-                "tools-call",
-                "browser_navigate",
-                &url_arg,
-                "--timeout",
-                "30",
-            ])
-        }
-        BrowserCommand::Drive => run_mcpc(&[
-            "tools-call",
-            "browser_navigate",
-            "url:=https://my.feishu.cn/drive/home/",
-            "--timeout",
-            "30",
-        ]),
-    }
-}
-
-fn run_mcpc(args: &[&str]) -> Result<()> {
-    let mut command = ProcessCommand::new("npx");
-    command.arg("--yes").arg("@apify/mcpc").arg("@browser");
-    for arg in args {
-        command.arg(arg);
-    }
-    run_status(&mut command)
-}
-
-fn run_status(command: &mut ProcessCommand) -> Result<()> {
-    let status = command.status().context("run command")?;
-    if !status.success() {
-        bail!("command exited with status {status}");
-    }
-    Ok(())
 }
 
 #[cfg(test)]
