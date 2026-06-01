@@ -83,7 +83,8 @@ The bot is split by module instead of keeping all logic in one file:
   Task body/query helpers, input/time/reminder normalization helpers, and
   section/custom-field structure builders.
 - `src/app/vc.rs` contains VC execution, meeting/reserve/recording/report/room operations, and VC body builders.
-- `src/app/wiki.rs` contains Wiki/knowledge-space command execution, route checks, and Wiki body builders.
+- `src/app/wiki.rs` contains Wiki/knowledge-space command execution and route
+  checks; `src/app/wiki/` contains typed Wiki request body builders.
 - `src/app/help.rs` exposes AI help text; `src/app/help/` splits long
   AI-facing help sections by workflow area. `src/app/manifest.rs` builds the
   machine-readable AI manifest; `src/app/manifest/` splits module metadata by

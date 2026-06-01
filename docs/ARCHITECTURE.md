@@ -47,7 +47,8 @@ src/app/sheet.rs     Sheets command runner, sheet tab operations, and cell value
 src/app/task.rs      Task command runner.
 src/app/task/        Task body/query helpers, input/time/reminder normalization helpers, and section/custom-field structure builders.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
-src/app/wiki.rs      Wiki/knowledge-space command runner, route checks, and Wiki body builders.
+src/app/wiki.rs      Wiki/knowledge-space command runner and route checks.
+src/app/wiki/        Typed Wiki request body builders.
 src/app/tests.rs     Shared unit-test imports and cross-module tests.
 src/app/tests/       Capability-specific unit-test modules.
 ```
