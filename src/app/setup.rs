@@ -1,7 +1,5 @@
 use super::*;
 
-const OFFICE_SETUP_GROUPS: &[&str] = &["im", "doc", "wiki", "base", "search"];
-
 pub(super) async fn run_setup_command(
     command: SetupCommand,
     use_lark: bool,
@@ -374,7 +372,7 @@ fn setup_group_names(groups: &[String]) -> Vec<String> {
             continue;
         }
         let expanded: Vec<&str> = match group.as_str() {
-            "office" => OFFICE_SETUP_GROUPS.to_vec(),
+            "office" => OFFICE_SCOPE_GROUPS.to_vec(),
             other => vec![other],
         };
         for item in expanded {

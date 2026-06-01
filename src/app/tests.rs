@@ -1636,6 +1636,21 @@ fn filters_manifest_by_module_identity() {
 }
 
 #[test]
+fn resolves_office_scope_profile() {
+    let groups = scope_groups("office").unwrap();
+    let names = groups.iter().map(|(name, _)| *name).collect::<Vec<_>>();
+    assert_eq!(names, vec!["im", "doc", "wiki", "base", "search"]);
+    let scopes = groups
+        .iter()
+        .flat_map(|(_, scopes)| scopes.iter().copied())
+        .collect::<Vec<_>>();
+    assert!(scopes.contains(&"im:message"));
+    assert!(scopes.contains(&"docx:document:create"));
+    assert!(scopes.contains(&"search:docs:read"));
+    assert!(scope_groups("missing").is_err());
+}
+
+#[test]
 fn manifest_exposes_office_workflow_layer() {
     let manifest = build_manifest().unwrap();
     let workflow_modules = manifest
