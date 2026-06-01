@@ -7,8 +7,13 @@ CLI. Keep new commands easy to discover from `--help`, `feishu-bot ai`, and
 Before sending changes:
 
 ```bash
+scripts/check-commit.sh
 scripts/ci-local.sh
 ```
+
+`scripts/check-commit.sh` is the fast local gate. Set
+`FEISHU_BOT_FULL_COMMIT_CHECK=1` when you want the same script to run the full
+CI-local gate.
 
 When adding a Feishu capability:
 
