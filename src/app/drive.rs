@@ -3,8 +3,10 @@
 use super::*;
 
 mod helpers;
+mod permissions;
 
 pub(super) use helpers::*;
+pub(super) use permissions::*;
 pub(super) async fn run_drive_command(
     api: &mut FeishuClient,
     command: DriveCommand,

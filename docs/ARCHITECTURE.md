@@ -26,6 +26,7 @@ src/app/dogfood.rs   Dogfood publish runner plus write/message loop probes.
 src/app/dogfood/     Read-probe verify orchestration, probe classification, summaries, and AI remediation helpers.
 src/app/drive.rs     Drive command runner.
 src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
+src/app/drive/permissions.rs Typed Drive permission query/body helpers.
 src/app/help.rs      AI help entrypoint and re-exports.
 src/app/help/        Long AI-facing help sections split by workflow area.
 src/app/helpdesk.rs  Helpdesk command runner, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
