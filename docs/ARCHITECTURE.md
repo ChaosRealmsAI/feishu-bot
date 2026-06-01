@@ -26,6 +26,7 @@ src/app/helpdesk.rs  Helpdesk command runner, ticket/message/FAQ operations, ser
 src/app/manifest.rs  Machine-readable manifest.
 src/app/mail.rs      Mail command runner, mailbox auth selection, message/folder/contact/settings/rule/label operations, and mail body builders.
 src/app/message.rs   IM message command runner, image/file/video send helpers, reactions, and pins.
+src/app/message/     Voice synthesis/conversion send helpers.
 src/app/minutes.rs   Minutes command runner, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 src/app/okr.rs       OKR command runner, OKR query helpers, and ID validation.
 src/app/office.rs    AI-first workflow layer for project operations.

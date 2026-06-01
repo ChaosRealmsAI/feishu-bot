@@ -76,7 +76,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/wiki.rs` contains Wiki/knowledge-space command execution, route checks, and Wiki body builders.
 - `src/app/help.rs`, `src/app/manifest.rs`, `src/app/scopes.rs`, and `src/app/output.rs` contain AI help text, manifest generation, scope grants, and output formatting.
 - `src/app/mail.rs` contains Mail execution, mailbox auth selection, message/folder/contact/settings/rule/label operations, and mail send body builders.
-- `src/app/message.rs` contains IM message execution, image/file/video helpers, reactions, and pins.
+- `src/app/message.rs` contains IM message execution, image/file/video helpers,
+  reactions, and pins; `src/app/message/` contains voice synthesis/conversion
+  send helpers.
 - `src/app/minutes.rs` contains Minutes execution, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 - `src/app/okr.rs` contains OKR execution, OKR query helpers, and ID validation.
 - `src/app/people.rs` contains Contact, Directory, CoreHR, and Hire execution and body builders.
