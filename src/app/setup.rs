@@ -76,7 +76,7 @@ fn run_setup_open_scopes(args: SetupOpenScopesArgs) -> Result<Value> {
             "system_open": system_open,
             "next_actions": [
                 "Approve the scopes in Feishu Open Platform if the browser opened successfully.",
-                "Then run `feishu-bot setup auto` or `feishu-bot dogfood verify --include-response`."
+                "Then run `feishu-bot setup quickstart` or `feishu-bot dogfood verify --include-response`."
             ],
         }
     }))
@@ -89,20 +89,7 @@ async fn run_setup_auto(
 ) -> Result<Value> {
     let values = load_env_values().unwrap_or_default();
     let grant = build_setup_grant(&values, &args.groups, args.token_type);
-    let browser_open = if args.open_browser {
-        match grant.as_ref() {
-            Ok(value) => {
-                let url = value
-                    .get("grant_url")
-                    .and_then(Value::as_str)
-                    .ok_or_else(|| anyhow!("setup grant response missing grant_url"))?;
-                probe_value(run_setup_browser_open(url).map(|_| json!({ "opened": true })))
-            }
-            Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
-        }
-    } else {
-        json!({ "status": "skipped" })
-    };
+    let browser_open = setup_grant_open_probe(&grant, args.open_browser, run_setup_browser_open);
 
     let config = Config::load(use_lark, base_url_override.clone());
     let doctor = match config.as_ref() {
@@ -110,26 +97,7 @@ async fn run_setup_auto(
         Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
     };
 
-    let wiki_bot = if args.no_wiki_bot {
-        json!({ "status": "skipped" })
-    } else {
-        match config {
-            Ok(config) => {
-                let mut api = FeishuClient::new(config);
-                probe_value(
-                    run_setup_wiki_bot(
-                        &mut api,
-                        args.space_id,
-                        "admin".to_string(),
-                        Some(false),
-                        ApiAuthArg::User,
-                    )
-                    .await,
-                )
-            }
-            Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
-        }
-    };
+    let wiki_bot = setup_wiki_bot_probe(&config, args.no_wiki_bot, args.space_id).await;
 
     Ok(json!({
         "code": 0,
@@ -154,60 +122,15 @@ async fn run_setup_quickstart(
 ) -> Result<Value> {
     let values = load_env_values().unwrap_or_default();
     let grant = build_setup_grant(&values, &args.groups, args.token_type);
-    let browser_open = if args.open_browser {
-        match grant.as_ref() {
-            Ok(value) => {
-                let url = value
-                    .get("grant_url")
-                    .and_then(Value::as_str)
-                    .ok_or_else(|| anyhow!("setup grant response missing grant_url"))?;
-                probe_value(run_setup_browser_open(url).map(|_| json!({ "opened": true })))
-            }
-            Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
-        }
-    } else {
-        json!({ "status": "skipped" })
-    };
-    let system_open = if args.system_browser {
-        match grant.as_ref() {
-            Ok(value) => {
-                let url = value
-                    .get("grant_url")
-                    .and_then(Value::as_str)
-                    .ok_or_else(|| anyhow!("setup grant response missing grant_url"))?;
-                probe_value(run_system_browser_open(url).map(|_| json!({ "opened": true })))
-            }
-            Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
-        }
-    } else {
-        json!({ "status": "skipped" })
-    };
+    let browser_open = setup_grant_open_probe(&grant, args.open_browser, run_setup_browser_open);
+    let system_open = setup_grant_open_probe(&grant, args.system_browser, run_system_browser_open);
 
     let config = Config::load(use_lark, base_url_override);
     let doctor = match config.as_ref() {
         Ok(config) => setup_doctor_probe(config).await,
         Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
     };
-    let wiki_bot = if args.no_wiki_bot {
-        json!({ "status": "skipped" })
-    } else {
-        match config {
-            Ok(config) => {
-                let mut api = FeishuClient::new(config);
-                probe_value(
-                    run_setup_wiki_bot(
-                        &mut api,
-                        args.space_id.clone(),
-                        "admin".to_string(),
-                        Some(false),
-                        ApiAuthArg::User,
-                    )
-                    .await,
-                )
-            }
-            Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
-        }
-    };
+    let wiki_bot = setup_wiki_bot_probe(&config, args.no_wiki_bot, args.space_id.clone()).await;
     let selected_groups = setup_group_names(&args.groups);
     let quickstart = setup_quickstart_plan(&values, &args.project, &selected_groups);
 
@@ -228,6 +151,49 @@ async fn run_setup_quickstart(
             "next_actions": setup_next_actions(&values),
         }
     }))
+}
+
+fn setup_grant_open_probe(
+    grant: &Result<Value>,
+    should_open: bool,
+    open: fn(&str) -> Result<()>,
+) -> Value {
+    if !should_open {
+        return json!({ "status": "skipped" });
+    }
+    match grant.as_ref() {
+        Ok(value) => match value.get("grant_url").and_then(Value::as_str) {
+            Some(url) => probe_value(open(url).map(|_| json!({ "opened": true }))),
+            None => json!({ "ok": false, "error": "setup grant response missing grant_url" }),
+        },
+        Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
+    }
+}
+
+async fn setup_wiki_bot_probe(
+    config: &Result<Config>,
+    should_skip: bool,
+    space_id: Option<String>,
+) -> Value {
+    if should_skip {
+        return json!({ "status": "skipped" });
+    }
+    match config {
+        Ok(config) => {
+            let mut api = FeishuClient::new(config.clone());
+            probe_value(
+                run_setup_wiki_bot(
+                    &mut api,
+                    space_id,
+                    "admin".to_string(),
+                    Some(false),
+                    ApiAuthArg::User,
+                )
+                .await,
+            )
+        }
+        Err(error) => json!({ "ok": false, "error": format!("{error:#}") }),
+    }
 }
 
 async fn setup_doctor_probe(config: &Config) -> Value {

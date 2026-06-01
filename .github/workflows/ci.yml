@@ -13,6 +13,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
+      - name: Open-source preflight
+        run: scripts/open-source-preflight.sh
       - name: Format
         run: cargo fmt -- --check
       - name: Test

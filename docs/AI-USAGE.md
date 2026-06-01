@@ -54,7 +54,6 @@ feishu-bot setup quickstart --open-browser --json
 scripts/feishu-bot-setup.sh --project "AI Project"
 feishu-bot setup open-scopes --group office --browser --json
 feishu-bot setup wiki-bot --auth user --json
-feishu-bot setup auto --open-browser --json
 ```
 
 `setup` automates everything the tool can safely automate: env shape checks,

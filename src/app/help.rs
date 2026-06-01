@@ -83,7 +83,6 @@ pub(super) const SETUP_AFTER_HELP: &str = r#"AI-safe setup automation:
   feishu-bot setup quickstart --open-browser
   feishu-bot setup open-scopes --group office --browser
   feishu-bot setup wiki-bot --auth user
-  feishu-bot setup auto --open-browser
 
 `setup` is the preferred first-run helper. It does not store secrets by itself.
 It checks env shape, builds Feishu Open Platform scope grant URLs, can open them

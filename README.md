@@ -90,7 +90,6 @@ feishu-bot --help
 feishu-bot setup --help
 feishu-bot setup plan
 feishu-bot setup quickstart --open-browser
-feishu-bot setup auto --open-browser
 feishu-bot dogfood verify
 feishu-bot oauth --help
 feishu-bot scopes --group all

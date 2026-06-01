@@ -4,7 +4,12 @@ version = "0.1.0"
 edition = "2021"
 description = "AI-ready Feishu Bot command-line automation for messages, docs, Wiki, Base, tasks, Drive, search, and OpenAPI workflows"
 license = "MIT"
+repository = "https://github.com/ChaosRealmsAI/feishu-bot"
+homepage = "https://github.com/ChaosRealmsAI/feishu-bot"
 documentation = "https://docs.rs/feishu-bot"
+readme = "README.md"
+keywords = ["feishu", "lark", "cli", "automation", "ai"]
+categories = ["command-line-utilities", "api-bindings"]
 include = [
   "Cargo.toml",
   "Cargo.lock",

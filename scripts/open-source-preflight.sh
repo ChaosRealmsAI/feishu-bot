@@ -8,7 +8,7 @@ fi
 
 blocked=0
 for path in .env dogfood dogfood-artifacts tmp target; do
-  if git ls-files --error-unmatch "${path}" >/dev/null 2>&1; then
+  if git ls-files -- "${path}" | grep -q .; then
     echo "refusing to publish tracked private/generated path: ${path}" >&2
     blocked=1
   fi

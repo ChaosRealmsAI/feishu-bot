@@ -194,8 +194,7 @@ pub(super) fn build_manifest() -> Result<Value> {
                     "feishu-bot setup quickstart --open-browser",
                     "scripts/feishu-bot-setup.sh --project \"AI Project\"",
                     "feishu-bot setup open-scopes --group office --browser",
-                    "feishu-bot setup wiki-bot --auth user",
-                    "feishu-bot setup auto --open-browser"
+                    "feishu-bot setup wiki-bot --auth user"
                 ],
                 "known_permission_edges": [
                     "Opening a grant URL is automated; approving permissions still happens in the signed-in human browser account.",
