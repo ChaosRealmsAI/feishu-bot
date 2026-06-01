@@ -7,7 +7,8 @@ src/lib.rs           Shared application entrypoint and JSON error handling.
 src/bin/feishu-bot.rs Primary command entrypoint.
 src/bin/feishuBot.rs CamelCase compatibility alias.
 src/bin/feishu.rs    Legacy compatibility alias.
-src/app/mod.rs       Application dispatcher and modules not yet split.
+src/app/mod.rs       Application dispatcher and module wiring.
+src/app/common.rs    Shared query, JSON, content, ID inference, and CLI enum helpers.
 src/app/approval.rs  Approval command runner, native approval, task actions, and external connector body builders.
 src/app/attendance.rs Attendance command runner, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 src/app/base.rs      Base/Bitable command runner.
@@ -68,4 +69,4 @@ Module rules:
 
 Modules still in `app/mod.rs`:
 
-- Notify/project-chat helpers, common JSON/query/input utilities, and the top-level command dispatcher.
+- Top-level command dispatch, doctor output, and response readers.
