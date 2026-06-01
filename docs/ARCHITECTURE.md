@@ -35,7 +35,8 @@ src/app/sheet.rs     Sheets command runner, sheet tab operations, and cell value
 src/app/task.rs      Task command runner and Task-specific body builders.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
 src/app/wiki.rs      Wiki/knowledge-space command runner, route checks, and Wiki body builders.
-src/app/tests.rs     Unit tests.
+src/app/tests.rs     Shared unit-test imports and cross-module tests.
+src/app/tests/       Capability-specific unit-test modules.
 ```
 
 Module rules:
@@ -46,6 +47,8 @@ Module rules:
 - If a module already exists, put command execution and helper builders there.
 - Keep `app/cli/` for Clap structs/enums only. Do not put API logic there.
 - Keep `app/help.rs` and `app/manifest.rs` in sync when adding AI-facing commands.
+- Put new capability-specific tests under `src/app/tests/` instead of growing
+  the shared `src/app/tests.rs` file.
 - Prefer `pub(super)` for cross-module items inside `app`; avoid `pub` unless it is part of a real library API.
 - Every split should preserve `cargo fmt --check`, `cargo check --all-targets`, and `cargo test --all-targets`.
 
