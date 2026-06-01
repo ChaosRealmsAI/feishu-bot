@@ -10,7 +10,8 @@ src/bin/feishu.rs    Legacy compatibility alias.
 src/app/mod.rs       Application dispatcher and modules not yet split.
 src/app/approval.rs  Approval command runner, native approval, task actions, and external connector body builders.
 src/app/attendance.rs Attendance command runner, group/shift/schedule/task/flow/stats operations, and attendance body builders.
-src/app/base.rs      Base/Bitable command runner and Base-specific body builders.
+src/app/base.rs      Base/Bitable command runner.
+src/app/base/        Base media, record, reference, and schema builders.
 src/app/board.rs     Board/whiteboard command runner, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 src/app/calendar.rs  Calendar command runner and Calendar-specific body builders.
 src/app/chat.rs      Chat command runner, chat create/list/search/get/delete, member operations, and chat member body builders.
@@ -26,13 +27,16 @@ src/app/mail.rs      Mail command runner, mailbox auth selection, message/folder
 src/app/message.rs   IM message command runner, image/file/video send helpers, reactions, and pins.
 src/app/minutes.rs   Minutes command runner, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 src/app/okr.rs       OKR command runner, OKR query helpers, and ID validation.
+src/app/office.rs    AI-first workflow layer for project operations.
+src/app/office/      Office formatting, links, readback, and state helpers.
 src/app/output.rs    Human-readable output formatting.
 src/app/people.rs    Contact, Directory, CoreHR, and Hire command runners and body builders.
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
 src/app/scopes.rs    Open Platform scope groups and grant URL printing.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
 src/app/sheet.rs     Sheets command runner, sheet tab operations, and cell value body builders.
-src/app/task.rs      Task command runner and Task-specific body builders.
+src/app/task.rs      Task command runner.
+src/app/task/        Task section and custom-field structure builders.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
 src/app/wiki.rs      Wiki/knowledge-space command runner, route checks, and Wiki body builders.
 src/app/tests.rs     Shared unit-test imports and cross-module tests.

@@ -51,12 +51,14 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/cli/` contains Clap command and argument definitions, split into
   small generated parts to keep the old single giant CLI file maintainable.
 - `src/app/office.rs` contains the AI-first workflow layer that composes chat,
-  Wiki, Docx, Base, message polling, voice, and search into project operations.
+  Wiki, Docx, Base, message polling, voice, and search into project operations;
+  `src/app/office/` contains formatting, link, readback, and state helpers.
 - `src/app/client.rs` contains the Feishu HTTP client, token handling, and upload/download helpers.
 - `src/app/config.rs` contains `.env` loading, base URL selection, and masking helpers.
 - `src/app/approval.rs` contains Approval execution, task actions, and external connector body builders.
 - `src/app/attendance.rs` contains Attendance execution, group/shift/schedule/task/flow/stats operations, and attendance body builders.
-- `src/app/base.rs` contains Base/Bitable command execution and Base-specific body builders.
+- `src/app/base.rs` contains Base/Bitable command execution; `src/app/base/`
+  contains media, record, reference, and schema builders.
 - `src/app/board.rs` contains Board/whiteboard execution, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
 - `src/app/chat.rs` contains Chat execution, chat create/list/search/get/delete, member operations, and chat member body builders.
@@ -66,7 +68,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/raw_api.rs` contains raw Feishu API passthrough execution.
 - `src/app/search.rs` contains Search execution, doc/message search, and custom search connector body builders.
 - `src/app/sheet.rs` contains Sheets execution, sheet tab operations, and cell value body builders.
-- `src/app/task.rs` contains Task command execution and Task-specific body builders.
+- `src/app/task.rs` contains Task command execution; `src/app/task/` contains
+  task section and custom-field structure builders.
 - `src/app/vc.rs` contains VC execution, meeting/reserve/recording/report/room operations, and VC body builders.
 - `src/app/wiki.rs` contains Wiki/knowledge-space command execution, route checks, and Wiki body builders.
 - `src/app/help.rs`, `src/app/manifest.rs`, `src/app/scopes.rs`, and `src/app/output.rs` contain AI help text, manifest generation, scope grants, and output formatting.
