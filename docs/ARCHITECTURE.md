@@ -45,6 +45,8 @@ src/app/people/      Directory, CoreHR, and Hire command runners, query builders
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
 src/app/scopes.rs    Open Platform scope groups and grant URL printing.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
+src/app/setup.rs     Setup automation command runner, doctor probes, Wiki bot grant, and browser open helpers.
+src/app/setup/       First-run plan, scope grant, quickstart, and next-action builders.
 src/app/sheet.rs     Sheets command runner, sheet tab operations, and cell value body builders.
 src/app/task.rs      Task command runner.
 src/app/task/        Task body/query helpers, input/time/reminder normalization helpers, tasklist/comment/member collaboration builders, and section/custom-field plus reminder/dependency relation builders.

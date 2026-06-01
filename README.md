@@ -78,6 +78,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/helpdesk.rs` contains Helpdesk execution, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
 - `src/app/raw_api.rs` contains raw Feishu API passthrough execution.
 - `src/app/search.rs` contains Search execution, doc/message search, and custom search connector body builders.
+- `src/app/setup.rs` contains setup automation execution; `src/app/setup/`
+  contains first-run plan, scope grant, quickstart, and next-action builders.
 - `src/app/sheet.rs` contains Sheets execution, sheet tab operations, and cell value body builders.
 - `src/app/task.rs` contains Task command execution; `src/app/task/` contains
   Task body/query helpers, input/time/reminder normalization helpers, and
