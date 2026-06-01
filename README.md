@@ -68,7 +68,7 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/chat.rs` contains Chat execution, chat create/list/search/get/delete, member operations, and chat member body builders.
 - `src/app/doc.rs` contains docx command execution, media insertion, and raw
   descendant body normalization; `src/app/doc/` contains Markdown/local block
-  mapping helpers and raw block templates.
+  mapping helpers, docx media insertion helpers, and raw block templates.
 - `src/app/dogfood.rs` contains dogfood publish execution plus write/message
   loop probes; `src/app/dogfood/` contains read-probe verify orchestration,
   probe classification, summaries, and AI remediation helpers.
