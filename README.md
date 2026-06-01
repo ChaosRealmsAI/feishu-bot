@@ -54,8 +54,9 @@ The bot is split by module instead of keeping all logic in one file:
   Wiki, Docx, Base, message polling, voice, and search into project operations;
   `src/app/office/` contains local dry-run/list helpers, resource writers,
   formatting, link, readback, and state helpers.
-- `src/app/client.rs` contains the Feishu HTTP client, token handling, and
-  upload/download helpers; `src/app/client/` contains document helper methods.
+- `src/app/client.rs` contains the Feishu HTTP client and token handling;
+  `src/app/client/` contains document helper methods plus Drive/IM/Minutes
+  upload/download helpers.
 - `src/app/config.rs` contains `.env` loading, base URL selection, and masking helpers.
 - `src/app/approval.rs` contains Approval execution, task actions, and external connector body builders.
 - `src/app/attendance.rs` contains Attendance execution, group/shift/schedule/task/flow/stats operations, and attendance body builders.

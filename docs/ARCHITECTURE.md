@@ -16,8 +16,8 @@ src/app/board.rs     Board/whiteboard command runner, Mermaid/PlantUML import, r
 src/app/calendar.rs  Calendar command runner and Calendar-specific body builders.
 src/app/chat.rs      Chat command runner, chat create/list/search/get/delete, member operations, and chat member body builders.
 src/app/cli/         Clap command and argument definitions split into small parts.
-src/app/client.rs    Feishu HTTP client, token handling, upload/download helpers.
-src/app/client/      Docx document create/append/read helper methods.
+src/app/client.rs    Feishu HTTP client and token handling.
+src/app/client/      Docx document create/append/read helper methods plus Drive/IM/Minutes upload/download helpers.
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
 src/app/doc.rs       Docx command runner, media insertion, and raw descendant body normalization.
 src/app/doc/         Markdown/local block mapping helpers and raw block templates.
