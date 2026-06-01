@@ -28,7 +28,8 @@ src/app/drive/       Drive upload, import/export, comment, version, subscription
 src/app/help.rs      AI help entrypoint and re-exports.
 src/app/help/        Long AI-facing help sections split by workflow area.
 src/app/helpdesk.rs  Helpdesk command runner, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
-src/app/manifest.rs  Machine-readable manifest.
+src/app/manifest.rs  Machine-readable manifest entrypoint and filtering.
+src/app/manifest/    AI manifest module metadata split by workflow area.
 src/app/mail.rs      Mail command runner, mailbox auth selection, message/folder/contact/settings/rule/label operations, and mail body builders.
 src/app/message.rs   IM message command runner, image/file/video send helpers, reactions, and pins.
 src/app/message/     Voice synthesis/conversion send helpers.
