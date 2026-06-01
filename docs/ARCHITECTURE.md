@@ -19,7 +19,8 @@ src/app/cli/         Clap command and argument definitions split into small part
 src/app/client.rs    Feishu HTTP client, token handling, upload/download helpers.
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
 src/app/doc.rs       Docx command runner, Markdown/local block mapping, templates, and media insertion.
-src/app/drive.rs     Drive command runner and Drive-specific helpers.
+src/app/drive.rs     Drive command runner.
+src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
 src/app/help.rs      Long help text and AI handoff text.
 src/app/helpdesk.rs  Helpdesk command runner, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
 src/app/manifest.rs  Machine-readable manifest.

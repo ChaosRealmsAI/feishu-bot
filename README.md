@@ -63,7 +63,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
 - `src/app/chat.rs` contains Chat execution, chat create/list/search/get/delete, member operations, and chat member body builders.
 - `src/app/doc.rs` contains docx command execution, Markdown/local block mapping, templates, and media insertion.
-- `src/app/drive.rs` contains the Drive command runner and Drive helpers.
+- `src/app/drive.rs` contains the Drive command runner; `src/app/drive/`
+  contains Drive upload, import/export, comment, version, subscription, and
+  permission helpers.
 - `src/app/helpdesk.rs` contains Helpdesk execution, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
 - `src/app/raw_api.rs` contains raw Feishu API passthrough execution.
 - `src/app/search.rs` contains Search execution, doc/message search, and custom search connector body builders.
