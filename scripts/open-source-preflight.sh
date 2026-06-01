@@ -34,9 +34,9 @@ for pattern in "${patterns[@]}"; do
 done
 rm -f "${tmp_file}"
 
-if git grep -nE '^(FEISHU|LARK)_(APP_SECRET|USER_ACCESS_TOKEN|REFRESH_TOKEN|HELPDESK_TOKEN)=' -- \
-  | grep -Ev '=(replace_me|xxx|u_xxx|r_xxx|helpdesk_token|ht_xxx)$'; then
-  echo "possible real Feishu/Lark credential in tracked files" >&2
+if git grep -nE '^(FEISHU|LARK)_(APP_ID|APP_SECRET|USER_ID|USER_ACCESS_TOKEN|REFRESH_TOKEN|WIKI_SPACE_ID|WIKI_PARENT_NODE_TOKEN|HELPDESK_ID|HELPDESK_TOKEN)=' -- \
+  | grep -Ev '=(replace_me|xxx|cli_xxx|ou_xxx|u_xxx|r_xxx|wik_xxx|wiki_space_id|wiki_parent_node_token|helpdesk_id|helpdesk_token|ht_xxx|123456)$'; then
+  echo "possible real Feishu/Lark credential or workspace identifier in tracked files" >&2
   blocked=1
 fi
 
