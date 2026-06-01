@@ -33,7 +33,7 @@ src/app/message/     Voice synthesis/conversion send helpers.
 src/app/minutes.rs   Minutes command runner, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 src/app/okr.rs       OKR command runner, OKR query helpers, and ID validation.
 src/app/office.rs    AI-first workflow layer for project operations.
-src/app/office/      Office formatting, links, readback, and state helpers.
+src/app/office/      Office local dry-run/list helpers, formatting, links, readback, and state helpers.
 src/app/output.rs    Human-readable output formatting.
 src/app/people.rs    Contact, Directory, CoreHR, and Hire command runners and body builders.
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
