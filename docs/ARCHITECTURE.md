@@ -35,8 +35,8 @@ src/app/message.rs   IM message command runner, image/file/video send helpers, r
 src/app/message/     Voice synthesis/conversion send helpers plus message polling cursor/state helpers.
 src/app/minutes.rs   Minutes command runner, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 src/app/okr.rs       OKR command runner, OKR query helpers, and ID validation.
-src/app/office.rs    AI-first workflow layer for project operations.
-src/app/office/      Office local dry-run/list helpers, resource writers, formatting, links, readback, and state helpers.
+src/app/office.rs    AI-first project dispatcher plus bootstrap, report, and progress workflows.
+src/app/office/      Office interaction/status workflows, local dry-run/list helpers, resource writers, formatting, links, readback, and state helpers.
 src/app/output.rs    Human-readable output formatting.
 src/app/people.rs    Contact, Directory, and CoreHR command runners and body builders.
 src/app/people/      Hire command runner, query builders, body builders, and ID type helpers.

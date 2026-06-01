@@ -50,10 +50,10 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/bin/feishuBot.rs` and `src/bin/feishu.rs` are compatibility aliases.
 - `src/app/cli/` contains Clap command and argument definitions, split into
   small generated parts to keep the old single giant CLI file maintainable.
-- `src/app/office.rs` contains the AI-first workflow layer that composes chat,
-  Wiki, Docx, Base, message polling, voice, and search into project operations;
-  `src/app/office/` contains local dry-run/list helpers, resource writers,
-  formatting, link, readback, and state helpers.
+- `src/app/office.rs` contains the AI-first project dispatcher plus bootstrap,
+  report, and progress workflows; `src/app/office/` contains interaction/status
+  workflows, local dry-run/list helpers, resource writers, formatting, links,
+  readback, and state helpers.
 - `src/app/client.rs` contains the Feishu HTTP client and token handling;
   `src/app/client/` contains document helper methods plus Drive/IM/Minutes
   upload/download helpers.
