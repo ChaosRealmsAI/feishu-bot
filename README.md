@@ -82,7 +82,10 @@ The bot is split by module instead of keeping all logic in one file:
   Task body/query helpers plus section and custom-field structure builders.
 - `src/app/vc.rs` contains VC execution, meeting/reserve/recording/report/room operations, and VC body builders.
 - `src/app/wiki.rs` contains Wiki/knowledge-space command execution, route checks, and Wiki body builders.
-- `src/app/help.rs`, `src/app/manifest.rs`, `src/app/scopes.rs`, and `src/app/output.rs` contain AI help text, manifest generation, scope grants, and output formatting.
+- `src/app/help.rs` exposes AI help text; `src/app/help/` splits long
+  AI-facing help sections by workflow area. `src/app/manifest.rs`,
+  `src/app/scopes.rs`, and `src/app/output.rs` contain manifest generation,
+  scope grants, and output formatting.
 - `src/app/mail.rs` contains Mail execution, mailbox auth selection, message/folder/contact/settings/rule/label operations, and mail send body builders.
 - `src/app/message.rs` contains IM message execution, image/file/video helpers,
   reactions, and pins; `src/app/message/` contains voice synthesis/conversion
