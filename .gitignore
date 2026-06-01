@@ -1,0 +1,36 @@
+/target
+.DS_Store
+*.log
+*.tmp
+.idea/
+.vscode/
+.envrc
+
+# Local credentials.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Local/private operator state.
+/private/*
+!/private/.gitignore
+!/private/.env.example
+
+# Real dogfood evidence can contain tenant, user, chat, message, and document IDs.
+/dogfood/
+/dogfood-artifacts/
+/tmp/
+/spec/evidence/
+/vox-feishu-test/
+
+# Local screenshots/media generated while validating Feishu clients.
+/base-project-demo*.png
+/frontend-page*.png
+/html-*visible.png
+*.aiff
+*.opus
+*.mp3
+*.mp4
