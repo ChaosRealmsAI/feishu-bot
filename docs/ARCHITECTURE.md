@@ -50,7 +50,7 @@ src/app/task.rs      Task command runner.
 src/app/task/        Task body/query helpers, input/time/reminder normalization helpers, tasklist/comment/member collaboration builders, and section/custom-field plus reminder/dependency relation builders.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
 src/app/wiki.rs      Wiki/knowledge-space command runner and route checks.
-src/app/wiki/        Typed Wiki request body builders.
+src/app/wiki/        Typed Wiki request body builders and route-check/write-probe helpers.
 src/app/tests.rs     Shared unit-test imports and cross-module tests.
 src/app/tests/       Capability-specific unit-test modules.
 ```
