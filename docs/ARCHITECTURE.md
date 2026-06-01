@@ -11,7 +11,7 @@ src/app/mod.rs       Application dispatcher and modules not yet split.
 src/app/approval.rs  Approval command runner, native approval, task actions, and external connector body builders.
 src/app/attendance.rs Attendance command runner, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 src/app/base.rs      Base/Bitable command runner.
-src/app/base/        Base media, record, reference, and schema builders.
+src/app/base/        Base media, record, reference, schema, field/list, search, view, role, and member helper builders.
 src/app/board.rs     Board/whiteboard command runner, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 src/app/calendar.rs  Calendar command runner and Calendar-specific body builders.
 src/app/chat.rs      Chat command runner, chat create/list/search/get/delete, member operations, and chat member body builders.
