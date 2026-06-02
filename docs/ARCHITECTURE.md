@@ -46,6 +46,8 @@ src/app/doc/templates/ AI-ready raw block templates split by support matrix, chi
 src/app/dogfood.rs   Dogfood command dispatch plus write/message loop probes.
 src/app/dogfood/     Publish execution, read-probe verify orchestration, read-probe specs, probe classification, summary aggregation, and AI remediation helpers.
 src/app/dogfood/publish.rs Dogfood publish workflow and publish input helpers.
+src/app/dogfood/probes.rs Dogfood probe helper entrypoint and re-exports.
+src/app/dogfood/probes/ Dogfood probe output, error classification, remediation, and module-filter helpers.
 src/app/dogfood/specs.rs Dogfood read-probe registry and auth/request metadata.
 src/app/dogfood/summary.rs Dogfood probe count, usability, blocked-module, and next-action summaries.
 src/app/drive.rs     Drive command dispatcher.

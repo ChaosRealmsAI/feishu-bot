@@ -91,7 +91,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/dogfood.rs` contains dogfood command dispatch plus write/message
   loop probes; `src/app/dogfood/` contains publish execution, read-probe verify
   orchestration, read-probe specs, probe classification, summary aggregation,
-  and AI remediation helpers.
+  and AI remediation helpers. `src/app/dogfood/probes/` splits probe output,
+  error classification, remediation, and module-filter helpers.
 - `src/app/drive.rs` contains the Drive command dispatcher; `src/app/drive/`
   contains Drive execution modules for file, media, comment, version,
   subscription, permission, and import/export operations. Query/body builders
