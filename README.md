@@ -110,8 +110,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/mail.rs` contains Mail execution, mailbox auth selection, message/folder/contact/settings/rule/label operations, and mail send body builders.
 - `src/app/message.rs` contains IM message execution, image/file/video helpers,
   reactions, and pins; `src/app/message/` contains voice synthesis/conversion
-  send helpers, message content/reaction body builders, polling cursor/state,
-  and loop-check/readback probe helpers.
+  send entrypoints plus voice prepare/audio/synth helpers, message
+  content/reaction body builders, polling cursor/state, and loop-check/readback
+  probe helpers.
 - `src/app/minutes.rs` contains Minutes execution, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 - `src/app/okr.rs` contains OKR execution, OKR query helpers, and ID validation.
 - `src/app/people.rs` contains Contact, Directory, and CoreHR execution and
