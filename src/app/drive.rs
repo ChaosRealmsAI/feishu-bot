@@ -2,9 +2,11 @@
 
 use super::*;
 
+mod comment;
 mod helpers;
 mod permissions;
 
+pub(super) use comment::*;
 pub(super) use helpers::*;
 pub(super) use permissions::*;
 pub(super) async fn run_drive_command(

@@ -74,7 +74,8 @@ The bot is split by module instead of keeping all logic in one file:
   probe classification, summaries, and AI remediation helpers.
 - `src/app/drive.rs` contains the Drive command runner; `src/app/drive/`
   contains Drive upload, import/export, comment, version, subscription, and
-  permission helpers.
+  permission helpers, with comment query/body builders isolated in
+  `src/app/drive/comment.rs`.
 - `src/app/helpdesk.rs` contains Helpdesk execution, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
 - `src/app/raw_api.rs` contains raw Feishu API passthrough execution.
 - `src/app/search.rs` contains Search execution, doc/message search, and custom search connector body builders.
