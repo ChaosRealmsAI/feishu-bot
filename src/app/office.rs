@@ -1,5 +1,6 @@
 use super::*;
 
+mod docs;
 mod formatting;
 mod interactions;
 mod links;
@@ -8,6 +9,7 @@ mod readback;
 mod resources;
 mod state;
 
+use docs::*;
 use formatting::*;
 use interactions::*;
 use links::*;
