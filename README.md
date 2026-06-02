@@ -70,9 +70,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/doc.rs` contains docx command execution, media insertion, and raw
   descendant body normalization; `src/app/doc/` contains Markdown/local block
   mapping helpers, docx media insertion helpers, and raw block templates.
-- `src/app/dogfood.rs` contains dogfood publish execution plus write/message
-  loop probes; `src/app/dogfood/` contains read-probe verify orchestration,
-  probe classification, summary aggregation, and AI remediation helpers.
+- `src/app/dogfood.rs` contains dogfood command dispatch plus write/message
+  loop probes; `src/app/dogfood/` contains publish execution, read-probe verify
+  orchestration, probe classification, summary aggregation, and AI remediation helpers.
 - `src/app/drive.rs` contains the Drive command runner; `src/app/drive/`
   contains Drive upload, import/export, comment, version, subscription, and
   permission helpers, with import/export execution isolated in
