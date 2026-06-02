@@ -24,6 +24,24 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             ]
         }),
         json!({
+            "name": "token",
+            "command": "feishu-bot token",
+            "layer": "setup",
+            "scope_group": "auth",
+            "status": "tenant token diagnostic",
+            "ai_use": "Verify app credentials by requesting tenant_access_token. Use this for low-level auth troubleshooting; prefer doctor, setup, or dogfood profile checks for normal readiness.",
+            "help": ["feishu-bot token --help"],
+            "examples": [
+                "feishu-bot token",
+                "feishu-bot --json token"
+            ],
+            "known_permission_edges": [
+                "token prints a masked tenant_access_token by default.",
+                "token --raw prints the full tenant_access_token and must be treated as a secret.",
+                "A successful tenant token only proves app_id/app_secret auth, not that business scopes are granted."
+            ]
+        }),
+        json!({
             "name": "bot",
             "command": "feishu-bot bot",
             "scope_group": "im",
@@ -48,6 +66,7 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             "help": ["feishu-bot setup --help", "feishu-bot setup plan --help", "feishu-bot setup quickstart --help", "feishu-bot setup open-scopes --help", "feishu-bot setup wiki-bot --help", "feishu-bot setup auto --help"],
             "examples": [
                 "feishu-bot setup plan",
+                "feishu-bot setup quickstart --no-wiki-bot",
                 "feishu-bot setup quickstart --open-browser",
                 "feishu-bot setup auto --open-browser --json",
                 "scripts/feishu-bot-setup.sh --project \"AI Project\" --open-browser",
@@ -70,9 +89,9 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             "ai_use": "Verify current-account module readiness with real OpenAPI probes; publish one standalone capability demo doc, read it back, attempt Wiki when configured, send it to the configured receiver, and verify the exact link message through message/chat/member probes.",
             "help": ["feishu-bot dogfood --help", "feishu-bot dogfood verify --help", "feishu-bot dogfood publish --help"],
             "examples": [
-                "feishu-bot dogfood verify",
+                "feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json",
                 "feishu-bot dogfood verify --module calendar --module task --include-response",
-                "feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict",
+                "feishu-bot dogfood verify --profile enterprise --include-response",
                 "feishu-bot dogfood verify --write --module doc --module base --module task",
                 "feishu-bot dogfood verify --write --module board --include-response",
                 "feishu-bot dogfood publish --title \"Base role v2 demo\" --file dogfood/demo.md",

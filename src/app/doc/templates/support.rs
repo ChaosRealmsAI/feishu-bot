@@ -4,7 +4,7 @@ pub(super) fn doc_support_matrix() -> Value {
     json!({
         "mermaid": {
             "preserve_source": "doc template --kind mermaid-code-child, then doc append-json",
-            "rendered_diagram": "doc template --kind board-child, doc append-json, doc blocks, then board import --syntax mermaid",
+            "rendered_diagram": "doc template --kind board-child, doc append-json, doc blocks, then board import --whiteboard-id <whiteboard_id> --syntax mermaid",
             "not_direct_docx": "diagram block has diagram_type but no Mermaid source field and is not writable through public docx OpenAPI"
         },
         "local_writer": [

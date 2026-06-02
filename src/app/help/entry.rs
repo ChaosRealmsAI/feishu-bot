@@ -82,6 +82,7 @@ document permissions.
 
 pub(in crate::app) const SETUP_AFTER_HELP: &str = r#"AI-safe setup automation:
   feishu-bot setup plan
+  feishu-bot setup quickstart --no-wiki-bot
   feishu-bot setup quickstart --open-browser
   feishu-bot setup auto --open-browser --json
   feishu-bot setup open-scopes --group office --browser
@@ -94,7 +95,8 @@ bot to FEISHU_WIKI_SPACE_ID using a user token. OAuth authorization still
 requires the signed-in human account to approve in the browser and paste the
 redirect code into `feishu-bot oauth token`.
 
-Use `setup quickstart` or `scripts/feishu-bot-setup.sh` for the normal
+Use `setup quickstart --no-wiki-bot` for a safe first read-only pass. Use
+`setup quickstart --open-browser` or `scripts/feishu-bot-setup.sh` for the normal
 one-human-plus-AI office profile. It returns the exact next commands for
 permission grant, OAuth token saving, Wiki bot membership, project bootstrap,
 progress updates, inbox polling, and search. Use `setup auto` when an AI agent
@@ -107,8 +109,8 @@ pub(in crate::app) const DOGFOOD_AFTER_HELP: &str = r##"AI-safe dogfood workflow
   feishu-bot dogfood publish --title "能力演示" --content "# Demo"
   feishu-bot dogfood publish --title "HTML 演示" --content-type html --file ./demo.html
   feishu-bot dogfood publish --title "非 Wiki 草稿" --file ./demo.md --no-wiki
-  feishu-bot dogfood verify
   feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
+  feishu-bot dogfood verify --profile all --include-response
   feishu-bot dogfood verify --module calendar --module task --include-response
   feishu-bot dogfood verify --profile enterprise --include-response
   feishu-bot dogfood verify --write --module doc --module base --module task

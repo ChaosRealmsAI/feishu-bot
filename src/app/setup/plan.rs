@@ -186,7 +186,7 @@ pub(super) fn setup_next_actions(values: &HashMap<String, String>) -> Vec<String
         actions.push("Set FEISHU_WIKI_SPACE_ID if reports should default to Wiki.".to_string());
     }
     if actions.is_empty() {
-        actions.push("Run `feishu-bot setup quickstart --open-browser`, approve scopes if needed, then run `feishu-bot dogfood verify --include-response`.".to_string());
+        actions.push("Run `feishu-bot setup quickstart --no-wiki-bot` for a safe read-only plan, use `--open-browser` only after confirming the intended account, then run `feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json`.".to_string());
     }
     actions
 }

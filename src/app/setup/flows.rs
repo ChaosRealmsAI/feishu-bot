@@ -15,7 +15,7 @@ pub(super) fn run_setup_plan(args: SetupPlanArgs) -> Result<Value> {
             "oauth": setup_oauth_plan(&values),
             "wiki_bot": setup_wiki_bot_plan(&values),
             "browser": setup_browser_plan(),
-            "recommended_auto": "feishu-bot setup quickstart --open-browser",
+            "recommended_auto": "feishu-bot setup quickstart --no-wiki-bot",
             "next_actions": setup_next_actions(&values),
         }
     }))
@@ -48,7 +48,7 @@ pub(super) fn run_setup_open_scopes(args: SetupOpenScopesArgs) -> Result<Value> 
             "system_open": system_open,
             "next_actions": [
                 "Approve the scopes in Feishu Open Platform if the browser opened successfully.",
-                "Then run `feishu-bot setup quickstart` or `feishu-bot dogfood verify --include-response`."
+                "Then run `feishu-bot setup quickstart --no-wiki-bot` or `feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json`."
             ],
         }
     }))

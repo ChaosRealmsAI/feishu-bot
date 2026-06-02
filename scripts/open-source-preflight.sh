@@ -42,6 +42,7 @@ patterns=(
   '"(tenant_access_token|user_access_token|refresh_token|app_secret|client_secret)"[[:space:]]*:[[:space:]]*"[A-Za-z0-9._~+/=-]{16,}"'
   'https://[^[:space:]"'\'']*\.feishu\.cn/(docx|wiki|base|docs|drive|folder)/[A-Za-z0-9]'
   '(^|[^A-Za-z0-9_])(oc_|ou_|cli_|u_|r_|wik|bascn|tbl)[A-Za-z0-9]{12,}'
+  '(^|[^A-Za-z0-9_])(om_|doxcn|docx_|file_v2_|shtcn|rec|fld)[A-Za-z0-9]{12,}'
 )
 
 tmp_file="$(mktemp)"

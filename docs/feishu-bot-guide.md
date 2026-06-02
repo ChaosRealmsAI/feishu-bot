@@ -43,7 +43,8 @@ feishu-bot --help
 feishu-bot ai
 feishu-bot manifest
 feishu-bot doctor
-feishu-bot setup quickstart --open-browser
+feishu-bot setup plan
+feishu-bot setup quickstart --no-wiki-bot
 feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
 

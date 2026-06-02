@@ -12,7 +12,7 @@ feishu-bot ai
 feishu-bot manifest
 feishu-bot doctor
 feishu-bot setup plan
-feishu-bot setup quickstart --open-browser
+feishu-bot setup quickstart --no-wiki-bot
 feishu-bot office --help
 feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
@@ -55,6 +55,7 @@ Use setup before office/dogfood on a new account:
 
 ```bash
 feishu-bot setup plan --json
+feishu-bot setup quickstart --no-wiki-bot --json
 feishu-bot setup quickstart --open-browser --json
 scripts/feishu-bot-setup.sh --project "AI Project" --open-browser
 feishu-bot setup open-scopes --group office --browser --json
@@ -92,8 +93,9 @@ Use two layers deliberately:
 
 1. Run the relevant help command before using an unfamiliar module.
 2. Start with read-only/local-only probes: `feishu-bot setup plan --json`,
-   `feishu-bot office list --json`, `feishu-bot office bootstrap --dry-run`, and
-   `feishu-bot office report --dry-run`.
+   `feishu-bot office list --json`,
+   `feishu-bot office bootstrap --project "AI Project" --dry-run --json`, and
+   `feishu-bot office report --project "AI Project" --title "Capability Demo" --file demo.md --dry-run --json`.
 3. Prefer `feishu-bot office ...` for normal project work.
 4. Run `feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json`
    before claiming the normal office loop works. Run

@@ -15,6 +15,8 @@ include = [
   "Cargo.lock",
   "LICENSE",
   "README.md",
+  "SECURITY.md",
+  "CONTRIBUTING.md",
   ".env.example",
   "docs/**",
   "private/.env.example",

@@ -74,14 +74,37 @@ pub(super) fn build_manifest() -> Result<Value> {
     let scope_values: Vec<Value> = scope_groups("all")?
         .into_iter()
         .map(|(name, scopes)| {
+            let tenant_grant_url = format!(
+                "https://open.feishu.cn/app/{}/auth?q={}&op_from=feishu-bot&token_type=tenant",
+                app_id,
+                scopes.join(",")
+            );
+            let user_grant_url = format!(
+                "https://open.feishu.cn/app/{}/auth?q={}&op_from=feishu-bot&token_type=user",
+                app_id,
+                scopes.join(",")
+            );
+            let recommended_token_type = if name == "user-token" {
+                "user"
+            } else {
+                "tenant"
+            };
+            let grant_url = if recommended_token_type == "user" {
+                &user_grant_url
+            } else {
+                &tenant_grant_url
+            };
             json!({
                 "group": name,
                 "scopes": scopes,
-                "grant_url": format!(
-                    "https://open.feishu.cn/app/{}/auth?q={}&op_from=feishu-bot&token_type=tenant",
-                    app_id,
-                    scopes.join(",")
-                ),
+                "recommended_token_type": recommended_token_type,
+                "grant_url": grant_url,
+                "tenant_grant_url": tenant_grant_url,
+                "user_grant_url": user_grant_url,
+                "grant_commands": {
+                    "tenant": format!("feishu-bot scopes --group {name} --token-type tenant"),
+                    "user": format!("feishu-bot scopes --group {name} --token-type user"),
+                },
             })
         })
         .collect();
@@ -96,7 +119,7 @@ pub(super) fn build_manifest() -> Result<Value> {
         "purpose": "AI-ready local Feishu Bot automation for Feishu/Lark office workflows.",
         "layers": {
             "workflow_modules": ["office", "dogfood"],
-            "setup_modules": ["setup", "oauth", "bot", "scopes", "browser"],
+            "setup_modules": ["setup", "oauth", "token", "bot", "scopes", "browser"],
             "atomic_modules": ["message", "chat", "doc", "wiki", "base", "task", "drive", "calendar", "search", "sheet", "approval", "board", "contact", "directory", "vc", "minutes", "okr", "attendance", "mail", "corehr", "helpdesk", "hire", "notify", "api"],
             "guidance": "Use workflow modules for normal AI office loops; drop to atomic modules for exact OpenAPI operations, troubleshooting, or unsupported workflow edges."
         },
@@ -130,11 +153,11 @@ pub(super) fn build_manifest() -> Result<Value> {
             "feishu-bot --help",
             "feishu-bot bot info",
             "feishu-bot setup plan",
-            "feishu-bot setup quickstart --open-browser",
+            "feishu-bot setup quickstart --no-wiki-bot",
             "feishu-bot office --help",
             "feishu-bot office list",
             "feishu-bot office bootstrap --project \"AI Project\" --dry-run",
-            "feishu-bot dogfood verify",
+            "feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json",
             "feishu-bot office bootstrap --project \"AI Project\" --user \"$FEISHU_USER_ID\" --space-id \"$FEISHU_WIKI_SPACE_ID\" --send-summary",
             "feishu-bot office progress --project \"AI Project\" --title \"Progress\" --summary \"Current status\"",
             "feishu-bot office report --project \"AI Project\" --title \"Capability Demo\" --file demo.md --base-record --pin",
@@ -169,9 +192,9 @@ pub(super) fn build_manifest() -> Result<Value> {
             "Prefer typed commands when present.",
             "Run the relevant --help command before using an unfamiliar module.",
             "Use --json for machine parsing of API responses.",
-            "If Feishu returns 99991672, inspect permission_violations and open the grant_url from feishu-bot scopes.",
+            "If Feishu returns 99991672, inspect permission_violations and use manifest.scopes[].grant_commands or feishu-bot scopes with the right --token-type.",
             "A help command only proves discoverability; it does not prove the Feishu capability works.",
-            "For read capability, run dogfood verify or a harmless read/list command and inspect JSON status.",
+            "For office readiness, run dogfood verify --profile office --auto-refresh-user-token --strict --json; for one module, run dogfood verify --module <module> --json or a harmless read/list command and inspect JSON status.",
             "For write capability, create the real Feishu object, read it back, and inspect returned readback fields before claiming success."
         ]
     }))

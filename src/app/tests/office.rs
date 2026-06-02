@@ -380,6 +380,7 @@ fn manifest_exposes_office_workflow_layer() {
         .and_then(Value::as_array)
         .unwrap();
     assert!(setup_modules.iter().any(|item| item == "bot"));
+    assert!(setup_modules.iter().any(|item| item == "token"));
     let atomic_modules = manifest
         .pointer("/layers/atomic_modules")
         .and_then(Value::as_array)
@@ -412,7 +413,47 @@ fn manifest_exposes_office_workflow_layer() {
         .unwrap()
         .iter()
         .any(|command| command.as_str().unwrap().contains("--dry-run")));
+    let first_commands = manifest
+        .get("first_commands")
+        .and_then(Value::as_array)
+        .unwrap();
+    assert!(first_commands.iter().any(|command| command
+        .as_str()
+        .unwrap()
+        .contains("--profile office --auto-refresh-user-token --strict --json")));
+    assert!(first_commands
+        .iter()
+        .any(|command| command.as_str().unwrap().contains("--no-wiki-bot")));
+    assert!(!first_commands
+        .iter()
+        .any(|command| command.as_str().unwrap().contains("--open-browser")));
+    assert!(!first_commands
+        .iter()
+        .any(|command| command.as_str() == Some("feishu-bot dogfood verify")));
     let modules = manifest.get("modules").and_then(Value::as_array).unwrap();
+    let token = modules
+        .iter()
+        .find(|module| module.get("name").and_then(Value::as_str) == Some("token"))
+        .unwrap();
+    assert_eq!(token["command"], "feishu-bot token");
+    assert_eq!(token["layer"], "setup");
+    assert!(token["known_permission_edges"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|edge| edge.as_str().unwrap().contains("--raw prints")));
+    let dogfood = modules
+        .iter()
+        .find(|module| module.get("name").and_then(Value::as_str) == Some("dogfood"))
+        .unwrap();
+    let dogfood_examples = dogfood["examples"].as_array().unwrap();
+    assert!(dogfood_examples.iter().any(|example| example
+        .as_str()
+        .unwrap()
+        .contains("--profile office --auto-refresh-user-token --strict --json")));
+    assert!(!dogfood_examples
+        .iter()
+        .any(|example| example.as_str() == Some("feishu-bot dogfood verify")));
     let office = modules
         .iter()
         .find(|module| module.get("name").and_then(Value::as_str) == Some("office"))
@@ -443,5 +484,33 @@ fn manifest_exposes_office_workflow_layer() {
         .as_array()
         .unwrap()
         .iter()
+        .any(|example| example.as_str().unwrap().contains("--no-wiki-bot")));
+    assert!(setup["examples"]
+        .as_array()
+        .unwrap()
+        .iter()
         .any(|example| example.as_str().unwrap().contains("setup auto")));
+    let board = modules
+        .iter()
+        .find(|module| module.get("name").and_then(Value::as_str) == Some("board"))
+        .unwrap();
+    assert!(board["examples"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|example| example.as_str().unwrap().contains("--whiteboard-id")));
+    let scopes = manifest.get("scopes").and_then(Value::as_array).unwrap();
+    let user_token_scopes = scopes
+        .iter()
+        .find(|group| group.get("group").and_then(Value::as_str) == Some("user-token"))
+        .unwrap();
+    assert_eq!(user_token_scopes["recommended_token_type"], "user");
+    assert!(user_token_scopes["grant_url"]
+        .as_str()
+        .unwrap()
+        .contains("token_type=user"));
+    assert!(user_token_scopes["grant_commands"]["user"]
+        .as_str()
+        .unwrap()
+        .contains("--token-type user"));
 }

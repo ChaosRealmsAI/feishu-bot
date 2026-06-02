@@ -168,8 +168,7 @@ feishu-bot manifest
 feishu-bot --help
 feishu-bot setup --help
 feishu-bot setup plan
-feishu-bot setup quickstart --open-browser
-feishu-bot dogfood verify
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 feishu-bot oauth --help
 feishu-bot scopes --group all
 feishu-bot doc capabilities
@@ -220,6 +219,14 @@ object/message:
 ```bash
 feishu-bot office progress --project "demo" --title "status" --summary "ok"
 feishu-bot dogfood publish --title "Bot smoke" --file ./demo.md
+```
+
+First-run setup that may operate the signed-in browser or add the app bot to a
+Wiki space is intentionally separate from quick checks:
+
+```bash
+feishu-bot setup quickstart --no-wiki-bot
+feishu-bot setup quickstart --open-browser
 ```
 
 Install it as a normal CLI:

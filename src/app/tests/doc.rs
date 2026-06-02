@@ -35,7 +35,7 @@ fn emits_doc_templates_for_raw_block_writing() {
     let matrix = doc_template(DocTemplateKind::SupportMatrix);
     assert_eq!(
             matrix["mermaid"]["rendered_diagram"],
-            "doc template --kind board-child, doc append-json, doc blocks, then board import --syntax mermaid"
+            "doc template --kind board-child, doc append-json, doc blocks, then board import --whiteboard-id <whiteboard_id> --syntax mermaid"
         );
     assert!(matrix["not_writable_by_public_docx_openapi"]["mindnote"].is_string());
 

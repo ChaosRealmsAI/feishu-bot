@@ -31,10 +31,10 @@ feishu-bot ai
 feishu-bot manifest
 feishu-bot doctor
 feishu-bot setup plan
-feishu-bot setup quickstart --open-browser
+feishu-bot setup quickstart --no-wiki-bot
 feishu-bot office --help
 feishu-bot office list --json
-feishu-bot dogfood verify --json
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
 
 If credentials live outside the repo:
@@ -47,6 +47,7 @@ For first-run permission setup:
 
 ```bash
 feishu-bot setup plan --json
+feishu-bot setup quickstart --no-wiki-bot --json
 feishu-bot setup quickstart --open-browser --json
 scripts/feishu-bot-setup.sh --project "<project_name>" --open-browser
 feishu-bot setup open-scopes --group office --browser --json
