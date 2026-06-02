@@ -60,7 +60,8 @@ The bot is split by module instead of keeping all logic in one file:
   workflows, local dry-run/list helpers, document writers, resource writers,
   formatting, links, readback, and state helpers. `src/app/office/resources/`
   splits bootstrap resources by chat, Wiki, Base, chat tabs, and summary/pin
-  messages.
+  messages. `src/app/office/local/` splits API-free list, dry-run, status,
+  cleanup, and local dispatch helpers.
 - `src/app/client.rs` contains the Feishu HTTP client type; `src/app/client/`
   contains token/auth/request execution plus document, IM/chat, Board, Drive,
   and Minutes convenience methods. `src/app/client/request/` splits token/auth,
