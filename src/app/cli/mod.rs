@@ -2,6 +2,7 @@
 
 use super::*;
 
+mod attendance;
 mod drive;
 mod minutes;
 mod office;
@@ -23,6 +24,7 @@ mod search;
 mod setup;
 mod vc;
 
+pub(super) use attendance::*;
 pub(super) use drive::*;
 pub(super) use minutes::*;
 pub(super) use office::*;

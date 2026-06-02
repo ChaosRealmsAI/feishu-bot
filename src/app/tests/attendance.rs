@@ -1,6 +1,56 @@
 use super::super::*;
 
 #[test]
+fn parses_attendance_commands_after_cli_split() {
+    let group = Cli::parse_from([
+        "feishu",
+        "attendance",
+        "group",
+        "list",
+        "--page-size",
+        "20",
+        "--page-token",
+        "next",
+    ]);
+    match group.command {
+        Commands::Attendance(AttendanceCommand::Group(AttendanceGroupCommand::List(args))) => {
+            assert_eq!(args.page_size, 20);
+            assert_eq!(args.page_token.as_deref(), Some("next"));
+        }
+        _ => panic!("expected attendance group list"),
+    }
+
+    let flow = Cli::parse_from([
+        "feishu",
+        "attendance",
+        "flow",
+        "query",
+        "--user-id",
+        "u1",
+        "--from-ts",
+        "1760000000",
+        "--to-ts",
+        "1760086400",
+        "--include-terminated-user",
+        "--employee-type",
+        "employee-no",
+    ]);
+    match flow.command {
+        Commands::Attendance(AttendanceCommand::Flow(AttendanceFlowCommand::Query(args))) => {
+            assert_eq!(args.user_ids, vec!["u1"]);
+            assert_eq!(args.check_time_from.as_deref(), Some("1760000000"));
+            assert_eq!(args.check_time_to.as_deref(), Some("1760086400"));
+            assert!(args.include_terminated_user);
+            assert!(matches!(
+                args.employee_type,
+                AttendanceEmployeeTypeArg::EmployeeNo
+            ));
+        }
+        _ => panic!("expected attendance flow query"),
+    }
+}
+
+#[test]
 fn builds_attendance_queries_and_bodies() {
     assert_eq!(
         AttendanceEmployeeTypeArg::EmployeeId.as_api_value(),
