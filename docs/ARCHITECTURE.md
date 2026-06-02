@@ -7,7 +7,10 @@ src/lib.rs           Shared application entrypoint and JSON error handling.
 src/bin/feishu-bot.rs Primary command entrypoint.
 src/bin/feishuBot.rs CamelCase compatibility alias.
 src/bin/feishu.rs    Legacy compatibility alias.
-src/app/mod.rs       Application dispatcher and module wiring.
+src/app/mod.rs       App module wiring and outer no-config/no-API command dispatch.
+src/app/dispatch.rs  Configured API command routing.
+src/app/doctor.rs    Masked config and tenant-token diagnostic output.
+src/app/response.rs  Feishu JSON and binary response parsing.
 src/app/common.rs    Shared helper re-exports.
 src/app/common/      Query/path helpers, content and key-value input readers, JSON body helpers, and ID/content-type argument resolvers.
 src/app/approval.rs  Approval command runner.
@@ -118,4 +121,5 @@ Module rules:
 
 Modules still in `app/mod.rs`:
 
-- Top-level command dispatch, doctor output, and response readers.
+- Module wiring, CLI parsing, and the outer dispatch for commands that do not
+  need app credentials.

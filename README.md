@@ -48,6 +48,10 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/lib.rs` owns the shared application entrypoint and JSON error handling.
 - `src/bin/feishu-bot.rs` is the primary command entrypoint.
 - `src/bin/feishuBot.rs` and `src/bin/feishu.rs` are compatibility aliases.
+- `src/app/mod.rs` wires the app modules and handles only the outer
+  no-config/no-API command dispatch. `src/app/dispatch.rs` routes configured
+  API commands, `src/app/doctor.rs` prints masked connectivity diagnostics, and
+  `src/app/response.rs` centralizes Feishu JSON/binary response parsing.
 - `src/app/cli/` contains Clap command and argument definitions, split into
   generated parts plus focused workflow submodules such as the office project
   and interaction argument groups.
