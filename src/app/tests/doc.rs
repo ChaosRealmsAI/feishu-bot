@@ -39,6 +39,11 @@ fn emits_doc_templates_for_raw_block_writing() {
         );
     assert!(matrix["not_writable_by_public_docx_openapi"]["mindnote"].is_string());
 
+    let all = doc_template(DocTemplateKind::All);
+    assert!(all["support-matrix"]["local_writer"].is_array());
+    assert_eq!(all["mermaid-code-child"]["children"][0]["block_type"], 14);
+    assert_eq!(all["table-descendant"]["descendants"][1]["block_type"], 31);
+
     let mermaid = doc_template(DocTemplateKind::MermaidCodeChild);
     assert_eq!(mermaid["children"][0]["block_type"], 14);
     assert_eq!(mermaid["children"][0]["code"]["style"]["language"], 1);

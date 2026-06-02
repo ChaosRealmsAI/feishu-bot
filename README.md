@@ -73,7 +73,8 @@ The bot is split by module instead of keeping all logic in one file:
   create/update, tab/menu, and member body/query builders.
 - `src/app/doc.rs` contains docx command execution, media insertion, and raw
   descendant body normalization; `src/app/doc/` contains Markdown/local block
-  mapping helpers, docx media insertion helpers, and raw block templates.
+  mapping helpers, docx media insertion helpers, and AI-ready raw block
+  templates split by support matrix, child blocks, and descendant blocks.
 - `src/app/dogfood.rs` contains dogfood command dispatch plus write/message
   loop probes; `src/app/dogfood/` contains publish execution, read-probe verify
   orchestration, read-probe specs, probe classification, summary aggregation,
