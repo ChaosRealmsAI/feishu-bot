@@ -46,6 +46,7 @@ src/app/dogfood/specs.rs Dogfood read-probe registry and auth/request metadata.
 src/app/dogfood/summary.rs Dogfood probe count, usability, blocked-module, and next-action summaries.
 src/app/drive.rs     Drive command runner.
 src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
+src/app/drive/helpers/ Drive upload, media-extra, import/export task, version/subscription, view-record, and output-file helpers.
 src/app/drive/transfer.rs Drive import/export execution flows.
 src/app/drive/comment.rs Typed Drive comment query/body helpers.
 src/app/drive/permissions.rs Typed Drive permission query/body helpers.
