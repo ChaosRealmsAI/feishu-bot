@@ -1,6 +1,67 @@
 use super::super::*;
 
 #[test]
+fn parses_corehr_commands() {
+    let cli = Cli::try_parse_from([
+        "feishu-bot",
+        "corehr",
+        "department",
+        "search",
+        "--department-id",
+        "dept_1",
+        "--name",
+        "研发",
+        "--manager-id",
+        "emp_1",
+        "--field",
+        "department_name",
+        "--active",
+        "true",
+        "--get-all-children",
+        "--page-size",
+        "20",
+    ])
+    .unwrap();
+    match cli.command {
+        Commands::Corehr(CorehrCommand::Department(CorehrDepartmentCommand::Search(args))) => {
+            assert_eq!(args.department_ids, vec!["dept_1"]);
+            assert_eq!(args.names, vec!["研发"]);
+            assert_eq!(args.manager_ids, vec!["emp_1"]);
+            assert_eq!(args.fields, vec!["department_name"]);
+            assert_eq!(args.active, Some(true));
+            assert!(args.get_all_children);
+            assert_eq!(args.page_size, 20);
+        }
+        _ => panic!("unexpected command"),
+    }
+
+    let cli = Cli::try_parse_from([
+        "feishu-bot",
+        "corehr",
+        "job",
+        "batch-get",
+        "--job-id",
+        "job_1",
+        "--job-code",
+        "JP001",
+        "--field",
+        "job_name",
+        "--user-id-type",
+        "open-id",
+    ])
+    .unwrap();
+    match cli.command {
+        Commands::Corehr(CorehrCommand::Job(CorehrJobCommand::BatchGet(args))) => {
+            assert_eq!(args.job_ids, vec!["job_1"]);
+            assert_eq!(args.job_codes, vec!["JP001"]);
+            assert_eq!(args.fields, vec!["job_name"]);
+            assert!(matches!(args.user_id_type, CorehrUserIdTypeArg::OpenId));
+        }
+        _ => panic!("unexpected command"),
+    }
+}
+
+#[test]
 fn builds_corehr_queries_and_bodies() {
     assert_eq!(
         CorehrUserIdTypeArg::PeopleCorehrId.as_api_value(),

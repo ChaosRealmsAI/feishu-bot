@@ -3,6 +3,7 @@
 use super::*;
 
 mod attendance;
+mod corehr;
 mod drive;
 mod mail;
 mod minutes;
@@ -25,6 +26,7 @@ mod setup;
 mod vc;
 
 pub(super) use attendance::*;
+pub(super) use corehr::*;
 pub(super) use drive::*;
 pub(super) use mail::*;
 pub(super) use minutes::*;
