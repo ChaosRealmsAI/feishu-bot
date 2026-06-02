@@ -80,8 +80,9 @@ src/app/task/custom_field.rs Task custom-field create/update/resource/value/opti
 src/app/task/tasklist.rs Tasklist command execution flows.
 src/app/task/structure_exec.rs Section, custom-field, and attachment command execution flows.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
-src/app/wiki.rs      Wiki/knowledge-space command runner and route checks.
-src/app/wiki/        Typed Wiki request body builders and route-check/write-probe helpers.
+src/app/wiki.rs      Wiki/knowledge-space command runner.
+src/app/wiki/        Typed Wiki request body builders and route-check entrypoint.
+src/app/wiki/route/  Wiki route-check calls, write-probe publishing, recommendation text, and request wrapper.
 src/app/tests.rs     Shared unit-test imports and cross-module tests.
 src/app/tests/       Capability-specific unit-test modules.
 ```
