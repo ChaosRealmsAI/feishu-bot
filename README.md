@@ -149,6 +149,7 @@ The bot is split by module instead of keeping all logic in one file:
 
 See `docs/ARCHITECTURE.md` before adding new Feishu APIs.
 See `docs/DOGFOOD.md` before claiming a capability works.
+See `docs/QUALITY_STATUS.md` before continuing broad refactors.
 See `skills/feishu-bot-office/SKILL.md` for the repeatable AI office workflow.
 
 ## Quick checks
