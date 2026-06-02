@@ -25,8 +25,9 @@ src/app/chat/        Chat create/update, tab/menu, and member body/query builder
 src/app/cli/         Clap command and argument definitions split into generated parts and focused workflow submodules.
 src/app/cli/office.rs Office workflow command enum.
 src/app/cli/office/ Office project/report/voice and interaction/search/cleanup argument definitions.
-src/app/client.rs    Feishu HTTP client, token handling, and generic request helpers.
-src/app/client/      Docx, IM/chat, Board, Drive, and Minutes convenience methods.
+src/app/client.rs    Feishu HTTP client type and constructor.
+src/app/client/      Token/auth/request execution plus Docx, IM/chat, Board, Drive, and Minutes convenience methods.
+src/app/client/request.rs Generic JSON, binary, multipart, tenant-token, user-token, and Helpdesk-auth request helpers.
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
 src/app/doc.rs       Docx command runner, media insertion, and raw descendant body normalization.
 src/app/doc/         Markdown/local block mapping helpers, Docx media insertion helpers, and raw block templates.
