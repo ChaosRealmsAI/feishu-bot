@@ -27,6 +27,7 @@ src/app/dogfood.rs   Dogfood publish runner plus write/message loop probes.
 src/app/dogfood/     Read-probe verify orchestration, probe classification, summaries, and AI remediation helpers.
 src/app/drive.rs     Drive command runner.
 src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
+src/app/drive/transfer.rs Drive import/export execution flows.
 src/app/drive/comment.rs Typed Drive comment query/body helpers.
 src/app/drive/permissions.rs Typed Drive permission query/body helpers.
 src/app/help.rs      AI help entrypoint and re-exports.
