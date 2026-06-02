@@ -65,7 +65,8 @@ The bot is split by module instead of keeping all logic in one file:
   role, and member helper builders.
 - `src/app/board.rs` contains Board/whiteboard execution, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
-- `src/app/chat.rs` contains Chat execution, chat create/list/search/get/delete, member operations, and chat member body builders.
+- `src/app/chat.rs` contains Chat execution; `src/app/chat/` contains chat
+  create/update, tab/menu, and member body/query builders.
 - `src/app/doc.rs` contains docx command execution, media insertion, and raw
   descendant body normalization; `src/app/doc/` contains Markdown/local block
   mapping helpers, docx media insertion helpers, and raw block templates.

@@ -15,7 +15,8 @@ src/app/base.rs      Base/Bitable command runner.
 src/app/base/        Base media, record, reference, schema, field/list, search, view, role, and member helper builders.
 src/app/board.rs     Board/whiteboard command runner, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 src/app/calendar.rs  Calendar command runner and Calendar-specific body builders.
-src/app/chat.rs      Chat command runner, chat create/list/search/get/delete, member operations, and chat member body builders.
+src/app/chat.rs      Chat command runner.
+src/app/chat/        Chat create/update, tab/menu, and member body/query builders.
 src/app/cli/         Clap command and argument definitions split into small parts.
 src/app/client.rs    Feishu HTTP client and token handling.
 src/app/client/      Docx document create/append/read helper methods plus Drive/IM/Minutes upload/download helpers.
