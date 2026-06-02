@@ -91,7 +91,6 @@ impl Config {
 }
 
 pub(super) fn load_env_values() -> Result<HashMap<String, String>> {
-    let mut values = HashMap::new();
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let cwd = std::env::current_dir().context("current dir")?;
     let mut paths = vec![manifest_dir.join(".env")];
@@ -102,13 +101,21 @@ pub(super) fn load_env_values() -> Result<HashMap<String, String>> {
     if let Ok(path) = std::env::var("FEISHU_ENV_FILE").or_else(|_| std::env::var("LARK_ENV_FILE")) {
         paths.push(PathBuf::from(path));
     }
+    load_env_values_from_sources(paths, std::env::vars())
+}
+
+pub(super) fn load_env_values_from_sources(
+    paths: impl IntoIterator<Item = PathBuf>,
+    env_vars: impl IntoIterator<Item = (String, String)>,
+) -> Result<HashMap<String, String>> {
+    let mut values = HashMap::new();
     for path in paths {
         if path.exists() {
             load_dotenv_file(&path, &mut values)?;
         }
     }
-    for (key, value) in std::env::vars() {
-        values.insert(key, value);
+    for (key, value) in env_vars {
+        insert_env_value(&mut values, key, value);
     }
     Ok(values)
 }
@@ -116,9 +123,16 @@ pub(super) fn load_env_values() -> Result<HashMap<String, String>> {
 fn load_dotenv_file(path: &Path, values: &mut HashMap<String, String>) -> Result<()> {
     for item in dotenvy::from_path_iter(path).with_context(|| format!("read {}", path.display()))? {
         let (key, value) = item.with_context(|| format!("parse {}", path.display()))?;
-        values.insert(key, value);
+        insert_env_value(values, key, value);
     }
     Ok(())
+}
+
+fn insert_env_value(values: &mut HashMap<String, String>, key: String, value: String) {
+    if value.is_empty() {
+        return;
+    }
+    values.insert(key, value);
 }
 
 pub(super) fn get_any(values: &HashMap<String, String>, keys: &[&str]) -> Option<String> {

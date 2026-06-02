@@ -3,6 +3,7 @@ mod attendance;
 mod base;
 mod board;
 mod calendar;
+mod config;
 mod corehr;
 mod directory;
 mod doc;
