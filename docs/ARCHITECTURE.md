@@ -64,6 +64,8 @@ src/app/people/      Directory, CoreHR, and Hire command runners, query builders
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
 src/app/scopes.rs    Open Platform scope filtering and grant URL printing.
 src/app/scopes/      Static Open Platform scope group registry.
+src/app/scopes/groups.rs Scope group registry entrypoint and stable all-groups ordering.
+src/app/scopes/groups/ Static scope groups split by identity, content, and work domains.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
 src/app/setup.rs     Setup automation command runner, doctor probes, Wiki bot grant, and browser open helpers.
 src/app/setup/       First-run plan, scope grant, quickstart, and next-action builders.

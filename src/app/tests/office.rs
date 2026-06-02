@@ -280,7 +280,34 @@ fn resolves_office_scope_profile() {
         .copied()
         .collect::<std::collections::BTreeSet<_>>();
     assert_eq!(all.len(), 23);
-    assert_eq!(all_names.first().copied(), Some("user-token"));
+    assert_eq!(
+        all_names,
+        vec![
+            "user-token",
+            "im",
+            "contact",
+            "directory",
+            "doc",
+            "board",
+            "base",
+            "task",
+            "drive",
+            "permission",
+            "calendar",
+            "vc",
+            "minutes",
+            "search",
+            "okr",
+            "attendance",
+            "mail",
+            "corehr",
+            "helpdesk",
+            "hire",
+            "wiki",
+            "sheet",
+            "approval",
+        ]
+    );
     assert_eq!(unique_names.len(), all_names.len());
     assert!(all_names.contains(&"permission"));
 
