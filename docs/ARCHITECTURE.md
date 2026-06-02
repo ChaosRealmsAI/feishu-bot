@@ -51,7 +51,8 @@ src/app/output/      Feishu block and code-language label maps for output summar
 src/app/people.rs    Contact, Directory, and CoreHR command runners and body builders.
 src/app/people/      Directory, CoreHR, and Hire command runners, query builders, body builders, and ID type helpers.
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
-src/app/scopes.rs    Open Platform scope groups and grant URL printing.
+src/app/scopes.rs    Open Platform scope filtering and grant URL printing.
+src/app/scopes/      Open Platform scope group registry.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
 src/app/setup.rs     Setup automation command runner, doctor probes, Wiki bot grant, and browser open helpers.
 src/app/setup/       First-run plan, scope grant, quickstart, and next-action builders.
