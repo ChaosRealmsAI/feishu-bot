@@ -4,19 +4,20 @@ use super::*;
 
 mod helpers;
 mod media;
+mod permission_exec;
 mod record_exec;
 mod records;
 mod reference;
 mod schema;
 mod schema_exec;
 
-use helpers::base_role_path;
 pub(super) use helpers::{
     build_base_field_list_query, build_base_member_add_body, build_base_member_batch_body,
     build_base_record_search_body, build_base_role_write_body, build_base_view_create_body,
     build_base_view_update_body,
 };
 pub(super) use media::*;
+use permission_exec::{run_base_member_command, run_base_role_command};
 use record_exec::run_base_record_command;
 pub(super) use records::*;
 pub(super) use reference::*;
@@ -168,109 +169,8 @@ pub(super) async fn run_base_command(
             )?;
             api.patch_json(&path, &[], body).await?
         }
-        BaseCommand::Role(BaseRoleCommand::List(args)) => {
-            let path = base_role_path(args.api_version, &args.app_token, None);
-            let mut query = vec![("page_size".to_string(), args.page_size.to_string())];
-            push_query_opt(&mut query, "page_token", args.page_token);
-            api.get_json(&path, &query).await?
-        }
-        BaseCommand::Role(BaseRoleCommand::Create(args)) => {
-            let path = base_role_path(args.api_version, &args.app_token, None);
-            let body = build_base_role_write_body(
-                args.name,
-                args.table_roles_json,
-                args.block_roles_json,
-                args.base_rule_json,
-                args.allow_base_complex_edit,
-                args.allow_copy,
-                args.body_json,
-                args.file,
-                args.stdin,
-            )?;
-            api.post_json(&path, &[], body).await?
-        }
-        BaseCommand::Role(BaseRoleCommand::Update(args)) => {
-            let path = format!("/bitable/v1/apps/{}/roles/{}", args.app_token, args.role_id);
-            let body = build_base_role_write_body(
-                args.name,
-                args.table_roles_json,
-                args.block_roles_json,
-                None,
-                None,
-                None,
-                args.body_json,
-                args.file,
-                args.stdin,
-            )?;
-            api.put_json(&path, &[], body).await?
-        }
-        BaseCommand::Role(BaseRoleCommand::Delete(args)) => {
-            let path = format!("/bitable/v1/apps/{}/roles/{}", args.app_token, args.role_id);
-            api.delete_json(&path, &[], None).await?
-        }
-        BaseCommand::Member(BaseMemberCommand::List(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/roles/{}/members",
-                args.app_token, args.role_id
-            );
-            let mut query = vec![("page_size".to_string(), args.page_size.to_string())];
-            push_query_opt(&mut query, "page_token", args.page_token);
-            api.get_json(&path, &query).await?
-        }
-        BaseCommand::Member(BaseMemberCommand::Add(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/roles/{}/members",
-                args.app_token, args.role_id
-            );
-            let body =
-                build_base_member_add_body(args.member_id, args.body_json, args.file, args.stdin)?;
-            api.post_json(
-                &path,
-                &[("member_id_type".to_string(), args.member_id_type)],
-                body,
-            )
-            .await?
-        }
-        BaseCommand::Member(BaseMemberCommand::Delete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/roles/{}/members/{}",
-                args.app_token, args.role_id, args.member_id
-            );
-            api.delete_json(
-                &path,
-                &[("member_id_type".to_string(), args.member_id_type)],
-                None,
-            )
-            .await?
-        }
-        BaseCommand::Member(BaseMemberCommand::BatchAdd(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/roles/{}/members/batch_create",
-                args.app_token, args.role_id
-            );
-            let body = build_base_member_batch_body(
-                args.members,
-                args.member_list_json,
-                args.body_json,
-                args.file,
-                args.stdin,
-            )?;
-            api.post_json(&path, &[], body).await?
-        }
-        BaseCommand::Member(BaseMemberCommand::BatchDelete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/roles/{}/members/batch_delete",
-                args.app_token, args.role_id
-            );
-            let body = build_base_member_batch_body(
-                args.members,
-                args.member_list_json,
-                args.body_json,
-                args.file,
-                args.stdin,
-            )?;
-            api.delete_json(&path, &[], Some(body)).await?
-        }
+        BaseCommand::Role(command) => run_base_role_command(api, command).await?,
+        BaseCommand::Member(command) => run_base_member_command(api, command).await?,
     };
     print_response(raw_json, "base operation completed", data)
 }
