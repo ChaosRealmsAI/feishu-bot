@@ -74,6 +74,8 @@ src/app/oauth/       OAuth authorization URL/PKCE helpers, token exchange/refres
 src/app/office.rs    AI-first project dispatcher plus bootstrap workflow.
 src/app/office/      Office report/progress workflows, interaction/status workflows, local dry-run/list helpers, document writers, resource writers, formatting, links, readback, and state helpers.
 src/app/office/docs.rs Office Wiki/docx document creation helpers.
+src/app/office/resources.rs Office bootstrap resource entrypoint and re-exports.
+src/app/office/resources/ Office chat, Wiki index, Base log, chat tab, summary, and pin resource flows.
 src/app/office/report.rs Office report and progress workflow execution.
 src/app/output.rs    Human-readable output helper re-exports.
 src/app/output/      Generic response summaries, document block/code output printers, and Feishu block/code label maps.

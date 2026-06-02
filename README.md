@@ -58,7 +58,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/office.rs` contains the AI-first dispatcher plus bootstrap workflow;
   `src/app/office/` contains report/progress workflows, interaction/status
   workflows, local dry-run/list helpers, document writers, resource writers,
-  formatting, links, readback, and state helpers.
+  formatting, links, readback, and state helpers. `src/app/office/resources/`
+  splits bootstrap resources by chat, Wiki, Base, chat tabs, and summary/pin
+  messages.
 - `src/app/client.rs` contains the Feishu HTTP client type; `src/app/client/`
   contains token/auth/request execution plus document, IM/chat, Board, Drive,
   and Minutes convenience methods. `src/app/client/request/` splits token/auth,
