@@ -200,7 +200,6 @@ feishu-bot office --help
 feishu-bot office list
 feishu-bot office bootstrap --project "demo" --dry-run
 feishu-bot office report --project "demo" --title "dry run" --content "hello" --dry-run
-feishu-bot office progress --project "demo" --title "status" --summary "ok"
 feishu-bot office status --project "demo"
 feishu-bot --json manifest --module base
 feishu-bot doc preview --file ./docs/feishu-bot-guide.md
@@ -212,6 +211,7 @@ real Feishu data and should only be used when you intentionally want a smoke
 object/message:
 
 ```bash
+feishu-bot office progress --project "demo" --title "status" --summary "ok"
 feishu-bot dogfood publish --title "Bot smoke" --file ./demo.md
 ```
 

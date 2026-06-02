@@ -24,6 +24,10 @@ feishu-bot --json manifest
 feishu-bot --json dogfood verify --module message --include-response
 ```
 
+For automation, read `manifest.workflow_layer` first. It contains the default
+workflow command, verification command, safe local probes, and preferred daily
+commands so an AI agent does not need to infer the operating loop from prose.
+
 ## Environment
 
 The CLI reads configuration from:
@@ -51,7 +55,7 @@ Use setup before office/dogfood on a new account:
 ```bash
 feishu-bot setup plan --json
 feishu-bot setup quickstart --open-browser --json
-scripts/feishu-bot-setup.sh --project "AI Project"
+scripts/feishu-bot-setup.sh --project "AI Project" --open-browser
 feishu-bot setup open-scopes --group office --browser --json
 feishu-bot setup wiki-bot --auth user --json
 ```
@@ -65,6 +69,11 @@ passed to `feishu-bot oauth token --save-env`.
 `setup quickstart` is the recommended first-run entry. It returns the exact
 grant, OAuth, Wiki-bot, bootstrap, progress, inbox, and search commands for the
 common one-human-plus-AI workflow.
+
+`setup auto` runs the safe setup checks and returns machine-readable next
+actions in one command. `scripts/feishu-bot-setup.sh` opens browser URLs only
+when `--open-browser` or `FEISHU_BOT_SETUP_OPEN_BROWSER=1` is set; confirm the
+intended Chrome/Feishu account first on multi-account machines.
 
 ## Capability Layers
 

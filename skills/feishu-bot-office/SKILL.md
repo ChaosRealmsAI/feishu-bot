@@ -48,7 +48,7 @@ For first-run permission setup:
 ```bash
 feishu-bot setup plan --json
 feishu-bot setup quickstart --open-browser --json
-scripts/feishu-bot-setup.sh --project "<project_name>"
+scripts/feishu-bot-setup.sh --project "<project_name>" --open-browser
 feishu-bot setup open-scopes --group office --browser --json
 feishu-bot setup wiki-bot --auth user --json
 feishu-bot setup auto --open-browser --json
@@ -57,6 +57,9 @@ feishu-bot setup auto --open-browser --json
 `setup` can open Feishu grant pages through the browser bridge and can add the
 current app bot to the configured Wiki space. Human approval and OAuth redirect
 code handoff are still explicit browser steps.
+The setup shell script opens browser URLs only when `--open-browser` or
+`FEISHU_BOT_SETUP_OPEN_BROWSER=1` is set; confirm the intended Chrome/Feishu
+account before enabling it on multi-account machines.
 
 ## Project Workspace
 

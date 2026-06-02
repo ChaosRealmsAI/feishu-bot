@@ -43,10 +43,10 @@ Read-only diagnostics:
   feishu-bot office list
   feishu-bot office bootstrap --project "demo" --dry-run
   feishu-bot office report --project "demo" --title "dry run" --content "hello" --dry-run
-  feishu-bot office progress --project "demo" --title "status" --summary "ok"
   feishu-bot --json manifest --module base
 
 Write smoke sequence; creates real Feishu data:
+  feishu-bot office progress --project "demo" --title "status" --summary "ok"
   feishu-bot message send --to "$FEISHU_USER_ID" --text "hello from feishu-bot"
   feishu-bot doc create --title "Bot smoke" --writer official --content $'# Smoke\n\n- docx ok'
   feishu-bot base create --name "Bot Base smoke"
@@ -57,8 +57,8 @@ pub(in crate::app) const OAUTH_AFTER_HELP: &str = r#"AI-safe user token workflow
   feishu-bot oauth url --scope offline_access --scope auth:user.id:read --scope task:task:read
   feishu-bot oauth url --scope "offline_access auth:user.id:read docx:document:readonly docx:document:write_only wiki:wiki wiki:space:write_only wiki:node:create"
   feishu-bot browser open --url "<authorization_url>"
-  feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env
-  feishu-bot oauth refresh --save-env
+  feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file private/local.env
+  feishu-bot oauth refresh --save-env --env-file private/local.env
   feishu-bot oauth user-info
   feishu-bot --json dogfood verify --module task --include-response
 
@@ -83,6 +83,7 @@ document permissions.
 pub(in crate::app) const SETUP_AFTER_HELP: &str = r#"AI-safe setup automation:
   feishu-bot setup plan
   feishu-bot setup quickstart --open-browser
+  feishu-bot setup auto --open-browser --json
   feishu-bot setup open-scopes --group office --browser
   feishu-bot setup wiki-bot --auth user
 
@@ -96,7 +97,9 @@ redirect code into `feishu-bot oauth token`.
 Use `setup quickstart` or `scripts/feishu-bot-setup.sh` for the normal
 one-human-plus-AI office profile. It returns the exact next commands for
 permission grant, OAuth token saving, Wiki bot membership, project bootstrap,
-progress updates, inbox polling, and search.
+progress updates, inbox polling, and search. Use `setup auto` when an AI agent
+should run the safe setup sequence and return machine-readable next actions in
+one command; it may open browser URLs when `--open-browser` is passed.
 "#;
 
 pub(in crate::app) const DOGFOOD_AFTER_HELP: &str = r##"AI-safe dogfood workflow:

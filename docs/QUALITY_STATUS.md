@@ -82,6 +82,10 @@ scripts/open-source-preflight.sh
 git diff --check
 ```
 
+For AI command discovery, `feishu-bot --json manifest` must expose
+`workflow_layer.default_command`, `workflow_layer.verification_command`, and
+`workflow_layer.preferred_commands` in addition to the module list.
+
 For package and secret checks:
 
 ```bash

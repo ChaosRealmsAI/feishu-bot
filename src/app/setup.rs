@@ -7,6 +7,8 @@ mod probes;
 mod wiki;
 
 use flows::{run_setup_auto, run_setup_open_scopes, run_setup_plan, run_setup_quickstart};
+#[cfg(test)]
+pub(in crate::app) use plan::{setup_oauth_plan, setup_quickstart_plan};
 use wiki::run_setup_wiki_bot;
 
 pub(super) async fn run_setup_command(

@@ -207,6 +207,34 @@ fn parses_setup_automation_commands_for_ai() {
 }
 
 #[test]
+fn setup_plan_uses_private_oauth_env_file() {
+    let values = std::collections::HashMap::new();
+    let oauth = setup_oauth_plan(&values);
+    assert_eq!(oauth["env_file"], "private/local.env");
+    assert!(oauth["token_command"]
+        .as_str()
+        .unwrap()
+        .contains("--env-file 'private/local.env'"));
+    let quickstart = setup_quickstart_plan(&values, "AI Project", &[]);
+    assert!(quickstart["commands"]["save_oauth_code"]
+        .as_str()
+        .unwrap()
+        .contains("--env-file 'private/local.env'"));
+
+    let mut values = std::collections::HashMap::new();
+    values.insert(
+        "FEISHU_ENV_FILE".to_string(),
+        "private/custom.env".to_string(),
+    );
+    let oauth = setup_oauth_plan(&values);
+    assert_eq!(oauth["env_file"], "private/custom.env");
+    assert!(oauth["refresh_command"]
+        .as_str()
+        .unwrap()
+        .contains("--env-file 'private/custom.env'"));
+}
+
+#[test]
 fn serializes_office_project_registry() {
     assert_eq!(office_project_key("  AI Project  ").unwrap(), "AI Project");
     assert!(office_project_key("   ").is_err());
@@ -269,6 +297,17 @@ fn filters_manifest_by_module_identity() {
     retain_manifest_modules(&mut modules, "base");
     assert_eq!(modules.len(), 1);
     assert_eq!(modules[0]["name"], "base");
+
+    let drive = json!({
+        "name": "drive",
+        "command": "feishu-bot drive",
+        "aliases": ["permission", "drive permission"],
+        "scope_group": "drive"
+    });
+    let mut modules = vec![task, drive];
+    retain_manifest_modules(&mut modules, "permission");
+    assert_eq!(modules.len(), 1);
+    assert_eq!(modules[0]["name"], "drive");
 }
 
 #[test]
@@ -313,13 +352,17 @@ fn resolves_office_scope_profile() {
 
     let groups = scope_groups("office").unwrap();
     let names = groups.iter().map(|(name, _)| *name).collect::<Vec<_>>();
-    assert_eq!(names, vec!["im", "doc", "wiki", "base", "search"]);
+    assert_eq!(
+        names,
+        vec!["im", "doc", "wiki", "base", "permission", "search"]
+    );
     let scopes = groups
         .iter()
         .flat_map(|(_, scopes)| scopes.iter().copied())
         .collect::<Vec<_>>();
     assert!(scopes.contains(&"im:message"));
     assert!(scopes.contains(&"docx:document:create"));
+    assert!(scopes.contains(&"docs:permission.member:create"));
     assert!(scopes.contains(&"search:docs:read"));
     assert!(scope_groups("missing").is_err());
 }
@@ -332,6 +375,35 @@ fn manifest_exposes_office_workflow_layer() {
         .and_then(Value::as_array)
         .unwrap();
     assert!(workflow_modules.iter().any(|item| item == "office"));
+    let setup_modules = manifest
+        .pointer("/layers/setup_modules")
+        .and_then(Value::as_array)
+        .unwrap();
+    assert!(setup_modules.iter().any(|item| item == "bot"));
+    let atomic_modules = manifest
+        .pointer("/layers/atomic_modules")
+        .and_then(Value::as_array)
+        .unwrap();
+    assert!(atomic_modules.iter().any(|item| item == "notify"));
+    let workflow_layer = manifest
+        .get("workflow_layer")
+        .and_then(Value::as_object)
+        .unwrap();
+    assert_eq!(workflow_layer["default_command"], "feishu-bot office");
+    assert_eq!(
+        workflow_layer["verification_command"],
+        "feishu-bot dogfood verify"
+    );
+    assert!(workflow_layer["preferred_commands"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|command| command.as_str().unwrap().contains("office inbox")));
+    assert!(workflow_layer["local_safe_commands"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|command| command.as_str().unwrap().contains("--dry-run")));
     let modules = manifest.get("modules").and_then(Value::as_array).unwrap();
     let office = modules
         .iter()
@@ -359,4 +431,9 @@ fn manifest_exposes_office_workflow_layer() {
         .unwrap()
         .iter()
         .any(|example| example.as_str().unwrap().contains("setup quickstart")));
+    assert!(setup["examples"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|example| example.as_str().unwrap().contains("setup auto")));
 }

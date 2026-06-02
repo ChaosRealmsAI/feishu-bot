@@ -14,10 +14,16 @@ for path in .env dogfood dogfood-artifacts tmp target vox-feishu-test; do
   fi
 done
 
-if git ls-files -z -- private | xargs -0 -r basename | grep -Ev '^(\.gitignore|\.env\.example)$' | grep -q .; then
-  echo "refusing to publish tracked private/ files except .gitignore and .env.example" >&2
-  blocked=1
-fi
+while IFS= read -r -d '' private_path; do
+  case "${private_path}" in
+    private/.gitignore|private/.env.example)
+      ;;
+    *)
+      echo "refusing to publish tracked private/ file: ${private_path}" >&2
+      blocked=1
+      ;;
+  esac
+done < <(git ls-files -z -- private)
 
 if git ls-files | grep -Ei '\.(pem|key|p12|pfx|aiff|opus|mp3|mp4|mov|png|jpe?g|webp)$' | grep -q .; then
   echo "refusing to publish tracked local credentials or validation media" >&2
@@ -33,12 +39,21 @@ patterns=(
   'AIza[0-9A-Za-z_-]{35}'
   'Bearer [A-Za-z0-9._~+/=-]{20,}'
   'xox[baprs]-[A-Za-z0-9-]{20,}'
+  '"(tenant_access_token|user_access_token|refresh_token|app_secret|client_secret)"[[:space:]]*:[[:space:]]*"[A-Za-z0-9._~+/=-]{16,}"'
+  'https://[^[:space:]"'\'']*\.feishu\.cn/(docx|wiki|base|docs|drive|folder)/[A-Za-z0-9]'
+  '(^|[^A-Za-z0-9_])(oc_|ou_|cli_|u_|r_|wik|bascn|tbl)[A-Za-z0-9]{12,}'
 )
 
 tmp_file="$(mktemp)"
 git ls-files -z >"${tmp_file}"
 for pattern in "${patterns[@]}"; do
-  if xargs -0 grep --exclude=open-source-preflight.sh -nE "${pattern}" <"${tmp_file}"; then
+  matches="$(
+    xargs -0 grep --exclude=open-source-preflight.sh -nE "${pattern}" <"${tmp_file}" \
+      | grep -Ev 'example\.feishu\.cn|my\.feishu\.cn/drive/home|my\.feishu\.cn/wiki/xxx' \
+      || true
+  )"
+  if [ -n "${matches}" ]; then
+    printf '%s\n' "${matches}"
     echo "possible secret matched pattern: ${pattern}" >&2
     blocked=1
   fi

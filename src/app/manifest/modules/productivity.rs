@@ -44,6 +44,7 @@ pub(in crate::app) fn productivity_manifest_modules() -> Vec<Value> {
         json!({
             "name": "drive",
             "command": "feishu-bot drive",
+            "aliases": ["permission", "drive permission", "drive permissions"],
             "scope_group": "drive",
             "status": "typed wrappers",
             "ai_use": "Upload/download Drive files, including multipart large Drive uploads; upload/download doc/sheet/Base media assets; import local files into online docs; export cloud docs to local files; manage folders, permissions, comments, versions, subscriptions, and view records.",

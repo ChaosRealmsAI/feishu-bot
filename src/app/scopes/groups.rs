@@ -1,4 +1,5 @@
-pub(in crate::app) const OFFICE_SCOPE_GROUPS: &[&str] = &["im", "doc", "wiki", "base", "search"];
+pub(in crate::app) const OFFICE_SCOPE_GROUPS: &[&str] =
+    &["im", "doc", "wiki", "base", "permission", "search"];
 
 pub(in crate::app) type ScopeGroups = Vec<(&'static str, Vec<&'static str>)>;
 

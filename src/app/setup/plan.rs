@@ -65,17 +65,20 @@ pub(super) fn setup_env_status(values: &HashMap<String, String>) -> Value {
     })
 }
 
-pub(super) fn setup_oauth_plan(values: &HashMap<String, String>) -> Value {
+pub(in crate::app) fn setup_oauth_plan(values: &HashMap<String, String>) -> Value {
     let configured = get_any(
         values,
         &["FEISHU_USER_ACCESS_TOKEN", "LARK_USER_ACCESS_TOKEN"],
     )
     .is_some();
+    let env_file = setup_oauth_env_file(values);
+    let env_arg = shell_quote(&env_file);
     json!({
         "user_access_token_configured": configured,
         "url_command": "feishu-bot oauth url --scope offline_access --scope auth:user.id:read --scope search:docs:read --scope search:message --scope wiki:wiki --scope wiki:node:create",
-        "token_command": "feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env",
-        "refresh_command": "feishu-bot oauth refresh --save-env",
+        "env_file": env_file,
+        "token_command": format!("feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file {env_arg}"),
+        "refresh_command": format!("feishu-bot oauth refresh --save-env --env-file {env_arg}"),
     })
 }
 
@@ -88,7 +91,7 @@ pub(super) fn setup_wiki_bot_plan(values: &HashMap<String, String>) -> Value {
     })
 }
 
-pub(super) fn setup_quickstart_plan(
+pub(in crate::app) fn setup_quickstart_plan(
     values: &HashMap<String, String>,
     project: &str,
     selected_groups: &[String],
@@ -118,16 +121,18 @@ pub(super) fn setup_quickstart_plan(
     } else {
         "--space-id <space_id>"
     };
+    let oauth_env_file = setup_oauth_env_file(values);
+    let oauth_env_arg = shell_quote(&oauth_env_file);
     json!({
         "purpose": "Bring a new Feishu app/account to the common AI office workflow: group chat, Wiki docs, Base project log, message polling, and search.",
-        "script": format!("scripts/feishu-bot-setup.sh --project {project_arg}"),
+        "script": format!("scripts/feishu-bot-setup.sh --project {project_arg} --open-browser"),
         "commands": {
             "inspect_env": "feishu-bot doctor",
             "plan": "feishu-bot setup plan --json",
             "grant_permissions": format!("feishu-bot setup open-scopes {group_args} --browser --json"),
             "oauth_url": "feishu-bot oauth url --scope offline_access --scope auth:user.id:read --scope search:docs:read --scope search:message --scope wiki:wiki --scope wiki:node:create",
-            "save_oauth_code": "feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env",
-            "refresh_oauth": "feishu-bot oauth refresh --save-env",
+            "save_oauth_code": format!("feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file {oauth_env_arg}"),
+            "refresh_oauth": format!("feishu-bot oauth refresh --save-env --env-file {oauth_env_arg}"),
             "add_wiki_bot": "feishu-bot setup wiki-bot --auth user --json",
             "bootstrap_dry_run": format!("feishu-bot office bootstrap --project {project_arg} --dry-run --json"),
             "bootstrap": format!("feishu-bot office bootstrap --project {project_arg} {user_arg} {space_arg} --send-summary --json"),
@@ -198,6 +203,11 @@ fn collect_setup_scopes(groups: &[String]) -> Result<Vec<String>> {
         }
     }
     Ok(out)
+}
+
+fn setup_oauth_env_file(values: &HashMap<String, String>) -> String {
+    get_any(values, &["FEISHU_ENV_FILE", "LARK_ENV_FILE"])
+        .unwrap_or_else(|| "private/local.env".to_string())
 }
 
 fn shell_quote(value: &str) -> String {

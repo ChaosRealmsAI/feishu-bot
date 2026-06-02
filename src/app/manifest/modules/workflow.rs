@@ -49,7 +49,8 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             "examples": [
                 "feishu-bot setup plan",
                 "feishu-bot setup quickstart --open-browser",
-                "scripts/feishu-bot-setup.sh --project \"AI Project\"",
+                "feishu-bot setup auto --open-browser --json",
+                "scripts/feishu-bot-setup.sh --project \"AI Project\" --open-browser",
                 "feishu-bot setup open-scopes --group office --browser",
                 "feishu-bot setup wiki-bot --auth user"
             ],
@@ -57,6 +58,7 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
                 "Opening a grant URL is automated; approving permissions still happens in the signed-in human browser account.",
                 "wiki-bot needs FEISHU_USER_ACCESS_TOKEN and a user allowed to manage the target Wiki space.",
                 "For multi-account Chrome, verify the intended Playwright MCP profile before approving account-sensitive grants.",
+                "scripts/feishu-bot-setup.sh opens browser URLs only when --open-browser or FEISHU_BOT_SETUP_OPEN_BROWSER=1 is set.",
                 "setup never prints app_secret or raw tokens; doctor/setup mask configured secrets."
             ]
         }),
@@ -89,7 +91,7 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             "name": "office",
             "command": "feishu-bot office",
             "layer": "workflow",
-            "scope_group": "im,wiki,doc,base,search",
+            "scope_group": "im,wiki,doc,base,permission,search",
             "status": "AI-first high-level workflows over atomic commands",
             "ai_use": "Default daily interface for one-human-plus-AI work. Bootstrap an isolated project group, Wiki index, Base log, and tabs; write one independent report doc per demo; send lightweight progress updates into chat/Base; send concise chat notifications and voice reports; poll the project inbox with cursor state and ack/reply defaults; search project messages/docs; inspect readback status; and clean local project state safely.",
             "state": {

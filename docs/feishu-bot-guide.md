@@ -80,7 +80,7 @@ AI office wrapper:
 
 ```bash
 feishu-bot setup quickstart --open-browser --json
-scripts/feishu-bot-setup.sh --project "AI Project"
+scripts/feishu-bot-setup.sh --project "AI Project" --open-browser
 feishu-bot office bootstrap --project "AI Project" --user "$FEISHU_USER_ID" --space-id "$FEISHU_WIKI_SPACE_ID" --send-summary --json
 feishu-bot office progress --project "AI Project" --title "Progress" --status doing --summary "Current status" --json
 feishu-bot office report --project "AI Project" --title "Demo" --file ./demo.md --base-record --pin --json

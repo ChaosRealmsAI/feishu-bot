@@ -36,24 +36,35 @@ pub(super) fn retain_manifest_modules(modules: &mut Vec<Value>, filter: &str) {
 }
 
 pub(super) fn manifest_module_exact_matches(module: &Value, needle: &str) -> bool {
-    ["name", "command"]
-        .iter()
-        .filter_map(|key| module.get(*key).and_then(Value::as_str))
-        .any(|value| {
-            let normalized = value.to_lowercase();
-            normalized == needle
-                || normalized
-                    .split_whitespace()
-                    .last()
-                    .is_some_and(|last| last == needle)
-        })
+    manifest_field_matches(module, &["name", "command", "aliases"], |value| {
+        let normalized = value.to_lowercase();
+        normalized == needle
+            || normalized
+                .split_whitespace()
+                .last()
+                .is_some_and(|last| last == needle)
+    })
 }
 
 pub(super) fn manifest_module_matches(module: &Value, needle: &str) -> bool {
-    ["name", "command", "scope_group"]
-        .iter()
-        .filter_map(|key| module.get(*key).and_then(Value::as_str))
-        .any(|value| value.to_lowercase().contains(needle))
+    manifest_field_matches(
+        module,
+        &["name", "command", "scope_group", "aliases", "tags"],
+        |value| value.to_lowercase().contains(needle),
+    )
+}
+
+fn manifest_field_matches(module: &Value, keys: &[&str], predicate: impl Fn(&str) -> bool) -> bool {
+    keys.iter().any(|key| match module.get(*key) {
+        Some(Value::String(value)) => predicate(value),
+        Some(Value::Array(values)) => values.iter().any(|value| {
+            value.as_str().is_some_and(|value| {
+                let normalized = value.to_lowercase();
+                predicate(&normalized)
+            })
+        }),
+        _ => false,
+    })
 }
 
 pub(super) fn build_manifest() -> Result<Value> {
@@ -85,9 +96,32 @@ pub(super) fn build_manifest() -> Result<Value> {
         "purpose": "AI-ready local Feishu Bot automation for Feishu/Lark office workflows.",
         "layers": {
             "workflow_modules": ["office", "dogfood"],
-            "setup_modules": ["setup", "oauth", "scopes", "browser"],
-            "atomic_modules": ["message", "chat", "doc", "wiki", "base", "task", "drive", "calendar", "search", "sheet", "approval", "board", "contact", "directory", "vc", "minutes", "okr", "attendance", "mail", "corehr", "helpdesk", "hire", "api"],
+            "setup_modules": ["setup", "oauth", "bot", "scopes", "browser"],
+            "atomic_modules": ["message", "chat", "doc", "wiki", "base", "task", "drive", "calendar", "search", "sheet", "approval", "board", "contact", "directory", "vc", "minutes", "okr", "attendance", "mail", "corehr", "helpdesk", "hire", "notify", "api"],
             "guidance": "Use workflow modules for normal AI office loops; drop to atomic modules for exact OpenAPI operations, troubleshooting, or unsupported workflow edges."
+        },
+        "workflow_layer": {
+            "default_command": "feishu-bot office",
+            "verification_command": "feishu-bot dogfood verify",
+            "preferred_commands": [
+                "feishu-bot office list --json",
+                "feishu-bot office bootstrap --project \"AI Project\" --dry-run --json",
+                "feishu-bot office bootstrap --project \"AI Project\" --user \"$FEISHU_USER_ID\" --space-id \"$FEISHU_WIKI_SPACE_ID\" --send-summary --json",
+                "feishu-bot office progress --project \"AI Project\" --title \"Progress\" --summary \"Current status\" --json",
+                "feishu-bot office report --project \"AI Project\" --title \"Capability Demo\" --file demo.md --base-record --pin --json",
+                "feishu-bot office inbox --project \"AI Project\" --from-now --json",
+                "feishu-bot office search --project \"AI Project\" --query \"decision\" --json",
+                "feishu-bot dogfood verify --module message --json"
+            ],
+            "local_safe_commands": [
+                "feishu-bot office list --json",
+                "feishu-bot office bootstrap --project \"AI Project\" --dry-run --json",
+                "feishu-bot office report --project \"AI Project\" --title \"Capability Demo\" --file demo.md --dry-run --json",
+                "feishu-bot office status --project \"AI Project\" --json"
+            ],
+            "proof_rule": "For write workflows, create the Feishu object, read it back, and inspect returned readback fields before reporting success.",
+            "state_file": "~/.config/feishu/office-projects.json",
+            "state_override_env": "FEISHU_OFFICE_STATE_FILE"
         },
         "first_commands": [
             "feishu-bot manifest",
@@ -135,7 +169,9 @@ pub(super) fn build_manifest() -> Result<Value> {
             "Run the relevant --help command before using an unfamiliar module.",
             "Use --json for machine parsing of API responses.",
             "If Feishu returns 99991672, inspect permission_violations and open the grant_url from feishu-bot scopes.",
-            "Do not claim a module works until a help command or a harmless read/list command has been verified."
+            "A help command only proves discoverability; it does not prove the Feishu capability works.",
+            "For read capability, run dogfood verify or a harmless read/list command and inspect JSON status.",
+            "For write capability, create the real Feishu object, read it back, and inspect returned readback fields before claiming success."
         ]
     }))
 }
