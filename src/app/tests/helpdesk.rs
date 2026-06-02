@@ -1,6 +1,77 @@
 use super::super::*;
 
 #[test]
+fn parses_helpdesk_commands() {
+    let cli = Cli::try_parse_from([
+        "feishu-bot",
+        "helpdesk",
+        "ticket",
+        "list",
+        "--type",
+        "2",
+        "--solved",
+        "1",
+        "--status",
+        "2",
+        "--status",
+        "5",
+        "--guest-name",
+        "张三",
+        "--tag",
+        "urgent",
+        "--page",
+        "2",
+        "--page-size",
+        "50",
+        "--create-time-start",
+        "1760000000000",
+        "--create-time-end",
+        "1760003600000",
+    ])
+    .unwrap();
+    match cli.command {
+        Commands::Helpdesk(HelpdeskCommand::Ticket(HelpdeskTicketCommand::List(args))) => {
+            assert_eq!(args.ticket_type, Some(2));
+            assert_eq!(args.solved, Some(1));
+            assert_eq!(args.status_list, vec![2, 5]);
+            assert_eq!(args.guest_name.as_deref(), Some("张三"));
+            assert_eq!(args.tags, vec!["urgent"]);
+            assert_eq!(args.page, 2);
+            assert_eq!(args.page_size, 50);
+            assert_eq!(args.create_time_start, Some(1760000000000));
+            assert_eq!(args.create_time_end, Some(1760003600000));
+        }
+        _ => panic!("unexpected command"),
+    }
+
+    let cli = Cli::try_parse_from([
+        "feishu-bot",
+        "helpdesk",
+        "message",
+        "send",
+        "--receiver-id",
+        "ou_user",
+        "--text",
+        "hello",
+        "--receive-type",
+        "user",
+        "--user-id-type",
+        "open-id",
+    ])
+    .unwrap();
+    match cli.command {
+        Commands::Helpdesk(HelpdeskCommand::Message(HelpdeskMessageCommand::Send(args))) => {
+            assert_eq!(args.receiver_id.as_deref(), Some("ou_user"));
+            assert_eq!(args.text.as_deref(), Some("hello"));
+            assert_eq!(args.msg_type, "text");
+            assert!(matches!(args.receive_type, HelpdeskReceiveTypeArg::User));
+            assert!(matches!(args.user_id_type, UserIdTypeArg::OpenId));
+        }
+        _ => panic!("unexpected command"),
+    }
+}
+
+#[test]
 fn builds_helpdesk_queries_bodies_and_auth() {
     assert_eq!(HelpdeskReceiveTypeArg::Chat.as_api_value(), "chat");
     assert_eq!(HelpdeskReceiveTypeArg::User.as_api_value(), "user");
