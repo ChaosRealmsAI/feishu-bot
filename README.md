@@ -71,10 +71,10 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
 - `src/app/chat.rs` contains Chat execution; `src/app/chat/` contains chat
   create/update, tab/menu, and member body/query builders.
-- `src/app/doc.rs` contains docx command execution, media insertion, and raw
-  descendant body normalization; `src/app/doc/` contains Markdown/local block
-  mapping helpers, docx media insertion helpers, and AI-ready raw block
-  templates split by support matrix, child blocks, and descendant blocks.
+- `src/app/doc.rs` contains docx command execution; `src/app/doc/` contains
+  Markdown/local block mapping helpers, docx media insertion helpers, raw
+  descendant body normalization, and AI-ready raw block templates split by
+  support matrix, child blocks, and descendant blocks.
 - `src/app/dogfood.rs` contains dogfood command dispatch plus write/message
   loop probes; `src/app/dogfood/` contains publish execution, read-probe verify
   orchestration, read-probe specs, probe classification, summary aggregation,

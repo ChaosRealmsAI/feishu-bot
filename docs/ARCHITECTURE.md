@@ -30,8 +30,9 @@ src/app/client.rs    Feishu HTTP client type and constructor.
 src/app/client/      Token/auth/request execution plus Docx, IM/chat, Board, Drive, and Minutes convenience methods.
 src/app/client/request.rs Generic JSON, binary, multipart, tenant-token, user-token, and Helpdesk-auth request helpers.
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
-src/app/doc.rs       Docx command runner, media insertion, and raw descendant body normalization.
+src/app/doc.rs       Docx command runner.
 src/app/doc/         Markdown/local block mapping helpers, Docx media insertion helpers, and raw block template entrypoints.
+src/app/doc/descendants.rs Raw child parsing, converted block cleanup, and descendant body defaults.
 src/app/doc/templates/ AI-ready raw block templates split by support matrix, child blocks, and descendant blocks.
 src/app/dogfood.rs   Dogfood command dispatch plus write/message loop probes.
 src/app/dogfood/     Publish execution, read-probe verify orchestration, read-probe specs, probe classification, summary aggregation, and AI remediation helpers.

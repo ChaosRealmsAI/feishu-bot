@@ -65,6 +65,59 @@ fn emits_doc_templates_for_raw_block_writing() {
 }
 
 #[test]
+fn normalizes_raw_doc_descendant_bodies() {
+    let raw_children =
+        parse_raw_children(r#"{"children":[{"block_type":22,"divider":{}}]}"#).unwrap();
+    assert_eq!(raw_children[0]["block_type"], 22);
+    assert_eq!(
+        parse_raw_children(r#"[{"block_type":2}]"#).unwrap()[0]["block_type"],
+        2
+    );
+
+    let converted = converted_to_descendant_body(json!({
+        "data": {
+            "first_level_block_ids": ["blk_1"],
+            "blocks": [{
+                "block_id": "blk_1",
+                "block_type": 2,
+                "parent_id": "parent",
+                "comment_ids": ["comment"],
+                "text": {
+                    "merge_info": {"ignored": true},
+                    "elements": []
+                }
+            }]
+        }
+    }))
+    .unwrap();
+    assert_eq!(converted["children_id"][0], "blk_1");
+    assert_eq!(converted["descendants"][0]["children"], json!([]));
+    assert!(converted["descendants"][0].get("parent_id").is_none());
+    assert!(converted["descendants"][0]["text"]
+        .get("merge_info")
+        .is_none());
+
+    let mut body = json!({
+        "descendants": [{
+            "block_id": "root",
+            "block_type": 2,
+            "parent_id": "ignored",
+            "comment_ids": ["ignored"],
+            "text": {
+                "merge_info": {"ignored": true},
+                "elements": []
+            }
+        }]
+    });
+    ensure_descendant_defaults(&mut body).unwrap();
+    assert_eq!(body["index"], -1);
+    assert_eq!(body["children_id"][0], "root");
+    assert_eq!(body["descendants"][0]["children"], json!([]));
+    assert!(body["descendants"][0].get("comment_ids").is_none());
+    assert!(body["descendants"][0]["text"].get("merge_info").is_none());
+}
+
+#[test]
 fn builds_doc_media_insert_bodies() {
     let placeholder = build_doc_media_placeholder(DocMediaKindArg::Image);
     assert_eq!(placeholder["block_type"], 27);
