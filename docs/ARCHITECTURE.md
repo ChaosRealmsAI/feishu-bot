@@ -14,7 +14,8 @@ src/app/approval.rs  Approval command runner, native approval, task actions, and
 src/app/attendance.rs Attendance command runner, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 src/app/base.rs      Base/Bitable command runner.
 src/app/base/        Base schema, field schema, record, and permission execution, media, reference, field/list, search, view, role, and member helper builders.
-src/app/base/field_schema.rs Base field type parsing, table field spec parsing, and field body builders.
+src/app/base/field_schema.rs Base field schema entrypoint and re-exports.
+src/app/base/field_schema/ Base field body builders, AI-friendly table field spec parser, and shared field build input.
 src/app/base/permission_exec.rs Role and member command execution flows.
 src/app/base/record_exec.rs Record command execution flows.
 src/app/base/schema_exec.rs Table, field, and view command execution flows.
