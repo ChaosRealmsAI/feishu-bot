@@ -98,7 +98,8 @@ The bot is split by module instead of keeping all logic in one file:
   tasklist and structure execution, custom-field builders, Task body/query
   helpers, input/time/reminder normalization helpers, and tasklist/comment/member
   collaboration builders plus section and reminder/dependency relation builders.
-- `src/app/vc.rs` contains VC execution, meeting/reserve/recording/report/room operations, and VC body builders.
+- `src/app/vc.rs` contains VC execution and meeting/reserve/recording/report/room
+  routing; `src/app/vc/` contains VC request body builders.
 - `src/app/wiki.rs` contains Wiki/knowledge-space command execution;
   `src/app/wiki/` contains typed Wiki request body builders, and
   `src/app/wiki/route/` splits route-check calls, write-probe publishing,

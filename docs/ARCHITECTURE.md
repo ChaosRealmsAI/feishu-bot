@@ -81,7 +81,8 @@ src/app/task/        Tasklist and structure execution, custom-field builders, Ta
 src/app/task/custom_field.rs Task custom-field create/update/resource/value/option body builders.
 src/app/task/tasklist.rs Tasklist command execution flows.
 src/app/task/structure_exec.rs Section, custom-field, and attachment command execution flows.
-src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
+src/app/vc.rs        VC command runner and meeting/reserve/recording/report/room operations.
+src/app/vc/          VC request body builders.
 src/app/wiki.rs      Wiki/knowledge-space command runner.
 src/app/wiki/        Typed Wiki request body builders and route-check entrypoint.
 src/app/wiki/route/  Wiki route-check calls, write-probe publishing, recommendation text, and request wrapper.
