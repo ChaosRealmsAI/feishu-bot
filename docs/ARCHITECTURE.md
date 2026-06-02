@@ -98,6 +98,8 @@ src/app/sheet.rs     Sheets command runner.
 src/app/sheet/       Sheet tab/style/value body builders.
 src/app/task.rs      Task command runner.
 src/app/task/        Tasklist and structure execution, Task body/query helpers, input/time/reminder normalization helpers, tasklist/comment/member collaboration builders, section plus reminder/dependency relation builders, and custom-field entrypoint.
+src/app/task/helpers.rs Task helper entrypoint and re-exports.
+src/app/task/helpers/ Task create/update body builders, query/request helpers, member builders, input normalization, collaboration bodies, and reminder/dependency relations.
 src/app/task/custom_field/ Task custom-field metadata, value, option, and setting body builders.
 src/app/task/tasklist.rs Tasklist command execution flows.
 src/app/task/structure_exec.rs Section, custom-field, and attachment command execution flows.

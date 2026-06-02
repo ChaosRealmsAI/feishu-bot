@@ -114,6 +114,8 @@ The bot is split by module instead of keeping all logic in one file:
   tasklist and structure execution, Task body/query helpers,
   input/time/reminder normalization helpers, and tasklist/comment/member
   collaboration builders plus section and reminder/dependency relation builders.
+  `src/app/task/helpers/` splits task create/update bodies, shared query/request
+  helpers, member builders, input normalization, collaboration, and relations.
   `src/app/task/custom_field/` splits custom-field metadata, option, setting,
   and value body builders.
 - `src/app/vc.rs` contains VC execution and meeting/reserve/recording/report/room
