@@ -34,26 +34,12 @@ impl FeishuClient {
         token: String,
         headers: &[(String, String)],
     ) -> Result<Value> {
-        if !path.starts_with('/') {
-            bail!("OpenAPI path must start with /: {path}");
-        }
-        let url = format!("{}{}", self.config.base_url, path);
-        let mut request = self
-            .http
-            .request(method.clone(), url)
-            .bearer_auth(token)
-            .query(query);
-        for (key, value) in headers {
-            request = request.header(key.as_str(), value.as_str());
-        }
+        let method_label = method.as_str().to_string();
+        let mut request = self.openapi_request_with_token(method, path, query, token, headers)?;
         if let Some(body) = body {
             request = request.json(&body);
         }
-        let method_label = method.as_str().to_string();
-        let res = request
-            .send()
-            .await
-            .with_context(|| format!("{method_label} {path}"))?;
+        let res = send_openapi_request(request, &method_label, path, None).await?;
         read_feishu_json(res).await
     }
 

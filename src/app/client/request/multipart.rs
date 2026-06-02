@@ -11,14 +11,12 @@ impl FeishuClient {
         auth: ApiAuthArg,
         headers: &[(String, String)],
     ) -> Result<Value> {
-        if !path.starts_with('/') {
-            bail!("OpenAPI path must start with /: {path}");
-        }
+        validate_openapi_path(path)?;
         if fields.is_empty() && files.is_empty() {
             bail!("multipart request needs at least one --field or --file");
         }
+        let method_label = method.as_str().to_string();
         let token = self.token_for_api_auth(auth).await?;
-        let url = format!("{}{}", self.config.base_url, path);
         let mut form = reqwest::multipart::Form::new();
         for (key, value) in fields {
             form = form.text(key, value);
@@ -31,20 +29,10 @@ impl FeishuClient {
                 reqwest::multipart::Part::bytes(bytes).file_name(file_name),
             );
         }
-        let mut request = self
-            .http
-            .request(method.clone(), url)
-            .bearer_auth(token)
-            .query(query)
+        let request = self
+            .openapi_request_with_token(method, path, query, token, headers)?
             .multipart(form);
-        for (key, value) in headers {
-            request = request.header(key.as_str(), value.as_str());
-        }
-        let method_label = method.as_str().to_string();
-        let res = request
-            .send()
-            .await
-            .with_context(|| format!("{method_label} {path} multipart"))?;
+        let res = send_openapi_request(request, &method_label, path, Some("multipart")).await?;
         read_feishu_json(res).await
     }
 }

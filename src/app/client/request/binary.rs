@@ -10,27 +10,14 @@ impl FeishuClient {
         headers: &[(String, String)],
         range: Option<&str>,
     ) -> Result<Vec<u8>> {
-        if !path.starts_with('/') {
-            bail!("OpenAPI path must start with /: {path}");
-        }
+        validate_openapi_path(path)?;
+        let method_label = method.as_str().to_string();
         let token = self.token_for_api_auth(auth).await?;
-        let url = format!("{}{}", self.config.base_url, path);
-        let mut request = self
-            .http
-            .request(method.clone(), url)
-            .bearer_auth(token)
-            .query(query);
-        for (key, value) in headers {
-            request = request.header(key.as_str(), value.as_str());
-        }
+        let mut request = self.openapi_request_with_token(method, path, query, token, headers)?;
         if let Some(range) = range.filter(|value| !value.trim().is_empty()) {
             request = request.header(reqwest::header::RANGE, range);
         }
-        let method_label = method.as_str().to_string();
-        let res = request
-            .send()
-            .await
-            .with_context(|| format!("{method_label} {path}"))?;
+        let res = send_openapi_request(request, &method_label, path, None).await?;
         read_binary_response(res).await
     }
 }

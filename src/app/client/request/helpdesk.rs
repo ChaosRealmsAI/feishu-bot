@@ -8,26 +8,16 @@ impl FeishuClient {
         query: &[(String, String)],
         body: Option<Value>,
     ) -> Result<Value> {
-        if !path.starts_with('/') {
-            bail!("OpenAPI path must start with /: {path}");
-        }
+        validate_openapi_path(path)?;
+        let method_label = method.as_str().to_string();
         let token = self.tenant_token().await?;
         let helpdesk_auth = self.helpdesk_auth_header()?;
-        let url = format!("{}{}", self.config.base_url, path);
-        let mut request = self
-            .http
-            .request(method.clone(), url)
-            .bearer_auth(token)
-            .header("X-Lark-Helpdesk-Authorization", helpdesk_auth)
-            .query(query);
+        let headers = [("X-Lark-Helpdesk-Authorization".to_string(), helpdesk_auth)];
+        let mut request = self.openapi_request_with_token(method, path, query, token, &headers)?;
         if let Some(body) = body {
             request = request.json(&body);
         }
-        let method_label = method.as_str().to_string();
-        let res = request
-            .send()
-            .await
-            .with_context(|| format!("{method_label} {path}"))?;
+        let res = send_openapi_request(request, &method_label, path, None).await?;
         read_feishu_json(res).await
     }
 }
