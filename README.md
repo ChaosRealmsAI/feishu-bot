@@ -66,7 +66,7 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/attendance.rs` contains Attendance execution, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 - `src/app/base.rs` contains Base/Bitable command execution; `src/app/base/`
   contains schema, field schema, record, and permission execution, media,
-  reference, field/list, search, view, role, and member helper builders.
+  reference, and helper builders split by query, view, and permission domains.
 - `src/app/board.rs` contains Board/whiteboard execution, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
 - `src/app/chat.rs` contains Chat execution; `src/app/chat/` contains chat

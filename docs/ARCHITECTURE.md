@@ -18,6 +18,7 @@ src/app/base/field_schema.rs Base field type parsing, table field spec parsing, 
 src/app/base/permission_exec.rs Role and member command execution flows.
 src/app/base/record_exec.rs Record command execution flows.
 src/app/base/schema_exec.rs Table, field, and view command execution flows.
+src/app/base/helpers/ Base query, view, and permission body/query helpers.
 src/app/board.rs     Board/whiteboard command runner, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 src/app/calendar.rs  Calendar command runner and Calendar-specific body builders.
 src/app/chat.rs      Chat command runner.
