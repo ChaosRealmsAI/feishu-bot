@@ -49,7 +49,8 @@ src/app/scopes.rs    Open Platform scope groups and grant URL printing.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
 src/app/setup.rs     Setup automation command runner, doctor probes, Wiki bot grant, and browser open helpers.
 src/app/setup/       First-run plan, scope grant, quickstart, and next-action builders.
-src/app/sheet.rs     Sheets command runner, sheet tab operations, and cell value body builders.
+src/app/sheet.rs     Sheets command runner.
+src/app/sheet/       Sheet tab/style/value body builders.
 src/app/task.rs      Task command runner.
 src/app/task/        Task body/query helpers, input/time/reminder normalization helpers, tasklist/comment/member collaboration builders, and section/custom-field plus reminder/dependency relation builders.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.
