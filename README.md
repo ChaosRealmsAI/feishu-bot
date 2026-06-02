@@ -49,7 +49,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/bin/feishu-bot.rs` is the primary command entrypoint.
 - `src/bin/feishuBot.rs` and `src/bin/feishu.rs` are compatibility aliases.
 - `src/app/cli/` contains Clap command and argument definitions, split into
-  small generated parts to keep the old single giant CLI file maintainable.
+  generated parts plus focused workflow submodules such as the office project
+  and interaction argument groups.
 - `src/app/office.rs` contains the AI-first dispatcher plus bootstrap workflow;
   `src/app/office/` contains report/progress workflows, interaction/status
   workflows, local dry-run/list helpers, document writers, resource writers,

@@ -21,7 +21,9 @@ src/app/board.rs     Board/whiteboard command runner, Mermaid/PlantUML import, r
 src/app/calendar.rs  Calendar command runner and Calendar-specific body builders.
 src/app/chat.rs      Chat command runner.
 src/app/chat/        Chat create/update, tab/menu, and member body/query builders.
-src/app/cli/         Clap command and argument definitions split into small parts.
+src/app/cli/         Clap command and argument definitions split into generated parts and focused workflow submodules.
+src/app/cli/office.rs Office workflow command enum.
+src/app/cli/office/ Office project/report/voice and interaction/search/cleanup argument definitions.
 src/app/client.rs    Feishu HTTP client, token handling, and generic request helpers.
 src/app/client/      Docx, IM/chat, Board, Drive, and Minutes convenience methods.
 src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
