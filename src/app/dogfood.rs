@@ -5,11 +5,13 @@ use super::*;
 mod probes;
 mod publish;
 mod read;
+mod specs;
 mod summary;
 
 pub(super) use probes::*;
 pub(super) use publish::*;
 use read::verify_dogfood;
+use specs::*;
 pub(super) use summary::*;
 
 pub(super) async fn run_dogfood_command(

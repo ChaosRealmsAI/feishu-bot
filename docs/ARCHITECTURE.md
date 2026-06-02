@@ -28,8 +28,9 @@ src/app/config.rs    Environment loading, base URLs, and secret masking helpers.
 src/app/doc.rs       Docx command runner, media insertion, and raw descendant body normalization.
 src/app/doc/         Markdown/local block mapping helpers, Docx media insertion helpers, and raw block templates.
 src/app/dogfood.rs   Dogfood command dispatch plus write/message loop probes.
-src/app/dogfood/     Publish execution, read-probe verify orchestration, probe classification, summary aggregation, and AI remediation helpers.
+src/app/dogfood/     Publish execution, read-probe verify orchestration, read-probe specs, probe classification, summary aggregation, and AI remediation helpers.
 src/app/dogfood/publish.rs Dogfood publish workflow and publish input helpers.
+src/app/dogfood/specs.rs Dogfood read-probe registry and auth/request metadata.
 src/app/dogfood/summary.rs Dogfood probe count, usability, blocked-module, and next-action summaries.
 src/app/drive.rs     Drive command runner.
 src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
