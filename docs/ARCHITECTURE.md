@@ -77,8 +77,8 @@ src/app/scopes/      Static Open Platform scope group registry.
 src/app/scopes/groups.rs Scope group registry entrypoint and stable all-groups ordering.
 src/app/scopes/groups/ Static scope groups split by identity, content, and work domains.
 src/app/search.rs    Search command runner, doc/message search, and custom search connector body builders.
-src/app/setup.rs     Setup automation command runner, doctor probes, Wiki bot grant, and browser open helpers.
-src/app/setup/       First-run plan, scope grant, quickstart, and next-action builders.
+src/app/setup.rs     Setup automation command dispatcher.
+src/app/setup/       First-run plan/scope builders, quickstart/auto/open-scopes flows, doctor/Wiki probes, Wiki bot grant, and browser open helpers.
 src/app/sheet.rs     Sheets command runner.
 src/app/sheet/       Sheet tab/style/value body builders.
 src/app/task.rs      Task command runner.
