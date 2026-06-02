@@ -34,8 +34,17 @@ pub(in crate::app::dogfood::probes) fn dogfood_probe_remediation(
             "action": "set_user_access_token",
             "env": ["FEISHU_USER_ACCESS_TOKEN", "LARK_USER_ACCESS_TOKEN"],
             "oauth_url_command": dogfood_user_token_oauth_command(module),
-            "oauth_token_command": "feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env",
+            "oauth_token_command": dogfood_oauth_token_command(),
             "why": "This Feishu API requires a user_access_token and operates in the human user's visibility context.",
+            "rerun_command": rerun_command,
+        }),
+        "expired_user_token" => json!({
+            "action": "refresh_user_access_token",
+            "env": ["FEISHU_USER_ACCESS_TOKEN", "FEISHU_REFRESH_TOKEN", "LARK_USER_ACCESS_TOKEN", "LARK_REFRESH_TOKEN"],
+            "oauth_refresh_command": dogfood_oauth_refresh_command(),
+            "oauth_url_command": dogfood_user_token_oauth_command(module),
+            "oauth_token_command": dogfood_oauth_token_command(),
+            "why": "Feishu returned 99991677 Authentication token expired. Refresh the user token if a refresh token exists; otherwise rerun OAuth for this module.",
             "rerun_command": rerun_command,
         }),
         "missing_helpdesk_config" => json!({
@@ -59,6 +68,15 @@ pub(in crate::app::dogfood::probes) fn dogfood_probe_remediation(
             "rerun_command": rerun_command,
         }),
     }
+}
+
+fn dogfood_oauth_token_command() -> String {
+    "feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file \"${FEISHU_ENV_FILE:-private/local.env}\"".to_string()
+}
+
+fn dogfood_oauth_refresh_command() -> String {
+    "feishu-bot oauth refresh --save-env --env-file \"${FEISHU_ENV_FILE:-private/local.env}\""
+        .to_string()
 }
 
 fn dogfood_user_token_oauth_command(module: &str) -> String {

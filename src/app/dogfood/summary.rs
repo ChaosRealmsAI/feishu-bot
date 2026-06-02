@@ -106,6 +106,9 @@ fn dogfood_probe_next_actions(probes: &[Value]) -> Vec<Value> {
                 .and_then(Value::as_str)
                 .unwrap_or(module)
                 .to_string(),
+            "set_user_access_token" | "refresh_user_access_token" | "inspect_api_error" => {
+                module.to_string()
+            }
             _ => action.to_string(),
         };
         if actions.iter().any(|item: &Value| {
@@ -124,6 +127,7 @@ fn dogfood_probe_next_actions(probes: &[Value]) -> Vec<Value> {
             "browser_command": remediation.get("browser_command").cloned().unwrap_or(Value::Null),
             "env": remediation.get("env").cloned().unwrap_or(Value::Null),
             "oauth_url_command": remediation.get("oauth_url_command").cloned().unwrap_or(Value::Null),
+            "oauth_refresh_command": remediation.get("oauth_refresh_command").cloned().unwrap_or(Value::Null),
             "oauth_token_command": remediation.get("oauth_token_command").cloned().unwrap_or(Value::Null),
             "rerun_command": remediation.get("rerun_command").cloned().unwrap_or(Value::Null),
         }));

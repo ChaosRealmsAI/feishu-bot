@@ -64,7 +64,7 @@ feishu-bot setup wiki-bot --auth user --json
 scope grant URL construction, Playwright MCP browser opening, bot identity
 lookup, and Wiki-space bot membership. Human approval is still required inside
 Feishu's authorization pages, and OAuth still needs the redirect `code` to be
-passed to `feishu-bot oauth token --save-env`.
+passed to `feishu-bot oauth token --save-env --env-file private/local.env`.
 
 `setup quickstart` is the recommended first-run entry. It returns the exact
 grant, OAuth, Wiki-bot, bootstrap, progress, inbox, and search commands for the

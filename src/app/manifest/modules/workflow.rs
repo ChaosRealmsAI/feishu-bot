@@ -7,13 +7,13 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             "command": "feishu-bot oauth",
             "scope_group": "user-token",
             "status": "OAuth v2 helpers",
-            "ai_use": "Generate Feishu OAuth authorization URLs, exchange authorization codes for user_access_token, refresh user tokens, and verify user token identity. Use this when dogfood verify reports missing_user_token for my tasks, mail, search, minutes, wiki create-space/search, or meeting host operations.",
+            "ai_use": "Generate Feishu OAuth authorization URLs, exchange authorization codes for user_access_token, refresh user tokens, and verify user token identity. Use this when dogfood verify reports missing_user_token or expired_user_token for my tasks, mail, search, minutes, wiki create-space/search, or meeting host operations.",
             "help": ["feishu-bot oauth --help", "feishu-bot oauth url --help", "feishu-bot oauth token --help", "feishu-bot oauth refresh --help", "feishu-bot oauth user-info --help"],
             "examples": [
                 "feishu-bot oauth url --scope offline_access --scope auth:user.id:read --scope task:task:read",
                 "feishu-bot browser open --url \"<authorization_url>\"",
-                "feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env",
-                "feishu-bot oauth refresh --save-env",
+                "feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file private/local.env",
+                "feishu-bot oauth refresh --save-env --env-file private/local.env",
                 "feishu-bot oauth user-info"
             ],
             "known_permission_edges": [

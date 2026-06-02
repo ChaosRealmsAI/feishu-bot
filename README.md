@@ -32,12 +32,15 @@ current-directory `.env`, and optional `FEISHU_ENV_FILE` or `LARK_ENV_FILE`.
 Examples that pass `"$FEISHU_USER_ID"` still need that variable exported in the
 shell, or you can pass the concrete user ID directly.
 
-When `dogfood verify` reports `missing_user_token`, start the OAuth v2 flow:
+When `dogfood verify` reports `missing_user_token`, start the OAuth v2 flow.
+When it reports `expired_user_token`, try `oauth refresh` first and rerun the
+probe; if refresh fails, rerun the OAuth URL/token flow.
 
 ```bash
 feishu-bot oauth url --scope offline_access --scope auth:user.id:read --scope task:task:read
 feishu-bot browser open --url "<authorization_url>"
-feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env
+feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file private/local.env
+feishu-bot oauth refresh --save-env --env-file private/local.env
 feishu-bot oauth user-info
 ```
 

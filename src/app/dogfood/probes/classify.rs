@@ -12,6 +12,13 @@ pub(in crate::app) fn classify_dogfood_error(error: &str) -> Value {
         let log_id = get_string(&json, &["error", "log_id"]);
         let code = json.get("code").and_then(Value::as_i64);
         let msg = json.get("msg").and_then(Value::as_str).unwrap_or_default();
+        if code == Some(99991677) || msg.contains("Authentication token expired") {
+            return json!({
+                "status": "expired_user_token",
+                "log_id": log_id,
+                "code": code,
+            });
+        }
         if code == Some(99991672) || !missing_scopes.is_empty() {
             return json!({
                 "status": "missing_scope",
@@ -38,6 +45,9 @@ pub(in crate::app) fn classify_dogfood_error(error: &str) -> Value {
             "log_id": log_id,
             "code": code,
         });
+    }
+    if error.contains("Authentication token expired") {
+        return json!({ "status": "expired_user_token" });
     }
     json!({ "status": "api_error" })
 }

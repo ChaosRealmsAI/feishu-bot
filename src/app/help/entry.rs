@@ -62,9 +62,9 @@ pub(in crate::app) const OAUTH_AFTER_HELP: &str = r#"AI-safe user token workflow
   feishu-bot oauth user-info
   feishu-bot --json dogfood verify --module task --include-response
 
-Use this when a probe reports missing_user_token. The redirect URI must be
-registered in the app's Open Platform security settings. By default the CLI uses
-FEISHU_OAUTH_REDIRECT_URI, LARK_OAUTH_REDIRECT_URI, or
+Use this when a probe reports missing_user_token or expired_user_token. The
+redirect URI must be registered in the app's Open Platform security settings.
+By default the CLI uses FEISHU_OAUTH_REDIRECT_URI, LARK_OAUTH_REDIRECT_URI, or
 http://localhost:8080/callback. Tokens are masked by default; --raw and
 --print-env intentionally expose secrets.
 "#;
@@ -121,7 +121,8 @@ read-users.
 
 `verify` is the preferred first step before claiming a module works. It runs
 real OpenAPI probes against the current app/account and classifies each result
-as ok, missing_scope, missing_user_token, missing_helpdesk_config, or api_error.
+as ok, missing_scope, missing_user_token, expired_user_token,
+missing_helpdesk_config, or api_error.
 Default probes are read-only; --write and --send-loop-check intentionally create
 real Feishu data. Failed probes include remediation JSON with grant URLs,
 browser commands, required env vars, and rerun commands for the next AI step.

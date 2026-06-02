@@ -11,7 +11,7 @@ Do not claim a command works just because the wrapper exists.
 4. For write paths, create a real object and read it back.
 5. Send the result to the configured user or chat.
 6. Read back the exact message with `message get` or `message list`.
-7. Record blockers as missing scopes, missing user token, or API errors.
+7. Record blockers as missing scopes, missing/expired user token, or API errors.
 
 `dogfood verify` may exit 0 even when probes are blocked. Automation must read
 the JSON result instead of treating exit code 0 as success.
@@ -30,6 +30,8 @@ feishu-bot office status --project "<project>" --check --json
 - `ok`: the current app/account completed the real Feishu call.
 - `missing_scope`: open the grant URL returned by the probe.
 - `missing_user_token`: set `FEISHU_USER_ACCESS_TOKEN` and rerun.
+- `expired_user_token`: run the returned `oauth_refresh_command`; if refresh
+  fails, rerun the returned OAuth URL/token commands.
 - `missing_helpdesk_config`: set `FEISHU_HELPDESK_ID` and
   `FEISHU_HELPDESK_TOKEN`.
 - `api_error`: inspect the returned Feishu error and `log_id`.

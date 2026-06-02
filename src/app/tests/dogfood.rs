@@ -103,6 +103,19 @@ fn classifies_dogfood_probe_errors() {
     );
     assert_eq!(missing_user["status"], "missing_user_token");
 
+    let expired_user = classify_dogfood_error(
+        r#"Feishu HTTP 401 Unauthorized: {
+          "code": 99991677,
+          "error": {
+            "log_id": "20260602ABC"
+          },
+          "msg": "Authentication token expired. Please request a new one."
+        }"#,
+    );
+    assert_eq!(expired_user["status"], "expired_user_token");
+    assert_eq!(expired_user["log_id"], "20260602ABC");
+    assert_eq!(expired_user["code"], 99991677);
+
     let helpdesk = classify_dogfood_error("helpdesk APIs require FEISHU_HELPDESK_TOKEN");
     assert_eq!(helpdesk["status"], "missing_helpdesk_config");
 }
@@ -162,6 +175,67 @@ fn dogfood_probe_outputs_remediation() {
         .as_str()
         .unwrap()
         .contains("task:task:read"));
+    assert!(user_token_probe["remediation"]["oauth_token_command"]
+        .as_str()
+        .unwrap()
+        .contains("private/local.env"));
+
+    let expired_token_probe = dogfood_probe_from_result(
+        "search",
+        "search.docs",
+        "feishu-bot --json search docs --query dogfood --page-size 1",
+        "POST /search/v2/doc_wiki/search",
+        "search",
+        probe_value(Err(anyhow!(
+            r#"Feishu HTTP 401 Unauthorized: {{
+              "code": 99991677,
+              "error": {{
+                "log_id": "20260602ABC"
+              }},
+              "msg": "Authentication token expired. Please request a new one."
+            }}"#
+        ))),
+        false,
+        "cli_test",
+    );
+    assert_eq!(expired_token_probe["status"], "expired_user_token");
+    assert_eq!(
+        expired_token_probe["remediation"]["action"],
+        "refresh_user_access_token"
+    );
+    assert!(expired_token_probe["remediation"]["oauth_refresh_command"]
+        .as_str()
+        .unwrap()
+        .contains("oauth refresh"));
+    let expired_mail_probe = dogfood_probe_from_result(
+        "mail",
+        "mail.me.folders.list",
+        "feishu-bot --json mail folder list --mailbox me",
+        "GET /mail/v1/user_mailboxes/me/folders",
+        "mail",
+        probe_value(Err(anyhow!(
+            r#"Feishu HTTP 401 Unauthorized: {{
+              "code": 99991677,
+              "msg": "Authentication token expired. Please request a new one."
+            }}"#
+        ))),
+        false,
+        "cli_test",
+    );
+    let summary = summarize_dogfood_probes(&[expired_token_probe, expired_mail_probe]);
+    assert_eq!(summary["counts"]["expired_user_token"], 2);
+    let action_modules = summary["next_actions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|action| action.get("module").and_then(Value::as_str))
+        .collect::<Vec<_>>();
+    assert!(action_modules.contains(&"search"));
+    assert!(action_modules.contains(&"mail"));
+    assert!(summary["next_actions"][0]["oauth_refresh_command"]
+        .as_str()
+        .unwrap()
+        .contains("oauth refresh"));
 }
 
 #[test]
