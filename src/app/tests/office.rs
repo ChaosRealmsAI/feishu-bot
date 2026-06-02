@@ -273,6 +273,17 @@ fn filters_manifest_by_module_identity() {
 
 #[test]
 fn resolves_office_scope_profile() {
+    let all = scope_groups("all").unwrap();
+    let all_names = all.iter().map(|(name, _)| *name).collect::<Vec<_>>();
+    let unique_names = all_names
+        .iter()
+        .copied()
+        .collect::<std::collections::BTreeSet<_>>();
+    assert_eq!(all.len(), 23);
+    assert_eq!(all_names.first().copied(), Some("user-token"));
+    assert_eq!(unique_names.len(), all_names.len());
+    assert!(all_names.contains(&"permission"));
+
     let groups = scope_groups("office").unwrap();
     let names = groups.iter().map(|(name, _)| *name).collect::<Vec<_>>();
     assert_eq!(names, vec!["im", "doc", "wiki", "base", "search"]);

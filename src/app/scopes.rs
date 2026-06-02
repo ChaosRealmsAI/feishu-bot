@@ -2,7 +2,7 @@ use super::*;
 
 mod groups;
 
-use groups::all_scope_groups;
+use groups::{all_scope_groups, ScopeGroup};
 pub(super) use groups::{ScopeGroups, OFFICE_SCOPE_GROUPS};
 
 pub(super) fn print_scope_groups(group: &str, token_type: ApiAuthArg) -> Result<()> {
@@ -38,25 +38,30 @@ pub(super) fn scope_groups(group: &str) -> Result<ScopeGroups> {
     let group = group.trim().to_ascii_lowercase();
     let all = all_scope_groups();
     if group == "all" {
-        return Ok(all);
+        return Ok(all.iter().map(scope_group_to_owned).collect());
     }
     if group == "office" {
         let selected = OFFICE_SCOPE_GROUPS
             .iter()
             .filter_map(|wanted| {
                 all.iter()
-                    .find(|(name, _)| name == wanted)
-                    .map(|(name, scopes)| (*name, scopes.clone()))
+                    .find(|scope_group| scope_group.name == *wanted)
+                    .map(scope_group_to_owned)
             })
             .collect();
         return Ok(selected);
     }
     let selected = all
-        .into_iter()
-        .filter(|(name, _)| *name == group.as_str())
+        .iter()
+        .filter(|scope_group| scope_group.name == group.as_str())
+        .map(scope_group_to_owned)
         .collect::<Vec<_>>();
     if selected.is_empty() {
         bail!("unknown scope group: {group}");
     }
     Ok(selected)
+}
+
+fn scope_group_to_owned(scope_group: &ScopeGroup) -> (&'static str, Vec<&'static str>) {
+    (scope_group.name, scope_group.scopes.to_vec())
 }
