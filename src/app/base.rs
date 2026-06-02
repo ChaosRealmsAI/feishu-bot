@@ -2,6 +2,7 @@
 
 use super::*;
 
+mod field_schema;
 mod helpers;
 mod media;
 mod permission_exec;
@@ -11,6 +12,7 @@ mod reference;
 mod schema;
 mod schema_exec;
 
+pub(super) use field_schema::*;
 pub(super) use helpers::{
     build_base_field_list_query, build_base_member_add_body, build_base_member_batch_body,
     build_base_record_search_body, build_base_role_write_body, build_base_view_create_body,
