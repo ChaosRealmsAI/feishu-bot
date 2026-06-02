@@ -3,6 +3,7 @@
 use super::*;
 
 mod drive;
+mod minutes;
 mod office;
 mod part01;
 mod part02;
@@ -21,6 +22,7 @@ mod setup;
 mod vc;
 
 pub(super) use drive::*;
+pub(super) use minutes::*;
 pub(super) use office::*;
 pub(super) use part01::*;
 pub(super) use part02::*;

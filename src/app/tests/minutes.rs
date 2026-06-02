@@ -1,6 +1,53 @@
 use super::super::*;
 
 #[test]
+fn parses_minutes_commands_after_cli_split() {
+    let search = Cli::parse_from([
+        "feishu",
+        "minutes",
+        "search",
+        "--query",
+        "AI sync",
+        "--sorter",
+        "create_time_desc",
+        "--page-size",
+        "10",
+    ]);
+    match search.command {
+        Commands::Minutes(MinutesCommand::Search(args)) => {
+            assert_eq!(args.query.as_deref(), Some("AI sync"));
+            assert_eq!(args.sorter.as_deref(), Some("create_time_desc"));
+            assert_eq!(args.page_size, 10);
+        }
+        _ => panic!("expected minutes search"),
+    }
+
+    let transcript = Cli::parse_from([
+        "feishu",
+        "minutes",
+        "transcript",
+        "--minute-token",
+        "obcnq3b9jl72l83w4f14xxxx",
+        "--need-speaker",
+        "--need-timestamp",
+        "--file-format",
+        "srt",
+        "--output",
+        "meeting.srt",
+    ]);
+    match transcript.command {
+        Commands::Minutes(MinutesCommand::Transcript(args)) => {
+            assert_eq!(args.minute_token, "obcnq3b9jl72l83w4f14xxxx");
+            assert!(args.need_speaker);
+            assert!(args.need_timestamp);
+            assert_eq!(args.file_format.as_deref(), Some("srt"));
+            assert_eq!(args.output, PathBuf::from("meeting.srt"));
+        }
+        _ => panic!("expected minutes transcript"),
+    }
+}
+
+#[test]
 fn extracts_minutes_tokens_from_urls() {
     assert_eq!(
         extract_minute_token("obcnq3b9jl72l83w4f14xxxx").unwrap(),
