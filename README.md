@@ -69,7 +69,8 @@ The bot is split by module instead of keeping all logic in one file:
   contains schema, field schema, record, and permission execution, media,
   reference, and helper builders split by query, view, and permission domains.
   `src/app/base/field_schema/` separates AI-friendly table field specs from
-  OpenAPI field body construction.
+  OpenAPI field body construction. `src/app/base/records/` separates record
+  field input parsing, batch record input parsing, and date-field normalization.
 - `src/app/board.rs` contains Board/whiteboard execution, Mermaid/PlantUML import, raw node creation, and Board node JSON normalization.
 - `src/app/calendar.rs` contains Calendar command execution and Calendar-specific body builders.
 - `src/app/chat.rs` contains Chat execution; `src/app/chat/` contains chat
