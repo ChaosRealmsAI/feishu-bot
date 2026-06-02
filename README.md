@@ -57,7 +57,9 @@ The bot is split by module instead of keeping all logic in one file:
   formatting, links, readback, and state helpers.
 - `src/app/client.rs` contains the Feishu HTTP client type; `src/app/client/`
   contains token/auth/request execution plus document, IM/chat, Board, Drive,
-  and Minutes convenience methods.
+  and Minutes convenience methods. `src/app/client/request/` splits token/auth,
+  common JSON wrappers, raw JSON execution, Helpdesk, binary, and multipart
+  request helpers.
 - `src/app/common.rs` re-exports shared helpers; `src/app/common/` contains
   query/path helpers, content and key-value input readers, JSON body helpers,
   and ID/content-type argument resolvers.
