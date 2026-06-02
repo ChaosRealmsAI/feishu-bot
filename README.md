@@ -58,6 +58,9 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/client.rs` contains the Feishu HTTP client, token handling, and
   generic request helpers; `src/app/client/` contains document, IM/chat,
   Board, Drive, and Minutes convenience methods.
+- `src/app/common.rs` re-exports shared helpers; `src/app/common/` contains
+  query/path helpers, content and key-value input readers, JSON body helpers,
+  and ID/content-type argument resolvers.
 - `src/app/config.rs` contains `.env` loading, base URL selection, and masking helpers.
 - `src/app/approval.rs` contains Approval execution, task actions, and external connector body builders.
 - `src/app/attendance.rs` contains Attendance execution, group/shift/schedule/task/flow/stats operations, and attendance body builders.

@@ -8,7 +8,8 @@ src/bin/feishu-bot.rs Primary command entrypoint.
 src/bin/feishuBot.rs CamelCase compatibility alias.
 src/bin/feishu.rs    Legacy compatibility alias.
 src/app/mod.rs       Application dispatcher and module wiring.
-src/app/common.rs    Shared query, JSON, content, ID inference, and CLI enum helpers.
+src/app/common.rs    Shared helper re-exports.
+src/app/common/      Query/path helpers, content and key-value input readers, JSON body helpers, and ID/content-type argument resolvers.
 src/app/approval.rs  Approval command runner, native approval, task actions, and external connector body builders.
 src/app/attendance.rs Attendance command runner, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 src/app/base.rs      Base/Bitable command runner.
