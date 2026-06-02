@@ -392,7 +392,7 @@ fn manifest_exposes_office_workflow_layer() {
     assert_eq!(workflow_layer["default_command"], "feishu-bot office");
     assert_eq!(
         workflow_layer["verification_command"],
-        "feishu-bot dogfood verify"
+        "feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json"
     );
     assert!(workflow_layer["preferred_commands"]
         .as_array()
@@ -406,7 +406,7 @@ fn manifest_exposes_office_workflow_layer() {
         .any(|command| command
             .as_str()
             .unwrap()
-            .contains("--auto-refresh-user-token --strict")));
+            .contains("--profile office --auto-refresh-user-token --strict")));
     assert!(workflow_layer["local_safe_commands"]
         .as_array()
         .unwrap()

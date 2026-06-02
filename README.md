@@ -44,7 +44,7 @@ feishu-bot browser open --url "<authorization_url>"
 feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file private/local.env
 feishu-bot oauth refresh --save-env --env-file private/local.env
 feishu-bot oauth user-info
-feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
 
 ## Code layout
@@ -207,6 +207,7 @@ feishu-bot office list
 feishu-bot office bootstrap --project "demo" --dry-run
 feishu-bot office report --project "demo" --title "dry run" --content "hello" --dry-run
 feishu-bot office status --project "demo"
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 feishu-bot --json manifest --module base
 feishu-bot doc preview --file ./docs/feishu-bot-guide.md
 ```

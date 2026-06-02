@@ -75,11 +75,15 @@ async fn run_dogfood_message_loop_probe(
     )
 }
 
-async fn run_dogfood_write_probes(api: &mut FeishuClient, args: &DogfoodVerifyArgs) -> Vec<Value> {
+async fn run_dogfood_write_probes(
+    api: &mut FeishuClient,
+    args: &DogfoodVerifyArgs,
+    module_filters: &[String],
+) -> Vec<Value> {
     let mut probes = Vec::new();
     let stamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
 
-    if dogfood_module_selected(&args.module, "doc", "doc.create_write_readback") {
+    if dogfood_module_selected(module_filters, "doc", "doc.create_write_readback") {
         let result = async {
             let title = format!("飞书Bot verify doc {stamp}");
             let content = format!("# {title}\n\n- dogfood verify write probe\n");
@@ -121,7 +125,7 @@ async fn run_dogfood_write_probes(api: &mut FeishuClient, args: &DogfoodVerifyAr
         ));
     }
 
-    if dogfood_module_selected(&args.module, "base", "base.create") {
+    if dogfood_module_selected(module_filters, "base", "base.create") {
         let result = api
             .post_json(
                 "/bitable/v1/apps",
@@ -141,7 +145,7 @@ async fn run_dogfood_write_probes(api: &mut FeishuClient, args: &DogfoodVerifyAr
         ));
     }
 
-    if dogfood_module_selected(&args.module, "board", "board.mermaid_import") {
+    if dogfood_module_selected(module_filters, "board", "board.mermaid_import") {
         let result = async {
             let title = format!("飞书Bot verify board Mermaid {stamp}");
             let created = api.create_document(&title, None).await?;
@@ -219,7 +223,7 @@ async fn run_dogfood_write_probes(api: &mut FeishuClient, args: &DogfoodVerifyAr
         ));
     }
 
-    if dogfood_module_selected(&args.module, "task", "task.create") {
+    if dogfood_module_selected(module_filters, "task", "task.create") {
         let result = api
             .post_json(
                 "/task/v2/tasks",
@@ -239,7 +243,7 @@ async fn run_dogfood_write_probes(api: &mut FeishuClient, args: &DogfoodVerifyAr
         ));
     }
 
-    if dogfood_module_selected(&args.module, "sheet", "sheet.create") {
+    if dogfood_module_selected(module_filters, "sheet", "sheet.create") {
         let result = api
             .post_json(
                 "/sheets/v3/spreadsheets",

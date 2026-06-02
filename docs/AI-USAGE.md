@@ -14,7 +14,7 @@ feishu-bot doctor
 feishu-bot setup plan
 feishu-bot setup quickstart --open-browser
 feishu-bot office --help
-feishu-bot dogfood verify
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
 
 Use `--json` for machine parsing:
@@ -22,7 +22,7 @@ Use `--json` for machine parsing:
 ```bash
 feishu-bot --json manifest
 feishu-bot --json dogfood verify --module message --include-response
-feishu-bot --json dogfood verify --module task --module search --auto-refresh-user-token --strict
+feishu-bot --json dogfood verify --profile office --auto-refresh-user-token --strict
 ```
 
 For automation, read `manifest.workflow_layer` first. It contains the default
@@ -95,8 +95,12 @@ Use two layers deliberately:
    `feishu-bot office list --json`, `feishu-bot office bootstrap --dry-run`, and
    `feishu-bot office report --dry-run`.
 3. Prefer `feishu-bot office ...` for normal project work.
-4. Run `feishu-bot dogfood verify --module <module> --json` before claiming a new
+4. Run `feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json`
+   before claiming the normal office loop works. Run
+   `feishu-bot dogfood verify --module <module> --json` before claiming a new
    atomic capability works.
+   Use `--profile office --write` only when real Doc/Base/Task smoke objects are
+   acceptable.
 5. Inspect probe status. Exit code 0 does not mean every probe succeeded.
 6. If blocked, follow the `remediation` fields in the JSON result.
 7. For write paths, create a real object and read it back.

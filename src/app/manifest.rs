@@ -102,7 +102,7 @@ pub(super) fn build_manifest() -> Result<Value> {
         },
         "workflow_layer": {
             "default_command": "feishu-bot office",
-            "verification_command": "feishu-bot dogfood verify",
+            "verification_command": "feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json",
             "preferred_commands": [
                 "feishu-bot office list --json",
                 "feishu-bot office bootstrap --project \"AI Project\" --dry-run --json",
@@ -112,7 +112,7 @@ pub(super) fn build_manifest() -> Result<Value> {
                 "feishu-bot office inbox --project \"AI Project\" --from-now --json",
                 "feishu-bot office search --project \"AI Project\" --query \"decision\" --json",
                 "feishu-bot dogfood verify --module message --json",
-                "feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict --json"
+                "feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json"
             ],
             "local_safe_commands": [
                 "feishu-bot office list --json",

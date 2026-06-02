@@ -159,6 +159,13 @@ pub(in crate::app) enum DogfoodCommand {
 pub(in crate::app) struct DogfoodVerifyArgs {
     #[arg(
         long,
+        value_enum,
+        help = "Use a preset probe profile: office for one-human-plus-AI daily work, enterprise for optional tenant products, all for every read probe"
+    )]
+    pub(in crate::app) profile: Option<DogfoodVerifyProfileArg>,
+
+    #[arg(
+        long,
         help = "Filter modules/probes; repeat for multiple modules, such as --module calendar --module task"
     )]
     pub(in crate::app) module: Vec<String>,
@@ -212,6 +219,23 @@ pub(in crate::app) struct DogfoodVerifyArgs {
         help = "Receiver ID type for --send-loop-check"
     )]
     pub(in crate::app) to_type: ReceiveIdTypeArg,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+pub(in crate::app) enum DogfoodVerifyProfileArg {
+    Office,
+    Enterprise,
+    All,
+}
+
+impl DogfoodVerifyProfileArg {
+    pub(in crate::app) fn as_str(self) -> &'static str {
+        match self {
+            Self::Office => "office",
+            Self::Enterprise => "enterprise",
+            Self::All => "all",
+        }
+    }
 }
 
 #[derive(Args)]

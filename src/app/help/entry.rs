@@ -108,11 +108,12 @@ pub(in crate::app) const DOGFOOD_AFTER_HELP: &str = r##"AI-safe dogfood workflow
   feishu-bot dogfood publish --title "HTML 演示" --content-type html --file ./demo.html
   feishu-bot dogfood publish --title "非 Wiki 草稿" --file ./demo.md --no-wiki
   feishu-bot dogfood verify
+  feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
   feishu-bot dogfood verify --module calendar --module task --include-response
+  feishu-bot dogfood verify --profile enterprise --include-response
   feishu-bot dogfood verify --write --module doc --module base --module task
   feishu-bot dogfood verify --write --module board --include-response
   feishu-bot dogfood verify --send-loop-check --to "$FEISHU_USER_ID"
-  feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict
 
 This is the preferred final step after adding a new CLI capability. It creates
 one standalone docx, writes the content, reads the doc back, attempts Wiki when
@@ -124,10 +125,15 @@ read-users.
 real OpenAPI probes against the current app/account and classifies each result
 as ok, no_data, missing_scope, missing_user_token, expired_user_token,
 missing_helpdesk_config, upstream_api_error, or api_error.
+Use --profile office as the normal one-human-plus-AI readiness check; it covers
+auth, bot, message, contact, Drive, Calendar, Task, Wiki, Search, and Minutes
+without blocking on optional enterprise products, and includes Doc/Base write
+probes when --write is passed. Use --profile enterprise for
+OKR/Attendance/VC/Hire/CoreHR/Mail/Helpdesk, or no profile for all read probes.
 Default probes are read-only; --write and --send-loop-check intentionally create
 real Feishu data. --auto-refresh-user-token intentionally refreshes and saves
 the user token before retrying expired user-token probes. --strict exits non-zero
-when any probe is still not usable after retries. Failed probes include
+when any selected probe is still not usable after retries. Failed probes include
 remediation JSON with grant URLs, browser commands, required env vars, and rerun
 commands for the next AI step.
 "##;

@@ -44,13 +44,14 @@ feishu-bot ai
 feishu-bot manifest
 feishu-bot doctor
 feishu-bot setup quickstart --open-browser
-feishu-bot dogfood verify
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
 
 For any new workflow:
 
 1. Run module help.
-2. Run `dogfood verify`.
+2. Run `dogfood verify --profile office` for the office loop or
+   `dogfood verify --module <module>` for a single atomic capability.
 3. Make the real write/read call.
 4. Send the result to Feishu.
 5. Read back the message or object before reporting success.

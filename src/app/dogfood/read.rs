@@ -7,8 +7,9 @@ pub(super) async fn verify_dogfood(
     let started_at = Local::now().to_rfc3339();
     let mut probes = Vec::new();
     let mut expired_user_token_probes = Vec::new();
+    let module_filters = dogfood_verify_module_filters(&args);
 
-    if dogfood_module_selected(&args.module, "auth", "auth.tenant_token") {
+    if dogfood_module_selected(&module_filters, "auth", "auth.tenant_token") {
         let token_probe = match api.tenant_token().await {
             Ok(token) => dogfood_probe_from_result(
                 "auth",
@@ -41,7 +42,7 @@ pub(super) async fn verify_dogfood(
     }
 
     for spec in dogfood_probe_specs() {
-        if dogfood_module_selected(&args.module, spec.module, spec.name) {
+        if dogfood_module_selected(&module_filters, spec.module, spec.name) {
             let probe = run_dogfood_probe(api, spec.clone(), args.include_response).await;
             if args.auto_refresh_user_token
                 && matches!(spec.auth, DogfoodProbeAuth::User)
@@ -60,7 +61,7 @@ pub(super) async fn verify_dogfood(
     };
 
     if args.send_loop_check
-        && dogfood_module_selected(&args.module, "message", "message.loop_check")
+        && dogfood_module_selected(&module_filters, "message", "message.loop_check")
     {
         probes.push(
             run_dogfood_message_loop_probe(
@@ -74,7 +75,7 @@ pub(super) async fn verify_dogfood(
     }
 
     if args.write {
-        for probe in run_dogfood_write_probes(api, &args).await {
+        for probe in run_dogfood_write_probes(api, &args, &module_filters).await {
             probes.push(probe);
         }
     }
@@ -91,7 +92,9 @@ pub(super) async fn verify_dogfood(
                 "write_probes": args.write,
                 "send_loop_check": args.send_loop_check,
                 "include_response": args.include_response,
-                "module_filter": args.module,
+                "profile": args.profile.map(|profile| profile.as_str()).unwrap_or("custom"),
+                "requested_modules": args.module,
+                "module_filter": module_filters,
                 "auto_refresh_user_token": args.auto_refresh_user_token,
                 "strict": args.strict,
             },

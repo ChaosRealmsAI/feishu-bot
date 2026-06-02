@@ -19,7 +19,7 @@ the JSON result instead of treating exit code 0 as success.
 When user-token probes report `expired_user_token`, automation may run:
 
 ```bash
-feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict --json
+feishu-bot dogfood verify --profile office --auto-refresh-user-token --strict --json
 ```
 
 This refreshes `FEISHU_USER_ACCESS_TOKEN` with `FEISHU_REFRESH_TOKEN`, saves the
@@ -30,6 +30,15 @@ opt-in because it writes local credentials.
 Use `--strict` in automation when the command should exit non-zero unless every
 selected probe is usable after optional retries. Usable statuses are `ok` and
 `no_data`.
+
+Use `--profile office` as the default AI readiness check for one-human-plus-AI
+work. It covers auth, bot identity, chat/message reachability, contact, Drive,
+Calendar, Task, Wiki, Search, and Minutes without failing on optional tenant
+products such as CoreHR, Helpdesk, or Mail. Add `--write` to the same profile
+when you intentionally want Doc/Base/Task creation proof. Use
+`--profile enterprise` for those
+optional tenant products, no profile for every read probe, or explicit
+`--module <module>` filters when validating a single atomic capability.
 
 For normal project reporting, prefer the workflow layer after the relevant
 module probes pass:

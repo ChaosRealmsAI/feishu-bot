@@ -6,6 +6,8 @@ fn parses_dogfood_auto_refresh_args_for_ai() {
         "feishu",
         "dogfood",
         "verify",
+        "--profile",
+        "office",
         "--module",
         "task",
         "--auto-refresh-user-token",
@@ -15,6 +17,7 @@ fn parses_dogfood_auto_refresh_args_for_ai() {
     ]);
     match cli.command {
         Commands::Dogfood(DogfoodCommand::Verify(args)) => {
+            assert_eq!(args.profile, Some(DogfoodVerifyProfileArg::Office));
             assert_eq!(args.module, vec!["task"]);
             assert!(args.auto_refresh_user_token);
             assert!(args.strict);
@@ -302,4 +305,69 @@ fn filters_dogfood_verify_modules() {
         "calendar.primary"
     ));
     assert!(dogfood_module_selected(&[], "calendar", "calendar.primary"));
+}
+
+#[test]
+fn expands_dogfood_verify_office_profile() {
+    let args = DogfoodVerifyArgs {
+        profile: Some(DogfoodVerifyProfileArg::Office),
+        module: Vec::new(),
+        include_response: false,
+        write: false,
+        send_loop_check: false,
+        auto_refresh_user_token: false,
+        strict: true,
+        refresh_env_file: None,
+        to: None,
+        to_type: ReceiveIdTypeArg::Auto,
+    };
+    let filters = dogfood_verify_module_filters(&args);
+    assert!(dogfood_module_selected(
+        &filters,
+        "message",
+        "message.chat_list"
+    ));
+    assert!(dogfood_module_selected(
+        &filters,
+        "task",
+        "task.my_tasks.list"
+    ));
+    assert!(dogfood_module_selected(&filters, "search", "search.docs"));
+    assert!(!dogfood_module_selected(
+        &filters,
+        "corehr",
+        "corehr.jobs.list"
+    ));
+    assert!(!dogfood_module_selected(
+        &filters,
+        "helpdesk",
+        "helpdesk.faq.categories"
+    ));
+}
+
+#[test]
+fn dogfood_verify_profile_accepts_explicit_modules() {
+    let args = DogfoodVerifyArgs {
+        profile: Some(DogfoodVerifyProfileArg::Office),
+        module: vec!["mail".to_string()],
+        include_response: false,
+        write: false,
+        send_loop_check: false,
+        auto_refresh_user_token: false,
+        strict: false,
+        refresh_env_file: None,
+        to: None,
+        to_type: ReceiveIdTypeArg::Auto,
+    };
+    let filters = dogfood_verify_module_filters(&args);
+    assert!(dogfood_module_selected(
+        &filters,
+        "message",
+        "message.chat_list"
+    ));
+    assert!(dogfood_module_selected(
+        &filters,
+        "mail",
+        "mail.me.folders.list"
+    ));
 }
