@@ -41,6 +41,7 @@ src/app/okr.rs       OKR command runner, OKR query helpers, and ID validation.
 src/app/office.rs    AI-first project dispatcher plus bootstrap, report, and progress workflows.
 src/app/office/      Office interaction/status workflows, local dry-run/list helpers, resource writers, formatting, links, readback, and state helpers.
 src/app/output.rs    Human-readable output formatting.
+src/app/output/      Feishu block and code-language label maps for output summaries.
 src/app/people.rs    Contact, Directory, and CoreHR command runners and body builders.
 src/app/people/      Directory, CoreHR, and Hire command runners, query builders, body builders, and ID type helpers.
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
