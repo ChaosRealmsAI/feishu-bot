@@ -7,6 +7,7 @@ mod media;
 mod records;
 mod reference;
 mod schema;
+mod schema_exec;
 
 use helpers::base_role_path;
 pub(super) use helpers::{
@@ -18,6 +19,7 @@ pub(super) use media::*;
 pub(super) use records::*;
 pub(super) use reference::*;
 pub(super) use schema::*;
+use schema_exec::{run_base_field_command, run_base_table_command, run_base_view_command};
 
 pub(super) async fn run_base_command(
     api: &mut FeishuClient,
@@ -110,118 +112,9 @@ pub(super) async fn run_base_command(
         BaseCommand::Media(BaseMediaCommand::FieldValue(args)) => {
             build_base_media_field_value(args.file_tokens, args.field)?
         }
-        BaseCommand::Table(BaseTableCommand::List(args)) => {
-            let path = format!("/bitable/v1/apps/{}/tables", args.app_token);
-            let mut query = vec![("page_size".to_string(), args.page_size.to_string())];
-            push_query_opt(&mut query, "page_token", args.page_token);
-            api.get_json(&path, &query).await?
-        }
-        BaseCommand::Table(BaseTableCommand::Create(args)) => {
-            let path = format!("/bitable/v1/apps/{}/tables", args.app_token);
-            let body = build_base_table_create_body(args)?;
-            api.post_json(&path, &[], body).await?
-        }
-        BaseCommand::Table(BaseTableCommand::BatchCreate(args)) => {
-            let path = format!("/bitable/v1/apps/{}/tables/batch_create", args.app_token);
-            let user_id_type = args.user_id_type.resolve(None).to_string();
-            let body = build_base_table_batch_create_body(args)?;
-            api.post_json(&path, &[("user_id_type".to_string(), user_id_type)], body)
-                .await?
-        }
-        BaseCommand::Table(BaseTableCommand::Update(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}",
-                args.app_token, args.table_id
-            );
-            let body = build_base_table_update_body(args)?;
-            api.patch_json(&path, &[], body).await?
-        }
-        BaseCommand::Table(BaseTableCommand::Delete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}",
-                args.app_token, args.table_id
-            );
-            api.delete_json(&path, &[], None).await?
-        }
-        BaseCommand::Table(BaseTableCommand::BatchDelete(args)) => {
-            let path = format!("/bitable/v1/apps/{}/tables/batch_delete", args.app_token);
-            let table_ids =
-                read_table_ids_json(args.table_ids, args.table_ids_json, args.file, args.stdin)?;
-            api.post_json(&path, &[], json!({ "table_ids": table_ids }))
-                .await?
-        }
-        BaseCommand::Field(BaseFieldCommand::List(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/fields",
-                args.app_token, args.table_id
-            );
-            let query = build_base_field_list_query(&args);
-            api.get_json(&path, &query).await?
-        }
-        BaseCommand::Field(BaseFieldCommand::Create(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/fields",
-                args.app_token, args.table_id
-            );
-            let mut query = Vec::new();
-            push_query_opt(&mut query, "client_token", args.client_token.clone());
-            let body = build_base_field_create_body(args)?;
-            api.post_json(&path, &query, body).await?
-        }
-        BaseCommand::Field(BaseFieldCommand::Update(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/fields/{}",
-                args.app_token, args.table_id, args.field_id
-            );
-            let body = build_base_field_update_body(args)?;
-            api.put_json(&path, &[], body).await?
-        }
-        BaseCommand::Field(BaseFieldCommand::Delete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/fields/{}",
-                args.app_token, args.table_id, args.field_id
-            );
-            api.delete_json(&path, &[], None).await?
-        }
-        BaseCommand::View(BaseViewCommand::List(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/views",
-                args.app_token, args.table_id
-            );
-            let mut query = vec![("page_size".to_string(), args.page_size.to_string())];
-            push_query_opt(&mut query, "page_token", args.page_token);
-            api.get_json(&path, &query).await?
-        }
-        BaseCommand::View(BaseViewCommand::Create(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/views",
-                args.app_token, args.table_id
-            );
-            let body = build_base_view_create_body(args)?;
-            api.post_json(&path, &[], body).await?
-        }
-        BaseCommand::View(BaseViewCommand::Get(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/views/{}",
-                args.app_token, args.table_id, args.view_id
-            );
-            api.get_json(&path, &[]).await?
-        }
-        BaseCommand::View(BaseViewCommand::Update(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/views/{}",
-                args.app_token, args.table_id, args.view_id
-            );
-            let body = build_base_view_update_body(args)?;
-            api.patch_json(&path, &[], body).await?
-        }
-        BaseCommand::View(BaseViewCommand::Delete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/views/{}",
-                args.app_token, args.table_id, args.view_id
-            );
-            api.delete_json(&path, &[], None).await?
-        }
+        BaseCommand::Table(command) => run_base_table_command(api, command).await?,
+        BaseCommand::Field(command) => run_base_field_command(api, command).await?,
+        BaseCommand::View(command) => run_base_view_command(api, command).await?,
         BaseCommand::Record(BaseRecordCommand::List(args)) => {
             let path = format!(
                 "/bitable/v1/apps/{}/tables/{}/records",
