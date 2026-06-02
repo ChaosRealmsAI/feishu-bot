@@ -60,6 +60,8 @@ src/app/message.rs   IM message command runner, image/file/video send helpers, r
 src/app/message/     Voice send entrypoint plus prepare/audio/synth helpers, message content/reaction body builders, polling cursor/state, and loop-check/readback probe helpers.
 src/app/minutes.rs   Minutes command runner, metadata/artifacts/media/transcript operations, token parsing, and search body builders.
 src/app/okr.rs       OKR command runner, OKR query helpers, and ID validation.
+src/app/oauth.rs     OAuth command dispatcher.
+src/app/oauth/       OAuth authorization URL/PKCE helpers, token exchange/refresh/user-info requests, token masking/env persistence, and human output formatting.
 src/app/office.rs    AI-first project dispatcher plus bootstrap workflow.
 src/app/office/      Office report/progress workflows, interaction/status workflows, local dry-run/list helpers, document writers, resource writers, formatting, links, readback, and state helpers.
 src/app/office/docs.rs Office Wiki/docx document creation helpers.

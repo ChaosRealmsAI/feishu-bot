@@ -92,6 +92,9 @@ The bot is split by module instead of keeping all logic in one file:
   `src/app/drive/comment.rs`, and upload/media/import-export/version/view
   helpers split under `src/app/drive/helpers/`.
 - `src/app/helpdesk.rs` contains Helpdesk execution, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
+- `src/app/oauth.rs` contains OAuth command dispatch; `src/app/oauth/` contains
+  authorization URL/PKCE helpers, token exchange/refresh/user-info requests,
+  token masking/env persistence, and human output formatting.
 - `src/app/raw_api.rs` contains raw Feishu API passthrough execution.
 - `src/app/search.rs` contains Search execution, doc/message search, and custom search connector body builders.
 - `src/app/setup.rs` contains setup command dispatch; `src/app/setup/`
