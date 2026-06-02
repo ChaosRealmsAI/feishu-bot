@@ -1,4 +1,5 @@
 use super::super::*;
+use clap::CommandFactory;
 
 #[test]
 fn parses_office_workflow_commands_for_ai() {
@@ -513,4 +514,45 @@ fn manifest_exposes_office_workflow_layer() {
         .as_str()
         .unwrap()
         .contains("--token-type user"));
+}
+
+#[test]
+fn manifest_covers_all_top_level_cli_commands_for_ai() {
+    let manifest = build_manifest().unwrap();
+    let mut exposed = std::collections::BTreeSet::new();
+
+    for module in manifest.get("modules").and_then(Value::as_array).unwrap() {
+        if let Some(command) = module.get("command").and_then(Value::as_str) {
+            if let Some(name) = manifest_command_name(command) {
+                exposed.insert(name.to_string());
+            }
+        }
+    }
+    for command in manifest
+        .get("first_commands")
+        .and_then(Value::as_array)
+        .unwrap()
+    {
+        if let Some(name) = command.as_str().and_then(manifest_command_name) {
+            exposed.insert(name.to_string());
+        }
+    }
+
+    let missing = Cli::command()
+        .get_subcommands()
+        .map(|command| command.get_name().to_string())
+        .filter(|name| !exposed.contains(name))
+        .collect::<Vec<_>>();
+
+    assert!(
+        missing.is_empty(),
+        "manifest missing top-level CLI commands: {missing:?}"
+    );
+}
+
+fn manifest_command_name(command: &str) -> Option<&str> {
+    command
+        .strip_prefix("feishu-bot ")?
+        .split_whitespace()
+        .next()
 }
