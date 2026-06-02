@@ -59,7 +59,8 @@ src/app/setup/       First-run plan, scope grant, quickstart, and next-action bu
 src/app/sheet.rs     Sheets command runner.
 src/app/sheet/       Sheet tab/style/value body builders.
 src/app/task.rs      Task command runner.
-src/app/task/        Tasklist and structure execution, Task body/query helpers, input/time/reminder normalization helpers, tasklist/comment/member collaboration builders, and section/custom-field plus reminder/dependency relation builders.
+src/app/task/        Tasklist and structure execution, custom-field builders, Task body/query helpers, input/time/reminder normalization helpers, tasklist/comment/member collaboration builders, and section plus reminder/dependency relation builders.
+src/app/task/custom_field.rs Task custom-field create/update/resource/value/option body builders.
 src/app/task/tasklist.rs Tasklist command execution flows.
 src/app/task/structure_exec.rs Section, custom-field, and attachment command execution flows.
 src/app/vc.rs        VC command runner, meeting/reserve/recording/report/room operations, and VC body builders.

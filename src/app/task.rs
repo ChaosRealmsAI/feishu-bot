@@ -2,11 +2,13 @@
 
 use super::*;
 
+mod custom_field;
 mod helpers;
 mod structure;
 mod structure_exec;
 mod tasklist;
 
+pub(super) use custom_field::*;
 pub(super) use helpers::*;
 pub(super) use structure::*;
 use structure_exec::{
