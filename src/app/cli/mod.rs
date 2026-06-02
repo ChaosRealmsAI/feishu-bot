@@ -18,6 +18,7 @@ mod part10;
 mod part11;
 mod part12;
 mod part13;
+mod search;
 mod setup;
 mod vc;
 
@@ -37,5 +38,6 @@ pub(super) use part10::*;
 pub(super) use part11::*;
 pub(super) use part12::*;
 pub(super) use part13::*;
+pub(super) use search::*;
 pub(super) use setup::*;
 pub(super) use vc::*;

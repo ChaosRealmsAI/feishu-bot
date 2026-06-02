@@ -1,6 +1,69 @@
 use super::super::*;
 
 #[test]
+fn parses_search_commands_after_cli_split() {
+    let docs = Cli::parse_from([
+        "feishu",
+        "search",
+        "docs",
+        "--query",
+        "飞书Bot",
+        "--doc-type",
+        "DOCX",
+        "--doc-type",
+        "BITABLE",
+        "--space-id",
+        "spc_1",
+        "--only-title",
+        "--page-size",
+        "10",
+    ]);
+    match docs.command {
+        Commands::Search(SearchCommand::Docs(args)) => {
+            assert_eq!(args.query.as_deref(), Some("飞书Bot"));
+            assert_eq!(args.doc_types, vec!["DOCX", "BITABLE"]);
+            assert_eq!(args.space_ids, vec!["spc_1"]);
+            assert!(args.only_title);
+            assert_eq!(args.page_size, 10);
+        }
+        _ => panic!("expected search docs"),
+    }
+
+    let item = Cli::parse_from([
+        "feishu",
+        "search",
+        "item",
+        "create",
+        "--data-source-id",
+        "ds_1",
+        "--id",
+        "item_1",
+        "--title",
+        "标题",
+        "--url",
+        "https://example.com",
+        "--structured-json",
+        r#"{"summary":"摘要"}"#,
+        "--text",
+        "全文",
+    ]);
+    match item.command {
+        Commands::Search(SearchCommand::Item(SearchItemCommand::Create(args))) => {
+            assert_eq!(args.data_source_id, "ds_1");
+            assert_eq!(args.id.as_deref(), Some("item_1"));
+            assert_eq!(args.title.as_deref(), Some("标题"));
+            assert_eq!(args.url.as_deref(), Some("https://example.com"));
+            assert_eq!(
+                args.structured_json.as_deref(),
+                Some(r#"{"summary":"摘要"}"#)
+            );
+            assert_eq!(args.text.as_deref(), Some("全文"));
+        }
+        _ => panic!("expected search item create"),
+    }
+}
+
+#[test]
 fn builds_search_docs_and_message_bodies() {
     let docs = build_search_docs_body(SearchDocsArgs {
         query: Some("飞书Bot".to_string()),
