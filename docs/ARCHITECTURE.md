@@ -10,7 +10,8 @@ src/bin/feishu.rs    Legacy compatibility alias.
 src/app/mod.rs       Application dispatcher and module wiring.
 src/app/common.rs    Shared helper re-exports.
 src/app/common/      Query/path helpers, content and key-value input readers, JSON body helpers, and ID/content-type argument resolvers.
-src/app/approval.rs  Approval command runner, native approval, task actions, and external connector body builders.
+src/app/approval.rs  Approval command runner.
+src/app/approval/    Approval body builders and query helper builders.
 src/app/attendance.rs Attendance command runner, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 src/app/base.rs      Base/Bitable command runner.
 src/app/base/        Base schema, field schema, record, and permission execution, media, reference, field/list, search, view, role, and member helper builders.

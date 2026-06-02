@@ -62,7 +62,8 @@ The bot is split by module instead of keeping all logic in one file:
   query/path helpers, content and key-value input readers, JSON body helpers,
   and ID/content-type argument resolvers.
 - `src/app/config.rs` contains `.env` loading, base URL selection, and masking helpers.
-- `src/app/approval.rs` contains Approval execution, task actions, and external connector body builders.
+- `src/app/approval.rs` contains Approval execution; `src/app/approval/`
+  contains Approval body builders and query helper builders.
 - `src/app/attendance.rs` contains Attendance execution, group/shift/schedule/task/flow/stats operations, and attendance body builders.
 - `src/app/base.rs` contains Base/Bitable command execution; `src/app/base/`
   contains schema, field schema, record, and permission execution, media,
