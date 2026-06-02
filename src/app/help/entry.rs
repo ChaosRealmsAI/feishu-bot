@@ -112,6 +112,7 @@ pub(in crate::app) const DOGFOOD_AFTER_HELP: &str = r##"AI-safe dogfood workflow
   feishu-bot dogfood verify --write --module doc --module base --module task
   feishu-bot dogfood verify --write --module board --include-response
   feishu-bot dogfood verify --send-loop-check --to "$FEISHU_USER_ID"
+  feishu-bot dogfood verify --module task --module search --auto-refresh-user-token
 
 This is the preferred final step after adding a new CLI capability. It creates
 one standalone docx, writes the content, reads the doc back, attempts Wiki when
@@ -121,11 +122,13 @@ read-users.
 
 `verify` is the preferred first step before claiming a module works. It runs
 real OpenAPI probes against the current app/account and classifies each result
-as ok, missing_scope, missing_user_token, expired_user_token,
-missing_helpdesk_config, or api_error.
+as ok, no_data, missing_scope, missing_user_token, expired_user_token,
+missing_helpdesk_config, upstream_api_error, or api_error.
 Default probes are read-only; --write and --send-loop-check intentionally create
-real Feishu data. Failed probes include remediation JSON with grant URLs,
-browser commands, required env vars, and rerun commands for the next AI step.
+real Feishu data. --auto-refresh-user-token intentionally refreshes and saves
+the user token before retrying expired user-token probes. Failed probes include
+remediation JSON with grant URLs, browser commands, required env vars, and rerun
+commands for the next AI step.
 "##;
 
 pub(in crate::app) const OFFICE_AFTER_HELP: &str = r#"AI office workflow layer:

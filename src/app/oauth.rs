@@ -6,7 +6,8 @@ mod request;
 mod token;
 mod url;
 
-use token::{exchange_oauth_code, get_oauth_user_info, refresh_oauth_token};
+pub(in crate::app) use token::refresh_oauth_token;
+use token::{exchange_oauth_code, get_oauth_user_info};
 use url::build_oauth_url_response;
 
 #[cfg(test)]

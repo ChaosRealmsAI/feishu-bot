@@ -72,6 +72,7 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             "examples": [
                 "feishu-bot dogfood verify",
                 "feishu-bot dogfood verify --module calendar --module task --include-response",
+                "feishu-bot dogfood verify --module task --module search --auto-refresh-user-token",
                 "feishu-bot dogfood verify --write --module doc --module base --module task",
                 "feishu-bot dogfood verify --write --module board --include-response",
                 "feishu-bot dogfood publish --title \"Base role v2 demo\" --file dogfood/demo.md",
@@ -80,6 +81,7 @@ pub(in crate::app) fn workflow_manifest_modules() -> Vec<Value> {
             ],
             "known_permission_edges": [
                 "dogfood verify exits successfully even when probes fail; inspect data.summary and per-probe status.",
+                "--auto-refresh-user-token refreshes FEISHU_USER_ACCESS_TOKEN with FEISHU_REFRESH_TOKEN, saves it to FEISHU_ENV_FILE/LARK_ENV_FILE or private/local.env, and retries expired user-token probes.",
                 "Failed dogfood verify probes include remediation JSON with grant URLs, browser commands, env vars, and rerun commands.",
                 "dogfood verify defaults to read-only probes. --write and --send-loop-check intentionally create Feishu data.",
                 "Defaults to FEISHU_USER_ID for delivery and returns an error if no receiver is configured.",

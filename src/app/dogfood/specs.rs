@@ -7,6 +7,7 @@ pub(super) enum DogfoodProbeAuth {
     Helpdesk,
 }
 
+#[derive(Clone)]
 pub(super) struct DogfoodProbeSpec {
     pub(super) module: &'static str,
     pub(super) name: &'static str,

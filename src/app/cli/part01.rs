@@ -183,6 +183,18 @@ pub(in crate::app) struct DogfoodVerifyArgs {
 
     #[arg(
         long,
+        help = "When user-token probes return expired_user_token, refresh FEISHU_USER_ACCESS_TOKEN with FEISHU_REFRESH_TOKEN, save it, and retry those probes"
+    )]
+    pub(in crate::app) auto_refresh_user_token: bool,
+
+    #[arg(
+        long,
+        help = "Env file for --auto-refresh-user-token; defaults to FEISHU_ENV_FILE/LARK_ENV_FILE or private/local.env"
+    )]
+    pub(in crate::app) refresh_env_file: Option<PathBuf>,
+
+    #[arg(
+        long,
         help = "Receiver for --send-loop-check; defaults to FEISHU_USER_ID"
     )]
     pub(in crate::app) to: Option<String>,

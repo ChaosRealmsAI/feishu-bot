@@ -1,6 +1,31 @@
 use super::super::*;
 
 #[test]
+fn parses_dogfood_auto_refresh_args_for_ai() {
+    let cli = Cli::parse_from([
+        "feishu",
+        "dogfood",
+        "verify",
+        "--module",
+        "task",
+        "--auto-refresh-user-token",
+        "--refresh-env-file",
+        "private/local.env",
+    ]);
+    match cli.command {
+        Commands::Dogfood(DogfoodCommand::Verify(args)) => {
+            assert_eq!(args.module, vec!["task"]);
+            assert!(args.auto_refresh_user_token);
+            assert_eq!(
+                args.refresh_env_file.unwrap(),
+                PathBuf::from("private/local.env")
+            );
+        }
+        _ => panic!("expected dogfood verify"),
+    }
+}
+
+#[test]
 fn detects_loop_check_probe_content() {
     let probe = probe_value(Ok(json!({
         "data": {

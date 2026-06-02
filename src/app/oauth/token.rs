@@ -25,7 +25,10 @@ pub(super) async fn exchange_oauth_code(config: &Config, args: OauthTokenArgs) -
     )
 }
 
-pub(super) async fn refresh_oauth_token(config: &Config, args: OauthRefreshArgs) -> Result<Value> {
+pub(in crate::app) async fn refresh_oauth_token(
+    config: &Config,
+    args: OauthRefreshArgs,
+) -> Result<Value> {
     let refresh_token = args
         .refresh_token
         .or_else(|| {

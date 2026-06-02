@@ -16,6 +16,17 @@ Do not claim a command works just because the wrapper exists.
 `dogfood verify` may exit 0 even when probes are blocked. Automation must read
 the JSON result instead of treating exit code 0 as success.
 
+When user-token probes report `expired_user_token`, automation may run:
+
+```bash
+feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --json
+```
+
+This refreshes `FEISHU_USER_ACCESS_TOKEN` with `FEISHU_REFRESH_TOKEN`, saves the
+new tokens to `FEISHU_ENV_FILE`/`LARK_ENV_FILE` or `private/local.env`, updates
+the in-memory client token, and retries the expired probes. It is intentionally
+opt-in because it writes local credentials.
+
 For normal project reporting, prefer the workflow layer after the relevant
 module probes pass:
 
@@ -28,12 +39,16 @@ feishu-bot office status --project "<project>" --check --json
 ## Status Meanings
 
 - `ok`: the current app/account completed the real Feishu call.
+- `no_data`: the API is reachable, but the tenant/account has no data for the
+  probe.
 - `missing_scope`: open the grant URL returned by the probe.
 - `missing_user_token`: set `FEISHU_USER_ACCESS_TOKEN` and rerun.
 - `expired_user_token`: run the returned `oauth_refresh_command`; if refresh
   fails, rerun the returned OAuth URL/token commands.
 - `missing_helpdesk_config`: set `FEISHU_HELPDESK_ID` and
   `FEISHU_HELPDESK_TOKEN`.
+- `upstream_api_error`: Feishu returned a non-permission product/server error;
+  retry later or confirm the product is enabled for this account.
 - `api_error`: inspect the returned Feishu error and `log_id`.
 
 ## Wiki Destination
