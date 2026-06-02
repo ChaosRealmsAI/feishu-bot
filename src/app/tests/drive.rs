@@ -198,6 +198,58 @@ fn builds_drive_permission_bodies() {
 }
 
 #[test]
+fn parses_drive_tail_commands_after_cli_split() {
+    let copy = Cli::parse_from([
+        "feishu",
+        "drive",
+        "copy",
+        "--file-token",
+        "docx_1",
+        "--file-type",
+        "docx",
+        "--folder-token",
+        "fld_1",
+        "--name",
+        "Copy",
+    ]);
+    match copy.command {
+        Commands::Drive(DriveCommand::Copy(args)) => {
+            assert_eq!(args.file_token, "docx_1");
+            assert_eq!(args.file_type, "docx");
+            assert_eq!(args.folder_token, "fld_1");
+            assert_eq!(args.name.as_deref(), Some("Copy"));
+        }
+        _ => panic!("expected drive copy"),
+    }
+
+    let permission = Cli::parse_from([
+        "feishu",
+        "drive",
+        "permission",
+        "member-update",
+        "--token",
+        "docx_1",
+        "--file-type",
+        "docx",
+        "--member-id",
+        "ou_1",
+        "--perm",
+        "edit",
+        "--need-notification",
+    ]);
+    match permission.command {
+        Commands::Drive(DriveCommand::Permission(DrivePermissionCommand::MemberUpdate(args))) => {
+            assert_eq!(args.token, "docx_1");
+            assert_eq!(args.file_type, "docx");
+            assert_eq!(args.member_id, "ou_1");
+            assert_eq!(args.perm, "edit");
+            assert!(args.need_notification);
+        }
+        _ => panic!("expected drive permission member-update"),
+    }
+}
+
+#[test]
 fn builds_drive_comment_version_subscription_inputs() {
     let create = build_drive_comment_create_body(DriveCommentCreateArgs {
         file_token: "docx_1".to_string(),

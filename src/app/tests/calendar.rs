@@ -1,6 +1,15 @@
 use super::super::*;
 
 #[test]
+fn parses_calendar_command_after_cli_split() {
+    let cli = Cli::parse_from(["feishu", "calendar", "primary"]);
+    assert!(matches!(
+        cli.command,
+        Commands::Calendar(CalendarCommand::Primary)
+    ));
+}
+
+#[test]
 fn builds_calendar_event_body() {
     let body = build_calendar_event_create_body(CalendarEventCreateArgs {
         calendar_id: "cal_1".to_string(),
