@@ -18,6 +18,7 @@ mod part11;
 mod part12;
 mod part13;
 mod setup;
+mod vc;
 
 pub(super) use drive::*;
 pub(super) use office::*;
@@ -35,3 +36,4 @@ pub(super) use part11::*;
 pub(super) use part12::*;
 pub(super) use part13::*;
 pub(super) use setup::*;
+pub(super) use vc::*;

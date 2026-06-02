@@ -1,49 +1,4 @@
 use super::*;
-#[derive(Args)]
-pub(in crate::app) struct VcRoomGetArgs {
-    #[arg(long, help = "Meeting room ID")]
-    pub(in crate::app) room_id: String,
-
-    #[arg(long, value_enum, default_value_t = UserIdTypeArg::OpenId)]
-    pub(in crate::app) user_id_type: UserIdTypeArg,
-}
-
-#[derive(Args)]
-pub(in crate::app) struct VcRoomMgetArgs {
-    #[arg(long = "room-id", help = "Meeting room ID. Can repeat.")]
-    pub(in crate::app) room_ids: Vec<String>,
-
-    #[arg(long, help = "Raw Feishu mget body JSON")]
-    pub(in crate::app) body_json: Option<String>,
-
-    #[arg(long, help = "Read mget body JSON from file")]
-    pub(in crate::app) file: Option<PathBuf>,
-
-    #[arg(long, help = "Read mget body JSON from stdin")]
-    pub(in crate::app) stdin: bool,
-
-    #[arg(long, value_enum, default_value_t = UserIdTypeArg::OpenId)]
-    pub(in crate::app) user_id_type: UserIdTypeArg,
-}
-
-#[derive(Subcommand)]
-pub(in crate::app) enum VcRoomLevelCommand {
-    #[command(about = "List child meeting room levels")]
-    List(VcRoomLevelListArgs),
-}
-
-#[derive(Args)]
-pub(in crate::app) struct VcRoomLevelListArgs {
-    #[arg(long, help = "Room level ID. Omit for tenant root when API allows it.")]
-    pub(in crate::app) room_level_id: Option<String>,
-
-    #[arg(long, default_value_t = 20, help = "Page size")]
-    pub(in crate::app) page_size: u16,
-
-    #[arg(long, help = "Page token")]
-    pub(in crate::app) page_token: Option<String>,
-}
-
 #[derive(Subcommand)]
 #[command(after_long_help = MINUTES_AFTER_HELP)]
 pub(in crate::app) enum MinutesCommand {

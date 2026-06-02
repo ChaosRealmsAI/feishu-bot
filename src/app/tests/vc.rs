@@ -1,6 +1,53 @@
 use super::super::*;
 
 #[test]
+fn parses_vc_commands_after_cli_split() {
+    let reserve = Cli::parse_from([
+        "feishu",
+        "vc",
+        "reserve",
+        "apply",
+        "--end-time",
+        "1780300000",
+        "--owner-id",
+        "ou_owner",
+        "--topic",
+        "AI sync",
+        "--auto-record",
+        "true",
+        "--assign-host",
+        "ou_host",
+    ]);
+    match reserve.command {
+        Commands::Vc(VcCommand::Reserve(VcReserveCommand::Apply(args))) => {
+            assert_eq!(args.end_time.as_deref(), Some("1780300000"));
+            assert_eq!(args.owner_id.as_deref(), Some("ou_owner"));
+            assert_eq!(args.topic.as_deref(), Some("AI sync"));
+            assert_eq!(args.auto_record, Some(true));
+            assert_eq!(args.assign_hosts, vec!["ou_host"]);
+        }
+        _ => panic!("expected vc reserve apply"),
+    }
+
+    let room = Cli::parse_from([
+        "feishu",
+        "vc",
+        "room",
+        "mget",
+        "--room-id",
+        "omm_1",
+        "--room-id",
+        "omm_2",
+    ]);
+    match room.command {
+        Commands::Vc(VcCommand::Room(VcRoomCommand::Mget(args))) => {
+            assert_eq!(args.room_ids, vec!["omm_1", "omm_2"]);
+        }
+        _ => panic!("expected vc room mget"),
+    }
+}
+
+#[test]
 fn builds_vc_room_mget_body() {
     let body = build_vc_room_mget_body(VcRoomMgetArgs {
         room_ids: vec!["omm_1".to_string(), "omm_2".to_string()],
