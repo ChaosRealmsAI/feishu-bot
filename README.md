@@ -86,12 +86,12 @@ The bot is split by module instead of keeping all logic in one file:
   loop probes; `src/app/dogfood/` contains publish execution, read-probe verify
   orchestration, read-probe specs, probe classification, summary aggregation,
   and AI remediation helpers.
-- `src/app/drive.rs` contains the Drive command runner; `src/app/drive/`
-  contains Drive upload, import/export, comment, version, subscription, and
-  permission helpers, with import/export execution isolated in
-  `src/app/drive/transfer.rs`, comment query/body builders isolated in
-  `src/app/drive/comment.rs`, and upload/media/import-export/version/view
-  helpers split under `src/app/drive/helpers/`.
+- `src/app/drive.rs` contains the Drive command dispatcher; `src/app/drive/`
+  contains Drive execution modules for file, media, comment, version,
+  subscription, permission, and import/export operations. Query/body builders
+  stay in focused helper modules such as `src/app/drive/comment.rs`,
+  `src/app/drive/permissions.rs`, `src/app/drive/transfer.rs`, and
+  `src/app/drive/helpers/`.
 - `src/app/helpdesk.rs` contains Helpdesk execution, ticket/message/FAQ operations, service-start body builders, and helpdesk message body builders.
 - `src/app/oauth.rs` contains OAuth command dispatch; `src/app/oauth/` contains
   authorization URL/PKCE helpers, token exchange/refresh/user-info requests,

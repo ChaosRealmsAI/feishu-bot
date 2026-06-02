@@ -45,9 +45,14 @@ src/app/dogfood/     Publish execution, read-probe verify orchestration, read-pr
 src/app/dogfood/publish.rs Dogfood publish workflow and publish input helpers.
 src/app/dogfood/specs.rs Dogfood read-probe registry and auth/request metadata.
 src/app/dogfood/summary.rs Dogfood probe count, usability, blocked-module, and next-action summaries.
-src/app/drive.rs     Drive command runner.
-src/app/drive/       Drive upload, import/export, comment, version, subscription, and permission helpers.
+src/app/drive.rs     Drive command dispatcher.
+src/app/drive/       Drive file/media/comment/version/subscription/permission execution modules and helpers.
 src/app/drive/helpers/ Drive upload, media-extra, import/export task, version/subscription, view-record, and output-file helpers.
+src/app/drive/file_ops.rs Drive file list/upload/download/stats/copy/move/delete execution flows.
+src/app/drive/media_exec.rs Drive media upload/download/tmp-url execution flows.
+src/app/drive/comment_exec.rs Drive comment command execution flows.
+src/app/drive/version_exec.rs Drive version and subscription command execution flows.
+src/app/drive/permission_exec.rs Drive permission command execution flows.
 src/app/drive/transfer.rs Drive import/export execution flows.
 src/app/drive/comment.rs Typed Drive comment query/body helpers.
 src/app/drive/permissions.rs Typed Drive permission query/body helpers.
