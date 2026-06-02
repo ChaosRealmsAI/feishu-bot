@@ -111,7 +111,8 @@ pub(super) fn build_manifest() -> Result<Value> {
                 "feishu-bot office report --project \"AI Project\" --title \"Capability Demo\" --file demo.md --base-record --pin --json",
                 "feishu-bot office inbox --project \"AI Project\" --from-now --json",
                 "feishu-bot office search --project \"AI Project\" --query \"decision\" --json",
-                "feishu-bot dogfood verify --module message --json"
+                "feishu-bot dogfood verify --module message --json",
+                "feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict --json"
             ],
             "local_safe_commands": [
                 "feishu-bot office list --json",

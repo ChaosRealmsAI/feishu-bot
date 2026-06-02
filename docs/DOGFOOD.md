@@ -19,13 +19,17 @@ the JSON result instead of treating exit code 0 as success.
 When user-token probes report `expired_user_token`, automation may run:
 
 ```bash
-feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --json
+feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict --json
 ```
 
 This refreshes `FEISHU_USER_ACCESS_TOKEN` with `FEISHU_REFRESH_TOKEN`, saves the
 new tokens to `FEISHU_ENV_FILE`/`LARK_ENV_FILE` or `private/local.env`, updates
 the in-memory client token, and retries the expired probes. It is intentionally
 opt-in because it writes local credentials.
+
+Use `--strict` in automation when the command should exit non-zero unless every
+selected probe is usable after optional retries. Usable statuses are `ok` and
+`no_data`.
 
 For normal project reporting, prefer the workflow layer after the relevant
 module probes pass:

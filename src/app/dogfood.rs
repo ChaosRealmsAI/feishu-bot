@@ -19,11 +19,29 @@ pub(super) async fn run_dogfood_command(
     command: DogfoodCommand,
     raw_json: bool,
 ) -> Result<()> {
+    if let DogfoodCommand::Verify(args) = command {
+        let strict = args.strict;
+        let data = verify_dogfood(api, args).await?;
+        let strict_passed = dogfood_verify_strict_passed(&data);
+        print_response(raw_json, "dogfood completed", data)?;
+        if strict && !strict_passed {
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
+
     let data = match command {
         DogfoodCommand::Publish(args) => publish_dogfood(api, args).await?,
-        DogfoodCommand::Verify(args) => verify_dogfood(api, args).await?,
+        DogfoodCommand::Verify(_) => unreachable!("verify is handled before dispatch"),
     };
     print_response(raw_json, "dogfood completed", data)
+}
+
+pub(in crate::app) fn dogfood_verify_strict_passed(data: &Value) -> bool {
+    data.pointer("/data/summary/not_ok")
+        .and_then(Value::as_u64)
+        .unwrap_or(1)
+        == 0
 }
 
 async fn run_dogfood_message_loop_probe(

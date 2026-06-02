@@ -93,6 +93,7 @@ pub(super) async fn verify_dogfood(
                 "include_response": args.include_response,
                 "module_filter": args.module,
                 "auto_refresh_user_token": args.auto_refresh_user_token,
+                "strict": args.strict,
             },
             "environment": {
                 "base_url": api.config.base_url,

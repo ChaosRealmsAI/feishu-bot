@@ -399,6 +399,14 @@ fn manifest_exposes_office_workflow_layer() {
         .unwrap()
         .iter()
         .any(|command| command.as_str().unwrap().contains("office inbox")));
+    assert!(workflow_layer["preferred_commands"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|command| command
+            .as_str()
+            .unwrap()
+            .contains("--auto-refresh-user-token --strict")));
     assert!(workflow_layer["local_safe_commands"]
         .as_array()
         .unwrap()

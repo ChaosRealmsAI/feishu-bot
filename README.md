@@ -44,7 +44,7 @@ feishu-bot browser open --url "<authorization_url>"
 feishu-bot oauth token --code <code> --code-verifier <code_verifier> --save-env --env-file private/local.env
 feishu-bot oauth refresh --save-env --env-file private/local.env
 feishu-bot oauth user-info
-feishu-bot dogfood verify --module task --module search --auto-refresh-user-token
+feishu-bot dogfood verify --module task --module search --auto-refresh-user-token --strict
 ```
 
 ## Code layout

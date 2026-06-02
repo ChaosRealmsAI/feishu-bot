@@ -189,6 +189,12 @@ pub(in crate::app) struct DogfoodVerifyArgs {
 
     #[arg(
         long,
+        help = "Exit non-zero when any probe is not usable. Usable statuses are ok and no_data."
+    )]
+    pub(in crate::app) strict: bool,
+
+    #[arg(
+        long,
         help = "Env file for --auto-refresh-user-token; defaults to FEISHU_ENV_FILE/LARK_ENV_FILE or private/local.env"
     )]
     pub(in crate::app) refresh_env_file: Option<PathBuf>,

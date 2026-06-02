@@ -22,7 +22,7 @@ Use `--json` for machine parsing:
 ```bash
 feishu-bot --json manifest
 feishu-bot --json dogfood verify --module message --include-response
-feishu-bot --json dogfood verify --module task --module search --auto-refresh-user-token
+feishu-bot --json dogfood verify --module task --module search --auto-refresh-user-token --strict
 ```
 
 For automation, read `manifest.workflow_layer` first. It contains the default

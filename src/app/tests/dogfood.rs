@@ -9,6 +9,7 @@ fn parses_dogfood_auto_refresh_args_for_ai() {
         "--module",
         "task",
         "--auto-refresh-user-token",
+        "--strict",
         "--refresh-env-file",
         "private/local.env",
     ]);
@@ -16,6 +17,7 @@ fn parses_dogfood_auto_refresh_args_for_ai() {
         Commands::Dogfood(DogfoodCommand::Verify(args)) => {
             assert_eq!(args.module, vec!["task"]);
             assert!(args.auto_refresh_user_token);
+            assert!(args.strict);
             assert_eq!(
                 args.refresh_env_file.unwrap(),
                 PathBuf::from("private/local.env")
@@ -23,6 +25,25 @@ fn parses_dogfood_auto_refresh_args_for_ai() {
         }
         _ => panic!("expected dogfood verify"),
     }
+}
+
+#[test]
+fn evaluates_dogfood_strict_summary() {
+    assert!(dogfood_verify_strict_passed(&json!({
+        "data": {
+            "summary": {
+                "not_ok": 0
+            }
+        }
+    })));
+    assert!(!dogfood_verify_strict_passed(&json!({
+        "data": {
+            "summary": {
+                "not_ok": 1
+            }
+        }
+    })));
+    assert!(!dogfood_verify_strict_passed(&json!({})));
 }
 
 #[test]
