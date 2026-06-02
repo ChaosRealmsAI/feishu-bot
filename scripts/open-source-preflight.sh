@@ -46,7 +46,11 @@ patterns=(
 )
 
 tmp_file="$(mktemp)"
-git ls-files -z >"${tmp_file}"
+while IFS= read -r -d '' tracked_file; do
+  if [ -f "${tracked_file}" ]; then
+    printf '%s\0' "${tracked_file}" >>"${tmp_file}"
+  fi
+done < <(git ls-files -z)
 for pattern in "${patterns[@]}"; do
   matches="$(
     xargs -0 grep --exclude=open-source-preflight.sh -nE "${pattern}" <"${tmp_file}" \

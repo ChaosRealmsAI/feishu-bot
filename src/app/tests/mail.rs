@@ -1,6 +1,62 @@
 use super::super::*;
 
 #[test]
+fn parses_mail_commands_after_cli_split() {
+    let list = Cli::parse_from([
+        "feishu",
+        "mail",
+        "message",
+        "list",
+        "--mailbox",
+        "me",
+        "--auth",
+        "user",
+        "--folder-id",
+        "INBOX",
+        "--only-unread",
+        "--page-size",
+        "10",
+    ]);
+    match list.command {
+        Commands::Mail(MailCommand::Message(MailMessageCommand::List(args))) => {
+            assert_eq!(args.mailbox.mailbox, "me");
+            assert!(matches!(args.mailbox.auth, MailAuthArg::User));
+            assert_eq!(args.folder_id.as_deref(), Some("INBOX"));
+            assert!(args.only_unread);
+            assert_eq!(args.page_size, 10);
+        }
+        _ => panic!("expected mail message list"),
+    }
+
+    let send = Cli::parse_from([
+        "feishu",
+        "mail",
+        "message",
+        "send",
+        "--mailbox",
+        "me",
+        "--to",
+        "a@example.com",
+        "--subject",
+        "hello",
+        "--text",
+        "body",
+        "--dedupe-key",
+        "k1",
+    ]);
+    match send.command {
+        Commands::Mail(MailCommand::Message(MailMessageCommand::Send(args))) => {
+            assert_eq!(args.mailbox, "me");
+            assert_eq!(args.to, vec!["a@example.com"]);
+            assert_eq!(args.subject.as_deref(), Some("hello"));
+            assert_eq!(args.text.as_deref(), Some("body"));
+            assert_eq!(args.dedupe_key.as_deref(), Some("k1"));
+        }
+        _ => panic!("expected mail message send"),
+    }
+}
+
+#[test]
 fn builds_mail_paths_auth_and_send_body() {
     assert_eq!(
         encode_path_segment("user@example.com/TUlH=="),
