@@ -4,9 +4,11 @@ use super::*;
 
 mod probes;
 mod read;
+mod summary;
 
 pub(super) use probes::*;
 use read::verify_dogfood;
+pub(super) use summary::*;
 
 pub(super) async fn run_dogfood_command(
     api: &mut FeishuClient,
