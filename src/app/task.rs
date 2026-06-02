@@ -4,10 +4,14 @@ use super::*;
 
 mod helpers;
 mod structure;
+mod structure_exec;
 mod tasklist;
 
 pub(super) use helpers::*;
 pub(super) use structure::*;
+use structure_exec::{
+    run_task_attachment_command, run_task_custom_field_command, run_task_section_command,
+};
 use tasklist::run_tasklist_command;
 
 pub(super) async fn run_task_command(
@@ -244,207 +248,9 @@ pub(super) async fn run_task_command(
             push_query_opt(&mut query, "page_token", args.page_token);
             task_request_json(api, Method::GET, &path, &query, None, args.auth).await?
         }
-        TaskCommand::Section(TaskSectionCommand::List(args)) => {
-            let mut query = task_page_query(args.page_size, args.page_token)?;
-            query.push(("resource_type".to_string(), args.resource_type));
-            push_query_opt(&mut query, "resource_id", args.resource_id);
-            push_query_opt(&mut query, "update_msec", args.update_msec);
-            query.extend(task_user_id_query(args.user_id_type));
-            task_request_json(
-                api,
-                Method::GET,
-                "/task/v2/sections",
-                &query,
-                None,
-                args.auth,
-            )
-            .await?
-        }
-        TaskCommand::Section(TaskSectionCommand::Get(args)) => {
-            let path = format!(
-                "/task/v2/sections/{}",
-                encode_path_segment(&args.section_guid)
-            );
-            let query = task_user_id_query(args.user_id_type);
-            task_request_json(api, Method::GET, &path, &query, None, args.auth).await?
-        }
-        TaskCommand::Section(TaskSectionCommand::Create(args)) => {
-            let query = task_user_id_query(args.user_id_type);
-            let auth = args.auth;
-            let body = build_task_section_create_body(args)?;
-            task_request_json(
-                api,
-                Method::POST,
-                "/task/v2/sections",
-                &query,
-                Some(body),
-                auth,
-            )
-            .await?
-        }
-        TaskCommand::Section(TaskSectionCommand::Update(args)) => {
-            let path = format!(
-                "/task/v2/sections/{}",
-                encode_path_segment(&args.section_guid)
-            );
-            let query = task_user_id_query(args.user_id_type);
-            let auth = args.auth;
-            let body = build_task_section_update_body(args)?;
-            task_request_json(api, Method::PATCH, &path, &query, Some(body), auth).await?
-        }
-        TaskCommand::Section(TaskSectionCommand::Delete(args)) => {
-            let path = format!(
-                "/task/v2/sections/{}",
-                encode_path_segment(&args.section_guid)
-            );
-            task_request_json(api, Method::DELETE, &path, &[], None, args.auth).await?
-        }
-        TaskCommand::Section(TaskSectionCommand::Tasks(args)) => {
-            let path = format!(
-                "/task/v2/sections/{}/tasks",
-                encode_path_segment(&args.section_guid)
-            );
-            let mut query = task_page_query(args.page_size, args.page_token)?;
-            if let Some(completed) = args.completed {
-                query.push(("completed".to_string(), completed.to_string()));
-            }
-            push_query_opt(&mut query, "created_from", args.created_from);
-            push_query_opt(&mut query, "created_to", args.created_to);
-            query.extend(task_user_id_query(args.user_id_type));
-            task_request_json(api, Method::GET, &path, &query, None, args.auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::List(args)) => {
-            let mut query = task_page_query(args.page_size, args.page_token)?;
-            push_query_opt(&mut query, "resource_type", args.resource_type);
-            push_query_opt(&mut query, "resource_id", args.resource_id);
-            query.extend(task_user_id_query(args.user_id_type));
-            task_request_json(
-                api,
-                Method::GET,
-                "/task/v2/custom_fields",
-                &query,
-                None,
-                args.auth,
-            )
-            .await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Get(args)) => {
-            let path = format!(
-                "/task/v2/custom_fields/{}",
-                encode_path_segment(&args.custom_field_guid)
-            );
-            let query = task_user_id_query(args.user_id_type);
-            task_request_json(api, Method::GET, &path, &query, None, args.auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Create(args)) => {
-            let query = task_user_id_query(args.user_id_type);
-            let auth = args.auth;
-            let body = build_task_custom_field_create_body(args)?;
-            task_request_json(
-                api,
-                Method::POST,
-                "/task/v2/custom_fields",
-                &query,
-                Some(body),
-                auth,
-            )
-            .await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Update(args)) => {
-            let path = format!(
-                "/task/v2/custom_fields/{}",
-                encode_path_segment(&args.custom_field_guid)
-            );
-            let query = task_user_id_query(args.user_id_type);
-            let auth = args.auth;
-            let body = build_task_custom_field_update_body(args)?;
-            task_request_json(api, Method::PATCH, &path, &query, Some(body), auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Add(args)) => {
-            let path = format!(
-                "/task/v2/custom_fields/{}/add",
-                encode_path_segment(&args.custom_field_guid)
-            );
-            let auth = args.auth;
-            let body = build_task_custom_field_resource_body(args)?;
-            task_request_json(api, Method::POST, &path, &[], Some(body), auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Remove(args)) => {
-            let path = format!(
-                "/task/v2/custom_fields/{}/remove",
-                encode_path_segment(&args.custom_field_guid)
-            );
-            let auth = args.auth;
-            let body = build_task_custom_field_resource_body(args)?;
-            task_request_json(api, Method::POST, &path, &[], Some(body), auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::SetValue(args)) => {
-            let path = format!("/task/v2/tasks/{}", encode_path_segment(&args.task_guid));
-            let query = task_user_id_query(args.user_id_type);
-            let auth = args.auth;
-            let body = build_task_custom_field_value_update_body(args)?;
-            task_request_json(api, Method::PATCH, &path, &query, Some(body), auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Option(
-            TaskCustomFieldOptionCommand::Create(args),
-        )) => {
-            let path = format!(
-                "/task/v2/custom_fields/{}/options",
-                encode_path_segment(&args.custom_field_guid)
-            );
-            let auth = args.auth;
-            let body = build_task_custom_field_option_create_body(args)?;
-            task_request_json(api, Method::POST, &path, &[], Some(body), auth).await?
-        }
-        TaskCommand::CustomField(TaskCustomFieldCommand::Option(
-            TaskCustomFieldOptionCommand::Update(args),
-        )) => {
-            let path = format!(
-                "/task/v2/custom_fields/{}/options/{}",
-                encode_path_segment(&args.custom_field_guid),
-                encode_path_segment(&args.option_guid)
-            );
-            let auth = args.auth;
-            let body = build_task_custom_field_option_update_body(args)?;
-            task_request_json(api, Method::PATCH, &path, &[], Some(body), auth).await?
-        }
-        TaskCommand::Attachment(TaskAttachmentCommand::List(args)) => {
-            let mut query = task_page_query(args.page_size, args.page_token)?;
-            query.push(("resource_type".to_string(), args.resource_type));
-            query.push(("resource_id".to_string(), args.resource_id));
-            query.extend(task_user_id_query(args.user_id_type));
-            task_request_json(
-                api,
-                Method::GET,
-                "/task/v2/attachments",
-                &query,
-                None,
-                args.auth,
-            )
-            .await?
-        }
-        TaskCommand::Attachment(TaskAttachmentCommand::Upload(args)) => {
-            let query = task_user_id_query(args.user_id_type);
-            let auth = args.auth;
-            let (fields, files) = build_task_attachment_upload_parts(args)?;
-            api.request_multipart_with_auth(
-                Method::POST,
-                "/task/v2/attachments/upload",
-                &query,
-                fields,
-                files,
-                auth,
-                &[],
-            )
-            .await?
-        }
-        TaskCommand::Attachment(TaskAttachmentCommand::Delete(args)) => {
-            let path = format!(
-                "/task/v2/attachments/{}",
-                encode_path_segment(&args.attachment_guid)
-            );
-            task_request_json(api, Method::DELETE, &path, &[], None, args.auth).await?
-        }
+        TaskCommand::Section(command) => run_task_section_command(api, command).await?,
+        TaskCommand::CustomField(command) => run_task_custom_field_command(api, command).await?,
+        TaskCommand::Attachment(command) => run_task_attachment_command(api, command).await?,
     };
     print_response(raw_json, "task operation completed", data)
 }

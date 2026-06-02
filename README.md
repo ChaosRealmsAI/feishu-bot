@@ -86,9 +86,10 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/sheet.rs` contains Sheets execution; `src/app/sheet/` contains sheet
   tab/style/value body builders.
 - `src/app/task.rs` contains Task command execution; `src/app/task/` contains
-  tasklist execution, Task body/query helpers, input/time/reminder
-  normalization helpers, and tasklist/comment/member collaboration builders
-  plus section/custom-field and reminder/dependency relation builders.
+  tasklist and structure execution, Task body/query helpers,
+  input/time/reminder normalization helpers, and tasklist/comment/member
+  collaboration builders plus section/custom-field and reminder/dependency
+  relation builders.
 - `src/app/vc.rs` contains VC execution, meeting/reserve/recording/report/room operations, and VC body builders.
 - `src/app/wiki.rs` contains Wiki/knowledge-space command execution and route
   checks; `src/app/wiki/` contains typed Wiki request body builders plus
