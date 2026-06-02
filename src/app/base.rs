@@ -4,6 +4,7 @@ use super::*;
 
 mod helpers;
 mod media;
+mod record_exec;
 mod records;
 mod reference;
 mod schema;
@@ -16,6 +17,7 @@ pub(super) use helpers::{
     build_base_view_update_body,
 };
 pub(super) use media::*;
+use record_exec::run_base_record_command;
 pub(super) use records::*;
 pub(super) use reference::*;
 pub(super) use schema::*;
@@ -115,176 +117,7 @@ pub(super) async fn run_base_command(
         BaseCommand::Table(command) => run_base_table_command(api, command).await?,
         BaseCommand::Field(command) => run_base_field_command(api, command).await?,
         BaseCommand::View(command) => run_base_view_command(api, command).await?,
-        BaseCommand::Record(BaseRecordCommand::List(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records",
-                args.app_token, args.table_id
-            );
-            let mut query = vec![
-                ("page_size".to_string(), args.page_size.to_string()),
-                (
-                    "user_id_type".to_string(),
-                    args.user_id_type.resolve(None).to_string(),
-                ),
-            ];
-            push_query_opt(&mut query, "page_token", args.page_token);
-            push_query_opt(&mut query, "view_id", args.view_id);
-            api.get_json(&path, &query).await?
-        }
-        BaseCommand::Record(BaseRecordCommand::Search(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/search",
-                args.app_token, args.table_id
-            );
-            let body = build_base_record_search_body(&args)?;
-            let mut query = vec![
-                ("page_size".to_string(), args.page_size.to_string()),
-                (
-                    "user_id_type".to_string(),
-                    args.user_id_type.resolve(None).to_string(),
-                ),
-            ];
-            push_query_opt(&mut query, "page_token", args.page_token);
-            api.post_json(&path, &query, body).await?
-        }
-        BaseCommand::Record(BaseRecordCommand::Get(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/{}",
-                args.app_token, args.table_id, args.record_id
-            );
-            api.get_json(
-                &path,
-                &[(
-                    "user_id_type".to_string(),
-                    args.user_id_type.resolve(None).to_string(),
-                )],
-            )
-            .await?
-        }
-        BaseCommand::Record(BaseRecordCommand::BatchGet(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/batch_get",
-                args.app_token, args.table_id
-            );
-            let record_ids =
-                read_record_ids_json(args.record_ids, args.record_ids_json, args.file, args.stdin)?;
-            api.post_json(
-                &path,
-                &[(
-                    "user_id_type".to_string(),
-                    args.user_id_type.resolve(None).to_string(),
-                )],
-                json!({ "record_ids": record_ids }),
-            )
-            .await?
-        }
-        BaseCommand::Record(BaseRecordCommand::Create(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records",
-                args.app_token, args.table_id
-            );
-            let mut fields = read_base_record_fields(
-                args.fields,
-                args.fields_json,
-                args.fields_file,
-                args.fields_stdin,
-            )?;
-            normalize_base_record_write_fields(api, &args.app_token, &args.table_id, &mut fields)
-                .await?;
-            let query = base_record_write_query(
-                args.client_token,
-                args.user_id_type,
-                args.ignore_consistency_check,
-            );
-            api.post_json(&path, &query, json!({ "fields": fields }))
-                .await?
-        }
-        BaseCommand::Record(BaseRecordCommand::BatchCreate(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/batch_create",
-                args.app_token, args.table_id
-            );
-            let mut records = read_base_record_batch_records(
-                args.record_fields,
-                Vec::new(),
-                args.records_json,
-                args.records_file,
-                args.records_stdin,
-                false,
-            )?;
-            normalize_base_record_write_records(api, &args.app_token, &args.table_id, &mut records)
-                .await?;
-            let query = base_record_write_query(
-                args.client_token,
-                args.user_id_type,
-                args.ignore_consistency_check,
-            );
-            api.post_json(&path, &query, json!({ "records": records }))
-                .await?
-        }
-        BaseCommand::Record(BaseRecordCommand::BatchUpdate(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/batch_update",
-                args.app_token, args.table_id
-            );
-            let mut records = read_base_record_batch_records(
-                args.record_fields,
-                args.record_ids,
-                args.records_json,
-                args.records_file,
-                args.records_stdin,
-                true,
-            )?;
-            normalize_base_record_write_records(api, &args.app_token, &args.table_id, &mut records)
-                .await?;
-            let query = base_record_write_query(
-                args.client_token,
-                args.user_id_type,
-                args.ignore_consistency_check,
-            );
-            api.post_json(&path, &query, json!({ "records": records }))
-                .await?
-        }
-        BaseCommand::Record(BaseRecordCommand::Update(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/{}",
-                args.app_token, args.table_id, args.record_id
-            );
-            let mut fields = read_base_record_fields(
-                args.fields,
-                args.fields_json,
-                args.fields_file,
-                args.fields_stdin,
-            )?;
-            normalize_base_record_write_fields(api, &args.app_token, &args.table_id, &mut fields)
-                .await?;
-            let mut query = vec![(
-                "user_id_type".to_string(),
-                args.user_id_type.resolve(None).to_string(),
-            )];
-            if args.ignore_consistency_check {
-                query.push(("ignore_consistency_check".to_string(), "true".to_string()));
-            }
-            api.put_json(&path, &query, json!({ "fields": fields }))
-                .await?
-        }
-        BaseCommand::Record(BaseRecordCommand::Delete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/{}",
-                args.app_token, args.table_id, args.record_id
-            );
-            api.delete_json(&path, &[], None).await?
-        }
-        BaseCommand::Record(BaseRecordCommand::BatchDelete(args)) => {
-            let path = format!(
-                "/bitable/v1/apps/{}/tables/{}/records/batch_delete",
-                args.app_token, args.table_id
-            );
-            let records =
-                read_record_ids_json(args.record_ids, args.records_json, args.file, args.stdin)?;
-            api.post_json(&path, &[], json!({ "records": records }))
-                .await?
-        }
+        BaseCommand::Record(command) => run_base_record_command(api, command).await?,
         BaseCommand::Dashboard(BaseDashboardCommand::List(args)) => {
             let path = format!("/bitable/v1/apps/{}/dashboards", args.app_token);
             let mut query = vec![("page_size".to_string(), args.page_size.to_string())];
