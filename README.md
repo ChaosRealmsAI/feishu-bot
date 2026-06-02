@@ -122,7 +122,8 @@ The bot is split by module instead of keeping all logic in one file:
 - `src/app/okr.rs` contains OKR execution, OKR query helpers, and ID validation.
 - `src/app/people.rs` contains Contact, Directory, and CoreHR execution and
   body builders; `src/app/people/` contains Directory, CoreHR, and Hire
-  execution and helpers.
+  execution and helpers. Hire-specific query/body/id-type helpers live under
+  `src/app/people/hire/`.
 - `src/app/tests.rs` contains unit tests.
 
 See `docs/ARCHITECTURE.md` before adding new Feishu APIs.

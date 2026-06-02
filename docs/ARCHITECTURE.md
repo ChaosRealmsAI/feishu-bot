@@ -66,6 +66,7 @@ src/app/output/summary.rs Generic human response field/count summaries.
 src/app/output/blocks.rs Doc block, conversion, generated-block, and code-language output summaries.
 src/app/people.rs    Contact, Directory, and CoreHR command runners and body builders.
 src/app/people/      Directory, CoreHR, and Hire command runners, query builders, body builders, and ID type helpers.
+src/app/people/hire/ Hire query builders, body builders, and ID type API value mappings.
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
 src/app/scopes.rs    Open Platform scope filtering and grant URL printing.
 src/app/scopes/      Static Open Platform scope group registry.
