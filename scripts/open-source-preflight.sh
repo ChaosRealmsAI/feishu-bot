@@ -7,12 +7,22 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 fi
 
 blocked=0
-for path in .env dogfood dogfood-artifacts tmp target; do
+for path in .env dogfood dogfood-artifacts tmp target vox-feishu-test; do
   if git ls-files -- "${path}" | grep -q .; then
     echo "refusing to publish tracked private/generated path: ${path}" >&2
     blocked=1
   fi
 done
+
+if git ls-files -z -- private | xargs -0 -r basename | grep -Ev '^(\.gitignore|\.env\.example)$' | grep -q .; then
+  echo "refusing to publish tracked private/ files except .gitignore and .env.example" >&2
+  blocked=1
+fi
+
+if git ls-files | grep -Ei '\.(pem|key|p12|pfx|aiff|opus|mp3|mp4|mov|png|jpe?g|webp)$' | grep -q .; then
+  echo "refusing to publish tracked local credentials or validation media" >&2
+  blocked=1
+fi
 
 patterns=(
   'PLAYWRIGHT_MCP_EXTENSION_TOKEN'
@@ -22,6 +32,7 @@ patterns=(
   'AKIA[0-9A-Z]{16}'
   'AIza[0-9A-Za-z_-]{35}'
   'Bearer [A-Za-z0-9._~+/=-]{20,}'
+  'xox[baprs]-[A-Za-z0-9-]{20,}'
 )
 
 tmp_file="$(mktemp)"
