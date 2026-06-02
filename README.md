@@ -102,9 +102,9 @@ The bot is split by module instead of keeping all logic in one file:
   AI-facing help sections by workflow area. `src/app/manifest.rs` builds the
   machine-readable AI manifest; `src/app/manifest/` splits module metadata by
   workflow area. `src/app/scopes.rs` prints and filters scope grants, with the
-  static scope registry in `src/app/scopes/`; `src/app/output.rs` contains
-  output formatting, with Feishu block/code label maps in
-  `src/app/output/labels.rs`.
+  static scope registry in `src/app/scopes/`; `src/app/output.rs` re-exports
+  output helpers, while `src/app/output/` contains generic response summaries,
+  document block/code output, and Feishu block/code label maps.
 - `src/app/mail.rs` contains Mail execution, mailbox auth selection, message/folder/contact/settings/rule/label operations, and mail send body builders.
 - `src/app/message.rs` contains IM message execution, image/file/video helpers,
   reactions, and pins; `src/app/message/` contains voice synthesis/conversion

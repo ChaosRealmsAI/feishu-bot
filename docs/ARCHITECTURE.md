@@ -55,8 +55,10 @@ src/app/office.rs    AI-first project dispatcher plus bootstrap workflow.
 src/app/office/      Office report/progress workflows, interaction/status workflows, local dry-run/list helpers, document writers, resource writers, formatting, links, readback, and state helpers.
 src/app/office/docs.rs Office Wiki/docx document creation helpers.
 src/app/office/report.rs Office report and progress workflow execution.
-src/app/output.rs    Human-readable output formatting.
-src/app/output/      Feishu block and code-language label maps for output summaries.
+src/app/output.rs    Human-readable output helper re-exports.
+src/app/output/      Generic response summaries, document block/code output printers, and Feishu block/code label maps.
+src/app/output/summary.rs Generic human response field/count summaries.
+src/app/output/blocks.rs Doc block, conversion, generated-block, and code-language output summaries.
 src/app/people.rs    Contact, Directory, and CoreHR command runners and body builders.
 src/app/people/      Directory, CoreHR, and Hire command runners, query builders, body builders, and ID type helpers.
 src/app/raw_api.rs   Raw Feishu API passthrough runner.
