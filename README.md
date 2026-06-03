@@ -175,6 +175,9 @@ feishu-bot doc capabilities
 feishu-bot doc template --kind all
 feishu-bot doc template --kind support-matrix
 feishu-bot board --help
+feishu-bot board template --style brutal-note --title "System map" > board.svg
+feishu-bot board check-svg --file board.svg --external
+feishu-bot board create --title "System map" --file board.svg --check --external-check --send-to "$FEISHU_USER_ID"
 feishu-bot contact --help
 feishu-bot directory --help
 feishu-bot chat --help
@@ -545,10 +548,24 @@ template containing `{document_id}`.
 ## Board / Mermaid
 
 ```bash
+feishu-bot board template --style brutal-note --title "系统流程" > board.svg
+feishu-bot board check-svg --file board.svg --external
+feishu-bot board svg --file board.svg --print-nodes --check --external-check --render-output board.png
+feishu-bot board create --title "系统流程画板" --file board.svg --check --external-check --send-to "$FEISHU_USER_ID"
 feishu-bot board import --whiteboard-id <whiteboard_id> --syntax mermaid --file ./diagram.mmd
 feishu-bot board import --whiteboard-id <whiteboard_id> --syntax plantuml --file ./diagram.puml
 feishu-bot board node-create --whiteboard-id <whiteboard_id> --file ./nodes.json
 ```
+
+`board template` emits local native-shape SVG starters for editable Feishu
+whiteboards. `board check-svg` catches common medium violations such as
+gradients, opacity, external images, and font-family before sending anything to
+Feishu; `--external` also runs `@larksuite/whiteboard-cli` through `npx`.
+`board svg` converts SVG into Board OpenAPI nodes and can either print them or
+write them into an existing whiteboard. `board create` creates a docx, appends a
+whiteboard block, converts the SVG, writes editable nodes, and optionally sends
+the document link with readback proof. SVG conversion requires Node/npm and npx
+access to `@larksuite/whiteboard-cli`.
 
 `whiteboard_id` is the `board.token` from a docx block with `block_type=43`.
 Use `feishu-bot doc blocks --document-id <id>` to inspect it after creating or

@@ -11,6 +11,13 @@ pub(super) async fn run_api_command(
         | Commands::Scopes(_)
         | Commands::Browser(_)
         | Commands::Setup(_)
+        | Commands::Board(BoardCommand::Template(_))
+        | Commands::Board(BoardCommand::CheckSvg(_))
+        | Commands::Board(BoardCommand::Svg(BoardSvgArgs {
+            print_nodes: true,
+            whiteboard_id: None,
+            ..
+        }))
         | Commands::Doc(DocCommand::Capabilities)
         | Commands::Doc(DocCommand::Template(_))
         | Commands::Doc(DocCommand::Preview(_)) => {

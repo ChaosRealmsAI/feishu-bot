@@ -505,6 +505,14 @@ pub(in crate::app) enum BoardCommand {
     Import(BoardImportArgs),
     #[command(about = "Create raw whiteboard nodes")]
     NodeCreate(BoardNodeCreateArgs),
+    #[command(about = "Print an AI-ready native-shape SVG starter for a Feishu whiteboard")]
+    Template(BoardTemplateArgs),
+    #[command(about = "Check an SVG against Feishu editable-whiteboard constraints")]
+    CheckSvg(BoardSvgCheckArgs),
+    #[command(about = "Convert an SVG to Feishu Board nodes and optionally write them")]
+    Svg(BoardSvgArgs),
+    #[command(about = "Create a docx document with a whiteboard block, optionally from SVG")]
+    Create(BoardCreateArgs),
 }
 
 #[derive(Args)]
@@ -555,6 +563,179 @@ pub(in crate::app) struct BoardNodeCreateArgs {
 
     #[arg(long, value_enum, default_value_t = UserIdTypeArg::OpenId)]
     pub(in crate::app) user_id_type: UserIdTypeArg,
+}
+
+#[derive(Args)]
+#[command(after_long_help = BOARD_AFTER_HELP)]
+pub(in crate::app) struct BoardTemplateArgs {
+    #[arg(
+        long,
+        default_value = "项目画板",
+        help = "Board title rendered in the SVG"
+    )]
+    pub(in crate::app) title: String,
+
+    #[arg(long, value_enum, default_value_t = BoardSvgStyleArg::BrutalNote)]
+    pub(in crate::app) style: BoardSvgStyleArg,
+}
+
+#[derive(Args)]
+#[command(after_long_help = BOARD_AFTER_HELP)]
+pub(in crate::app) struct BoardSvgCheckArgs {
+    #[arg(long, help = "SVG source")]
+    pub(in crate::app) svg: Option<String>,
+
+    #[arg(long, help = "Read SVG source from file")]
+    pub(in crate::app) file: Option<PathBuf>,
+
+    #[arg(long, help = "Read SVG source from stdin")]
+    pub(in crate::app) stdin: bool,
+
+    #[arg(
+        long,
+        help = "Also run @larksuite/whiteboard-cli --check if npx is available"
+    )]
+    pub(in crate::app) external: bool,
+
+    #[arg(
+        long,
+        default_value = "@larksuite/whiteboard-cli@^0.2.11",
+        help = "NPM package spec for the optional external checker"
+    )]
+    pub(in crate::app) package: String,
+}
+
+#[derive(Args)]
+#[command(after_long_help = BOARD_AFTER_HELP)]
+pub(in crate::app) struct BoardSvgArgs {
+    #[arg(
+        long,
+        help = "Whiteboard ID from a docx board block token; omit with --print-nodes"
+    )]
+    pub(in crate::app) whiteboard_id: Option<String>,
+
+    #[arg(long, help = "SVG source")]
+    pub(in crate::app) svg: Option<String>,
+
+    #[arg(long, help = "Read SVG source from file")]
+    pub(in crate::app) file: Option<PathBuf>,
+
+    #[arg(long, help = "Read SVG source from stdin")]
+    pub(in crate::app) stdin: bool,
+
+    #[arg(
+        long,
+        help = "Print converted Board node JSON instead of writing to Feishu"
+    )]
+    pub(in crate::app) print_nodes: bool,
+
+    #[arg(long, help = "Run local SVG medium checks before conversion")]
+    pub(in crate::app) check: bool,
+
+    #[arg(long, help = "Run @larksuite/whiteboard-cli --check before conversion")]
+    pub(in crate::app) external_check: bool,
+
+    #[arg(long, help = "Render a PNG preview to this path with whiteboard-cli")]
+    pub(in crate::app) render_output: Option<PathBuf>,
+
+    #[arg(
+        long,
+        default_value = "@larksuite/whiteboard-cli@^0.2.11",
+        help = "NPM package spec for SVG conversion/render/check"
+    )]
+    pub(in crate::app) package: String,
+
+    #[arg(long, help = "Idempotency token")]
+    pub(in crate::app) client_token: Option<String>,
+
+    #[arg(long, value_enum, default_value_t = UserIdTypeArg::OpenId)]
+    pub(in crate::app) user_id_type: UserIdTypeArg,
+}
+
+#[derive(Args)]
+#[command(after_long_help = BOARD_AFTER_HELP)]
+pub(in crate::app) struct BoardCreateArgs {
+    #[arg(long, help = "Document title")]
+    pub(in crate::app) title: String,
+
+    #[arg(long, help = "Optional Drive folder token for document placement")]
+    pub(in crate::app) folder_token: Option<String>,
+
+    #[arg(
+        long,
+        value_enum,
+        default_value_t = ApiAuthArg::Tenant,
+        help = "Access token type for docx create/write calls"
+    )]
+    pub(in crate::app) auth: ApiAuthArg,
+
+    #[arg(long, default_value_t = 1200, help = "Whiteboard block width")]
+    pub(in crate::app) width: i64,
+
+    #[arg(long, default_value_t = 720, help = "Whiteboard block height")]
+    pub(in crate::app) height: i64,
+
+    #[arg(
+        long,
+        default_value_t = 1,
+        help = "Whiteboard block align: 1 left, 2 center, 3 right"
+    )]
+    pub(in crate::app) align: i64,
+
+    #[arg(long, help = "SVG source to convert and write into the new board")]
+    pub(in crate::app) svg: Option<String>,
+
+    #[arg(long, help = "Read SVG source from file")]
+    pub(in crate::app) file: Option<PathBuf>,
+
+    #[arg(long, help = "Read SVG source from stdin")]
+    pub(in crate::app) stdin: bool,
+
+    #[arg(long, help = "Run local SVG medium checks before conversion")]
+    pub(in crate::app) check: bool,
+
+    #[arg(long, help = "Run @larksuite/whiteboard-cli --check before conversion")]
+    pub(in crate::app) external_check: bool,
+
+    #[arg(long, help = "Render a PNG preview to this path with whiteboard-cli")]
+    pub(in crate::app) render_output: Option<PathBuf>,
+
+    #[arg(
+        long,
+        default_value = "@larksuite/whiteboard-cli@^0.2.11",
+        help = "NPM package spec for SVG conversion/render/check"
+    )]
+    pub(in crate::app) package: String,
+
+    #[arg(long, help = "Send the created document link to this receiver")]
+    pub(in crate::app) send_to: Option<String>,
+
+    #[arg(
+        long,
+        value_enum,
+        default_value_t = ReceiveIdTypeArg::Auto,
+        help = "Receiver ID type for --send-to"
+    )]
+    pub(in crate::app) send_to_type: ReceiveIdTypeArg,
+
+    #[arg(
+        long,
+        help = "After --send-to, read back message/chat/member proof for this link"
+    )]
+    pub(in crate::app) send_loop_check: bool,
+
+    #[arg(long, help = "Idempotency token for Board node create")]
+    pub(in crate::app) client_token: Option<String>,
+
+    #[arg(long, value_enum, default_value_t = UserIdTypeArg::OpenId)]
+    pub(in crate::app) user_id_type: UserIdTypeArg,
+}
+
+#[derive(Clone, Copy, Debug, ValueEnum)]
+pub(in crate::app) enum BoardSvgStyleArg {
+    BrutalNote,
+    CalmMap,
+    BrightSystem,
 }
 
 #[derive(Subcommand)]

@@ -116,6 +116,9 @@ pub async fn run() -> Result<()> {
         Commands::Office(command) if office_command_can_run_without_api(&command) => {
             run_office_local_command(command, raw_json)
         }
+        Commands::Board(command) if board_command_can_run_without_api(&command) => {
+            run_board_local_command(command, raw_json)
+        }
         Commands::Base(BaseCommand::ParseUrl(args)) => print_base_url_parse(args, raw_json),
         Commands::Doc(DocCommand::Capabilities) => {
             print!("{DOC_CAPABILITIES}");
