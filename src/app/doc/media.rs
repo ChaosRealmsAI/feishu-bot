@@ -8,7 +8,7 @@ pub(in crate::app) async fn insert_doc_media(
         .block_id
         .clone()
         .unwrap_or_else(|| args.document_id.clone());
-    let placeholder = build_doc_media_placeholder(args.kind);
+    let placeholder = build_doc_media_placeholder(args.kind, args.view_type);
     let append_response = api
         .append_raw_children_at(
             &args.document_id,
@@ -93,16 +93,23 @@ pub(in crate::app) async fn insert_doc_media(
     }))
 }
 
-pub(in crate::app) fn build_doc_media_placeholder(kind: DocMediaKindArg) -> Value {
+pub(in crate::app) fn build_doc_media_placeholder(
+    kind: DocMediaKindArg,
+    view_type: Option<i64>,
+) -> Value {
     match kind {
         DocMediaKindArg::Image => json!({
             "block_type": 27,
             "image": {}
         }),
-        DocMediaKindArg::File => json!({
-            "block_type": 23,
-            "file": {}
-        }),
+        DocMediaKindArg::File => {
+            let mut file = Map::new();
+            insert_opt_i64(&mut file, "view_type", view_type);
+            json!({
+                "block_type": 23,
+                "file": file
+            })
+        }
     }
 }
 

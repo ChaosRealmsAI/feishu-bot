@@ -119,9 +119,13 @@ fn normalizes_raw_doc_descendant_bodies() {
 
 #[test]
 fn builds_doc_media_insert_bodies() {
-    let placeholder = build_doc_media_placeholder(DocMediaKindArg::Image);
+    let placeholder = build_doc_media_placeholder(DocMediaKindArg::Image, None);
     assert_eq!(placeholder["block_type"], 27);
     assert!(placeholder["image"].is_object());
+
+    let file_placeholder = build_doc_media_placeholder(DocMediaKindArg::File, Some(2));
+    assert_eq!(file_placeholder["block_type"], 23);
+    assert_eq!(file_placeholder["file"]["view_type"], 2);
 
     let image = build_doc_media_replace_body(
         DocMediaKindArg::Image,
