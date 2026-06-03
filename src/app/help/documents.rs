@@ -192,12 +192,24 @@ not model yet.
 "#;
 
 pub(in crate::app) const BOARD_AFTER_HELP: &str = r#"AI-safe Board workflow:
+  feishu-bot board template --style brutal-note --title "系统流程" > board.svg
+  feishu-bot board check-svg --file board.svg --external
+  feishu-bot board svg --file board.svg --print-nodes --check --external-check --render-output board.png
+  feishu-bot board create --title "系统流程画板" --file board.svg --check --external-check --send-to <chat_id> --send-to-type chat-id
   feishu-bot doc template --kind board-child > board.json
   feishu-bot doc append-json --document-id <doc_id> --file board.json
   feishu-bot doc blocks --document-id <doc_id>
   feishu-bot board import --whiteboard-id <whiteboard_id> --syntax mermaid --file ./diagram.mmd
   feishu-bot board import --whiteboard-id <whiteboard_id> --syntax plantuml --file ./diagram.puml
   feishu-bot board node-create --whiteboard-id <whiteboard_id> --file ./nodes.json
+
+`board template` prints local native-shape SVG starters. `board check-svg` runs
+local medium checks; `--external` also runs @larksuite/whiteboard-cli through
+npx. `board svg` converts SVG into Board OpenAPI nodes and either prints them
+or writes them to an existing whiteboard. `board create` creates a docx, appends
+a whiteboard block, converts the SVG, writes editable nodes, and can send the
+link with delivery proof. SVG conversion requires Node/npm and npx access to
+@larksuite/whiteboard-cli.
 
 The docx `diagram` block is not writable through the public docx OpenAPI. The
 Board API is the supported rendered Mermaid/PlantUML path when a whiteboard

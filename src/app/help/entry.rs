@@ -16,7 +16,7 @@ pub(in crate::app) const ROOT_AFTER_HELP: &str = r#"AI handoff:
   feishu-bot doc convert --file notes.md Use Feishu official Markdown/HTML converter.
   feishu-bot base --help                Base/Bitable app, table, field, record commands.
   feishu-bot task --help                Feishu Task v2 commands.
-  feishu-bot board --help               Whiteboard Mermaid/PlantUML and node commands.
+  feishu-bot board --help               Editable whiteboard SVG/Mermaid/node commands.
   feishu-bot contact --help             Contact user and department lookup.
   feishu-bot directory --help           Directory employee search, filter, and batch reads.
   feishu-bot chat --help                Chat discovery, metadata, and members.

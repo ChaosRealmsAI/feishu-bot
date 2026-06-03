@@ -8,7 +8,7 @@ pub(in crate::app) async fn insert_doc_media(
         .block_id
         .clone()
         .unwrap_or_else(|| args.document_id.clone());
-    let placeholder = build_doc_media_placeholder(args.kind);
+    let placeholder = build_doc_media_placeholder(args.kind, args.view_type);
     let append_response = api
         .append_raw_children_at(
             &args.document_id,
@@ -17,9 +17,15 @@ pub(in crate::app) async fn insert_doc_media(
             vec![placeholder],
         )
         .await?;
-    let media_block_id = first_appended_block_id(&append_response).ok_or_else(|| {
+    let placeholder_block_id = first_appended_block_id(&append_response).ok_or_else(|| {
         anyhow!(
             "doc insert-media append response did not include a child block_id: {append_response}"
+        )
+    })?;
+    let media_block_id = appended_media_target_block_id(args.kind, &append_response).ok_or_else(|| {
+        anyhow!(
+            "doc insert-media append response did not include a target {} block_id: {append_response}",
+            doc_media_kind_label(args.kind)
         )
     })?;
 
@@ -41,7 +47,7 @@ pub(in crate::app) async fn insert_doc_media(
         .await
         .with_context(|| {
             format!(
-                "created {} placeholder block {media_block_id} in document {}, but media upload failed",
+                "created {} placeholder block {placeholder_block_id} in document {}, but media upload failed for target block {media_block_id}",
                 doc_media_kind_label(args.kind),
                 args.document_id
             )
@@ -73,6 +79,7 @@ pub(in crate::app) async fn insert_doc_media(
         "data": {
             "document_id": args.document_id,
             "parent_block_id": parent_block_id,
+            "placeholder_block_id": placeholder_block_id,
             "media_block_id": media_block_id,
             "kind": doc_media_kind_label(args.kind),
             "parent_type": parent_type,
@@ -86,16 +93,23 @@ pub(in crate::app) async fn insert_doc_media(
     }))
 }
 
-pub(in crate::app) fn build_doc_media_placeholder(kind: DocMediaKindArg) -> Value {
+pub(in crate::app) fn build_doc_media_placeholder(
+    kind: DocMediaKindArg,
+    view_type: Option<i64>,
+) -> Value {
     match kind {
         DocMediaKindArg::Image => json!({
             "block_type": 27,
             "image": {}
         }),
-        DocMediaKindArg::File => json!({
-            "block_type": 23,
-            "file": {}
-        }),
+        DocMediaKindArg::File => {
+            let mut file = Map::new();
+            insert_opt_i64(&mut file, "view_type", view_type);
+            json!({
+                "block_type": 23,
+                "file": file
+            })
+        }
     }
 }
 
@@ -136,6 +150,30 @@ pub(in crate::app) fn first_appended_block_id(value: &Value) -> Option<String> {
         .and_then(|child| child.get("block_id"))
         .and_then(Value::as_str)
         .map(ToString::to_string)
+}
+
+pub(in crate::app) fn appended_media_target_block_id(
+    kind: DocMediaKindArg,
+    value: &Value,
+) -> Option<String> {
+    let first_child = value
+        .get("data")
+        .and_then(|data| data.get("children"))
+        .and_then(Value::as_array)
+        .and_then(|children| children.first())?;
+    match kind {
+        DocMediaKindArg::Image => first_child
+            .get("block_id")
+            .and_then(Value::as_str)
+            .map(ToString::to_string),
+        DocMediaKindArg::File => first_child
+            .get("children")
+            .and_then(Value::as_array)
+            .and_then(|children| children.first())
+            .and_then(Value::as_str)
+            .or_else(|| first_child.get("block_id").and_then(Value::as_str))
+            .map(ToString::to_string),
+    }
 }
 
 fn doc_media_kind_label(kind: DocMediaKindArg) -> &'static str {

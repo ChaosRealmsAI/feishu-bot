@@ -35,15 +35,20 @@ pub(in crate::app) fn knowledge_manifest_modules() -> Vec<Value> {
             "name": "board",
             "command": "feishu-bot board",
             "scope_group": "board",
-            "status": "typed wrappers and raw node escape hatch",
-            "ai_use": "Create/read whiteboards and import Mermaid/PlantUML source as board nodes.",
+            "status": "typed wrappers, SVG-to-editable-board workflow, and raw node escape hatch",
+            "ai_use": "Create editable Feishu whiteboards from native-shape SVG, import Mermaid/PlantUML source as board nodes, or write raw Board nodes.",
             "help": ["feishu-bot board --help"],
             "examples": [
+                "feishu-bot board template --style brutal-note --title \"System map\" > board.svg",
+                "feishu-bot board check-svg --file board.svg --external",
+                "feishu-bot board create --title \"System map\" --file board.svg --check --external-check --send-to <chat_id> --send-to-type chat-id",
                 "feishu-bot doc create --title \"Board host\" --writer official --content \"# Board host\"",
                 "feishu-bot doc append-json --document-id <document_id> --block-id <document_id> --raw-json '[{\"block_type\":43,\"board\":{\"align\":1,\"height\":500,\"width\":900}}]'",
+                "feishu-bot board svg --whiteboard-id <whiteboard_id> --file board.svg --check --external-check",
                 "feishu-bot board import --whiteboard-id <whiteboard_id> --syntax mermaid --file graph.mmd"
             ],
             "known_permission_edges": [
+                "SVG conversion requires Node/npm and npx access to @larksuite/whiteboard-cli; local template/check commands do not need Feishu credentials.",
                 "board import requires a whiteboard_id from an existing Feishu Board block; create/read the host doc blocks first if needed."
             ]
         }),
